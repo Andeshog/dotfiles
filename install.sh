@@ -2,7 +2,8 @@
 
 # Colors for output
 GREEN='\033[0;32m'
-BLUE='\033[0;34m'
+BLUE='\033[0;36m'
+YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}Setting up dotfiles...${NC}"
@@ -24,7 +25,7 @@ create_symlink() {
         fi
         
         # Back up existing file
-        echo -e "${BLUE}Backing up existing $target to $target.backup${NC}"
+        echo -e "${YELLOW}Backing up existing $target to $target.backup${NC}"
         mv "$target" "$target.backup"
     fi
     
@@ -35,5 +36,6 @@ create_symlink() {
 
 # Create symlinks
 create_symlink "$DOTFILES_DIR/tmux.conf" "$HOME/.tmux.conf"
+create_symlink "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 
 echo -e "${GREEN}Done! Dotfiles installed.${NC}"
