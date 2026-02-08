@@ -70,6 +70,11 @@ map("n", "<C-w>z", function()
 	vim.cmd("wincmd |")
 end, { desc = "Maximize current window" })
 
+-- Move floating window to split
+map("n", "<leader>ws", function()
+	vim.api.nvim_win_set_config(0, { split = "above", win = vim.fn.win_getid(1) })
+end, { desc = "Move floating window to split" })
+
 -- Which-Key
 map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
 map("n", "<leader>wk", function()
