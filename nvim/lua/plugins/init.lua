@@ -734,6 +734,7 @@ return {
 				expr = true,
 				replace_keycodes = false,
 			})
+			vim.keymap.set("i", "<C-L>", "<Plug>(copilot-accept-word)")
 
 			vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)", { silent = true })
 			vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
@@ -752,9 +753,9 @@ return {
 		config = function()
 			require("codecompanion").setup({
 				strategies = {
-					chat = { adapter = "copilot" },
-					inline = { adapter = "copilot" },
-					cmd = { adapter = "copilot" },
+					chat = { adapter = { name = "copilot", model = "claude-sonnet-4.5" } },
+					inline = { adapter = { name = "copilot", model = "claude-sonnet-4.5" } },
+					cmd = { adapter = { name = "copilot", model = "claude-sonnet-4.5" } },
 				},
 			})
 		end,

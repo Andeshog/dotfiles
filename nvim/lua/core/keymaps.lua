@@ -362,6 +362,7 @@ map("i", "<C-l>", 'copilot#Accept("<CR>")', {
 	replace_keycodes = false,
 	desc = "Copilot accept",
 })
+map("i", "<C-L>", "<Plug>(copilot-accept-word)")
 map("i", "<M-]>", "<Plug>(copilot-next)", { silent = true, desc = "Copilot next" })
 map("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true, desc = "Copilot previous" })
 map("i", "<C-]>", "<Plug>(copilot-dismiss)", { silent = true, desc = "Copilot dismiss" })
