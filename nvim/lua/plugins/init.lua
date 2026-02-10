@@ -729,12 +729,12 @@ return {
 				["*"] = true,
 			}
 
-			vim.keymap.set("i", "<C-l>", 'copilot#Accept("<CR>")', {
+			vim.keymap.set("i", "<C-l>", 'copilot#Accept("\\<CR>")', {
 				silent = true,
 				expr = true,
 				replace_keycodes = false,
 			})
-			vim.keymap.set("i", "<C-L>", "<Plug>(copilot-accept-word)")
+			vim.keymap.set("i", "<C-k>", "<Plug>(copilot-accept-word)")
 
 			vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)", { silent = true })
 			vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
