@@ -1,7 +1,7 @@
 local M = {}
 
 local state = {
-	building = false,
+	running = false,
 	output_buf = nil,
 	config = {
 		show_output = false, -- show output split on build start
@@ -62,6 +62,16 @@ local function get_build_command(package_name)
 	end
 end
 
+--- Determine test command
+--- @param package_name string
+--- @returns string
+local function get_test_command(package_name)
+	return string.format(
+		"colcon test --packages-select %s --event-handlers console_direct+ && colcon test-result --verbose",
+		package_name
+	)
+end
+
 --- Find the colcon workspace root (parent directory that contains 'src')
 --- @param pkg_dir string directory containing package.xml
 --- @returns string workspace root
@@ -112,31 +122,11 @@ local function show_output_split()
 	vim.cmd("wincmd p")
 end
 
--- Main build function
-function M.build()
-	if state.building then
-		vim.notify("ROS2 build already in progress...", vim.log.levels.WARN)
-		return
-	end
-
-	local pkg_dir = find_package_root()
-	if not pkg_dir then
-		vim.notify("No package.xml found in parent directories", vim.log.levels.ERROR)
-		return
-	end
-
-	local pkg_name = read_package_name(pkg_dir)
-	if not pkg_name then
-		vim.notify("Could not parse package name from package.xml", vim.log.levels.ERROR)
-		return
-	end
-
-	local ws_root = find_workspace_root(pkg_dir)
-	local build_cmd = get_build_command(pkg_name)
-
-	state.building = true
-	vim.notify(string.format("Building %s", pkg_name), vim.log.levels.INFO)
-
+--- Run a shell command with streaming output in the output buffer
+--- @param cmd string shell command to run
+--- @param ws_root string workspace root directory to cd into
+--- @param label string display label for notifications (e.g. "Building foo", "Testing foo")
+local function run_job(cmd, ws_root, label)
 	local buf = get_output_buffer()
 	local output_lines = {}
 
@@ -145,8 +135,11 @@ function M.build()
 		show_output_split()
 	end
 
+	state.running = true
+	vim.notify(label, vim.log.levels.INFO)
+
 	vim.system(
-		{ "sh", "-c", string.format("cd %s && %s 2>&1", vim.fn.shellescape(ws_root), build_cmd) },
+		{ "sh", "-c", string.format("cd %s && %s 2>&1", vim.fn.shellescape(ws_root), cmd) },
 		{
 			text = true,
 			stdout = function(_, data)
@@ -181,10 +174,10 @@ function M.build()
 			end,
 		},
 		vim.schedule_wrap(function(result)
-			state.building = false
+			state.running = false
 
 			if result.code == 0 then
-				vim.notify(string.format("✓ Built %s", pkg_name), vim.log.levels.INFO)
+				vim.notify(string.format("✓ %s", label), vim.log.levels.INFO)
 				-- Close output window on success unless configured to keep it
 				if not state.config.keep_output_on_success then
 					for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -194,14 +187,60 @@ function M.build()
 					end
 				end
 			else
-				vim.notify(
-					string.format("✗ Build failed for %s (code %d)", pkg_name, result.code),
-					vim.log.levels.ERROR
-				)
+				vim.notify(string.format("✗ %s failed (code %d)", label, result.code), vim.log.levels.ERROR)
 				show_output_split()
 			end
 		end)
 	)
+end
+
+--- Resolve package context (pkg_dir, pkg_name, ws_root) or notify on error
+--- @returns string|nil, string|nil, string|nil
+local function resolve_package()
+	local pkg_dir = find_package_root()
+	if not pkg_dir then
+		vim.notify("No package.xml found in parent directories", vim.log.levels.ERROR)
+		return nil, nil, nil
+	end
+
+	local pkg_name = read_package_name(pkg_dir)
+	if not pkg_name then
+		vim.notify("Could not parse package name from package.xml", vim.log.levels.ERROR)
+		return nil, nil, nil
+	end
+
+	local ws_root = find_workspace_root(pkg_dir)
+	return pkg_dir, pkg_name, ws_root
+end
+
+-- Main build function
+function M.build()
+	if state.running then
+		vim.notify("ROS2 job already in progress...", vim.log.levels.WARN)
+		return
+	end
+
+	local _, pkg_name, ws_root = resolve_package()
+	if not pkg_name then
+		return
+	end
+
+	run_job(get_build_command(pkg_name), ws_root, string.format("Building %s", pkg_name))
+end
+
+-- Main test function
+function M.test()
+	if state.running then
+		vim.notify("ROS2 job already in progress...", vim.log.levels.WARN)
+		return
+	end
+
+	local _, pkg_name, ws_root = resolve_package()
+	if not pkg_name then
+		return
+	end
+
+	run_job(get_test_command(pkg_name), ws_root, string.format("Testing %s", pkg_name))
 end
 
 -- Close the output split if open
@@ -218,16 +257,24 @@ end
 --- Setup: keymaps and commands
 function M.setup(opts)
 	opts = opts or {}
-	local key = opts.key or "<leader>cb"
 
 	-- Update config with user options
 	state.config.show_output = opts.show_output or false
 	state.config.keep_output_on_success = opts.keep_output_on_success or false
 
+	-- Keybindings: support opts.keys table or legacy opts.key
+	local keys = opts.keys or {}
+	local build_key = keys.build or opts.key or "<leader>cb"
+	local test_key = keys.test or "<leader>ct"
+	local close_key = keys.close or "<leader>cc"
+
 	vim.api.nvim_create_user_command("ROS2Build", M.build, { desc = "Build current ROS2 package" })
+	vim.api.nvim_create_user_command("ROS2Test", M.test, { desc = "Test current ROS2 package" })
 	vim.api.nvim_create_user_command("ROS2BuildClose", M.close_output, { desc = "Close build output" })
 
-	vim.keymap.set("n", key, M.build, { desc = "Build ROS2 package", silent = true })
+	vim.keymap.set("n", build_key, M.build, { desc = "Build ROS2 package", silent = true })
+	vim.keymap.set("n", test_key, M.test, { desc = "Test ROS2 package", silent = true })
+	vim.keymap.set("n", close_key, M.close_output, { desc = "Close ROS2 build output", silent = true })
 end
 
 return M

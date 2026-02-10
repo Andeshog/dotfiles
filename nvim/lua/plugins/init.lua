@@ -838,7 +838,11 @@ return {
 		dir = vim.fn.stdpath("config") .. "/lua/custom_plugins",
 		config = function()
 			require("custom_plugins.build_package").setup({
-				key = "<leader>cb",
+				keys = {
+					build = "<leader>cb",
+					test = "<leader>ct",
+					close = "<leader>cc",
+				},
 				show_output = true,
 				keep_output_on_success = true,
 			})
