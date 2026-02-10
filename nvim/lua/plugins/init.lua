@@ -828,4 +828,20 @@ return {
 		event = "BufReadPre",
 		opts = {},
 	},
+
+	----------------------------------------------------------
+	---------------------- ROS2 Tools ------------------------
+	----------------------------------------------------------
+
+	{
+		name = "ros2-build",
+		dir = vim.fn.stdpath("config") .. "/lua/custom_plugins",
+		config = function()
+			require("custom_plugins.build_package").setup({
+				key = "<leader>cb",
+				show_output = true,
+				keep_output_on_success = true,
+			})
+		end,
+	},
 }

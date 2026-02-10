@@ -136,8 +136,9 @@ map("n", "<leader>gf", "<C-i>", { desc = "Jump forward" })
 ----------------------------------------------------------
 map("n", "<leader>t", "<nop>", { desc = "Terminal/Test" })
 
-map("n", "<leader>tt", "<cmd>terminal<cr>", { desc = "Open terminal" })
-
+map("n", "<leader>t", function()
+	vim.cmd("botright 15split | terminal")
+end, { desc = "Open terminal in bottom split" })
 -- Terminal mode navigation
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "Terminal escape" })
 map("t", "<C-h>", "<C-\\><C-N><C-w>h", { desc = "Terminal: go to left window" })
