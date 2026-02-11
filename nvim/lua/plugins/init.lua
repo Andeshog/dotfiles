@@ -361,6 +361,29 @@ return {
 		end,
 	},
 
+	{
+		"YouSame2/inlinediff-nvim",
+		lazy = true,
+		cmd = "InlineDiff",
+		opts = {
+			colors = {
+				InlineDiffAddContext = "#283e00",
+				InlineDiffAddChange = "#507800",
+				InlineDiffDeleteContext = "#3e0008",
+				InlineDiffDeleteChange = "#78000a",
+			},
+		},
+		keys = {
+			{
+				"<leader>gd",
+				function()
+					require("inlinediff").toggle()
+				end,
+				desc = "Toggle inline diff",
+			},
+		},
+	},
+
 	----------------------------------------------------------
 	-------------------- Treesitter --------------------------
 	----------------------------------------------------------
