@@ -93,7 +93,6 @@ end
 --- @returns number buffer handle
 local function get_output_buffer()
 	if state.output_buf and vim.api.nvim_buf_is_valid(state.output_buf) then
-		vim.api.nvim_buf_set_lines(state.output_buf, 0, -1, false, {})
 		return state.output_buf
 	end
 
@@ -128,6 +127,7 @@ end
 --- @param label string display label for notifications (e.g. "Building foo", "Testing foo")
 local function run_job(cmd, ws_root, label)
 	local buf = get_output_buffer()
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
 	local output_lines = {}
 
 	-- Show output split immediately if configured
