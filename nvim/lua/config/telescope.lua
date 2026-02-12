@@ -93,6 +93,7 @@ function M.setup()
 		"cmdline",
 		"directory",
 		"projects",
+		"live_grep_args",
 	}
 
 	for _, ext in ipairs(extensions) do

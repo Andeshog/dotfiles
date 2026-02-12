@@ -104,7 +104,7 @@ map("n", "<leader>bq", "<cmd>bufdo bdelete<cr>", { desc = "Delete all buffers", 
 map("n", "<leader>f", "<nop>", { desc = "Find" })
 
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
-map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "Live grep" })
+map("n", "<leader>fg", "<cmd>Telescope live_grep_args<cr>", { desc = "Live grep with args" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
 map("n", "<leader>fc", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Current buffer" })
 map("n", "<leader>fx", "<cmd>Telescope diagnostics<cr>", { desc = "Diagnostics" })

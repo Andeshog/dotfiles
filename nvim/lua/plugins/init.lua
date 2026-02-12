@@ -261,6 +261,7 @@ return {
 			"nvim-telescope/telescope-file-browser.nvim",
 			"jonarrien/telescope-cmdline.nvim",
 			"fbuchlak/telescope-directory.nvim",
+			"nvim-telescope/telescope-live-grep-args.nvim",
 		},
 		config = function()
 			require("config.telescope").setup()
