@@ -98,6 +98,14 @@ map("n", "<leader>bD", "<cmd>bdelete!<cr>", { desc = "Force delete buffer", sile
 map("n", "<leader>bo", "<cmd>%bdelete|edit#|bdelete#<cr>", { desc = "Delete other buffers", silent = true })
 map("n", "<leader>bq", "<cmd>bufdo bdelete<cr>", { desc = "Delete all buffers", silent = true })
 
+-- Close buffers and open Dashboard (fresh session)
+map(
+	"n",
+	"<leader>dd",
+	"<cmd>bufdo bd | Dashboard<cr>",
+	{ desc = "Delete all buffers and open Dashboard", silent = true }
+)
+
 ----------------------------------------------------------
 ----------------------- Telescope ------------------------
 ----------------------------------------------------------

@@ -60,6 +60,9 @@ return {
 				show_start = true,
 				show_end = false,
 			},
+			exclude = {
+				filetypes = { "dashboard" },
+			},
 		},
 
 		config = function(_, opts)
