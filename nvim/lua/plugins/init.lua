@@ -283,6 +283,21 @@ return {
 		end,
 	},
 
+	"matze/vim-move",
+
+	{
+		"rmagatti/auto-session",
+		lazy = false,
+		keys = {
+			{ "<leader>wr", "<cmd>AutoSession search<CR>", desc = "Session search" },
+			{ "<leader>wS", "<cmd>AutoSession save<CR>", desc = "Save session" },
+			{ "<leader>wa", "<cmd>AutoSession toggle<CR>", desc = "Toggle autosave" },
+		},
+		opts = {
+			bypass_save_filetypes = { "dashboard" },
+		},
+	},
+
 	----------------------------------------------------------
 	--------------- Editing & Text Manipulation --------------
 	----------------------------------------------------------
