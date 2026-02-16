@@ -31,6 +31,9 @@ require("neo-tree").setup({
 			hide_by_name = {
 				"node_modules",
 			},
+			hide_by_pattern = {
+				"**/.git/*",
+			},
 		},
 		follow_current_file = {
 			enabled = true, -- sync with current file
