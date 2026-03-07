@@ -71,6 +71,9 @@ dap.configurations.c = dap.configurations.cpp
 dapview.setup({
 	winbar = {
 		show = true,
+		controls = {
+			enabled = true,
+		},
 	},
 	windows = {
 		position = "below",
