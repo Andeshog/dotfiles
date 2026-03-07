@@ -610,7 +610,7 @@ return {
 	{
 		"mfussenegger/nvim-dap",
 		dependencies = {
-			"rcarriga/nvim-dap-ui",
+			"igorlfs/nvim-dap-view",
 			"theHamsta/nvim-dap-virtual-text",
 		},
 		config = function()

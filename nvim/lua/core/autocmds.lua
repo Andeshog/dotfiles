@@ -1,7 +1,7 @@
 local api = vim.api
 
 api.nvim_create_autocmd("FileType", {
-	pattern = { "dap-float", "dapui_hover", "dap-preview" },
+	pattern = { "dap-float", "dap-preview" },
 	callback = function(ev)
 		local opts = { buffer = ev.buf, silent = true, nowait = true }
 		-- Close just this window
