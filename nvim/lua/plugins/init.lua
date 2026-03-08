@@ -950,6 +950,22 @@ return {
 		end,
 	},
 
+	{
+		"Root-lee/screensaver.nvim",
+		config = function()
+			local scripts = vim.fn.stdpath("config") .. "/scripts"
+			require("screensaver").setup({
+				idle_ms = 6 * 1000, -- Start after 1 minute of inactivity
+				custom_commands = {
+					fireworks = "python3 " .. scripts .. "/screensaver_fireworks.py",
+				},
+				animations = {
+					"fireworks",
+				},
+			})
+		end,
+	},
+
 	----------------------------------------------------------
 	---------------------- ROS2 Tools ------------------------
 	----------------------------------------------------------
