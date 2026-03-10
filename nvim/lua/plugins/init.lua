@@ -954,8 +954,10 @@ return {
 		"Root-lee/screensaver.nvim",
 		config = function()
 			local scripts = vim.fn.stdpath("config") .. "/scripts"
+			local x = 3
 			require("screensaver").setup({
-				idle_ms = 60 * 1000, -- Start after 1 minute of inactivity
+				idle_ms = x * 60 * 1000, -- Start after X minutes of inactivity
+				exit_key = "j",
 				custom_commands = {
 					fireworks = "python3 " .. scripts .. "/screensaver_fireworks.py",
 				},
