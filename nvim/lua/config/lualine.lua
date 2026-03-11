@@ -121,6 +121,7 @@ function M.setup()
 				},
 			},
 			lualine_x = {
+				"progress",
 				{
 					function()
 						local bufnr = vim.api.nvim_get_current_buf()
