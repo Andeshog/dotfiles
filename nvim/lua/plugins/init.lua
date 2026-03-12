@@ -958,6 +958,7 @@ return {
 			require("screensaver").setup({
 				idle_ms = x * 60 * 1000, -- Start after X minutes of inactivity
 				exit_key = "j",
+				auto_start = false,
 				custom_commands = {
 					fireworks = "python3 " .. scripts .. "/screensaver_fireworks.py",
 				},
