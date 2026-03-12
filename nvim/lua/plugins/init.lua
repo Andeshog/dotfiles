@@ -807,7 +807,7 @@ return {
 
 	{
 		"github/copilot.vim",
-		event = "VeryLazy",
+		event = "BufReadPre",
 		config = function()
 			vim.g.copilot_no_tab_map = true
 			vim.g.copilot_assume_mapped = true
@@ -852,20 +852,107 @@ return {
 		dependencies = { "folke/snacks.nvim" },
 		config = function()
 			require("claudecode").setup()
+		end,
+	},
 
-			-- Make Claude Code terminal respect catppuccin dim_inactive
-			vim.api.nvim_create_autocmd("TermOpen", {
-				pattern = "*",
-				callback = function()
-					-- Check if this is a Claude Code terminal
-					local bufname = vim.api.nvim_buf_get_name(0)
-					if bufname:match("claude") then
-						-- Clear any winhighlight overrides so NormalNC can work
-						vim.wo.winhighlight = ""
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		opts = {},
+	},
+
+	{
+		"folke/sidekick.nvim",
+		event = "VeryLazy",
+		dependencies = { "folke/snacks.nvim" },
+		opts = {
+			cli = {
+				win = {
+					-- Clear winhighlight so catppuccin dim_inactive works correctly.
+					-- Default is "Normal:SidekickChat,NormalNC:SidekickChat" which
+					-- maps both states to the same group, preventing dimming.
+					wo = { winhighlight = "" },
+				},
+				tools = {
+					copilot = {
+						cmd = { "copilot", "--alt-screen" },
+					},
+				},
+			},
+		},
+		keys = {
+			{
+				"<tab>",
+				function()
+					if not require("sidekick").nes_jump_or_apply() then
+						return "<Tab>"
 					end
 				end,
-			})
-		end,
+				expr = true,
+				desc = "Goto/Apply Next Edit Suggestion",
+			},
+			{
+				"<c-.>",
+				function()
+					require("sidekick.cli").toggle()
+				end,
+				desc = "Sidekick Toggle",
+				mode = { "n", "t", "i", "x" },
+			},
+			{
+				"<leader>aa",
+				function()
+					require("sidekick.cli").toggle()
+				end,
+				desc = "Sidekick Toggle CLI",
+			},
+			{
+				"<leader>as",
+				function()
+					require("sidekick.cli").select()
+				end,
+				desc = "Sidekick Select CLI",
+			},
+			{
+				"<leader>at",
+				function()
+					require("sidekick.cli").send({ msg = "{this}" })
+				end,
+				mode = { "x", "n" },
+				desc = "Sidekick Send This",
+			},
+			{
+				"<leader>af",
+				function()
+					require("sidekick.cli").send({ msg = "{file}" })
+				end,
+				desc = "Sidekick Send File",
+			},
+			{
+				"<leader>av",
+				function()
+					require("sidekick.cli").send({ msg = "{selection}" })
+				end,
+				mode = { "x" },
+				desc = "Sidekick Send Visual Selection",
+			},
+			{
+				"<leader>ap",
+				function()
+					require("sidekick.cli").prompt()
+				end,
+				mode = { "n", "x" },
+				desc = "Sidekick Select Prompt",
+			},
+			{
+				"<leader>aC",
+				function()
+					require("sidekick.cli").toggle({ name = "copilot", focus = true })
+				end,
+				desc = "Sidekick Toggle Copilot",
+			},
+		},
 	},
 
 	----------------------------------------------------------

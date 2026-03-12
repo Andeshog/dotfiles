@@ -106,3 +106,10 @@ vim.lsp.config("bashls", {
 })
 
 vim.lsp.enable("bashls")
+vim.lsp.enable("pyright")
+
+vim.lsp.config("copilot", {
+	filetypes = { "*" },
+	root_markers = { ".git", ".bashrc", ".zshrc", ".profile" },
+})
+vim.lsp.enable("copilot")

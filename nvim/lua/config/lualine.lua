@@ -41,8 +41,8 @@ local function toggle_lspinfo() -- Look for an existing LspInfo window
 	vim.cmd("LspInfo")
 end
 
-local function minimap_status()
-	return ""
+local function copilot_icon()
+	return ""
 end
 
 function M.setup()
@@ -174,33 +174,26 @@ function M.setup()
 			},
 			lualine_z = {
 				{
-					minimap_status,
+					copilot_icon,
 					color = function()
 						local base = vim.api.nvim_get_hl(0, { name = "lualine_z_normal", link = false })
-
-						local ok, api = pcall(require, "neominimap.api")
-						local enabled = ok and api.enabled()
-
-						-- green when minimap enabled, grey-ish when disabled
-						local bg = enabled and "#a6da95" or "#5b6078"
-
-						return {
-							fg = base.fg,
-							bg = bg,
-							gui = "bold",
-						}
-					end,
-					on_click = function(clicks, button, _)
-						if button ~= "l" or clicks ~= 1 then
-							return
-						end
-
-						local ok, api = pcall(require, "neominimap.api")
+						local ok, status = pcall(require, "sidekick.status")
 						if not ok then
-							return
+							return { fg = base.fg, bg = "#5b6078", gui = "bold" }
 						end
-
-						api.toggle() -- global toggle
+						local s = status.get()
+						if not s then
+							return { fg = base.fg, bg = "#5b6078", gui = "bold" }
+						end
+						if s.kind == "Error" then
+							return { fg = base.fg, bg = "#ed8796", gui = "bold" }
+						elseif s.busy or s.kind == "Warning" then
+							return { fg = base.fg, bg = "#eed49f", gui = "bold" }
+						elseif s.kind == "Inactive" then
+							return { fg = base.fg, bg = "#5b6078", gui = "bold" }
+						else
+							return { fg = base.fg, bg = "#a6da95", gui = "bold" }
+						end
 					end,
 				},
 			},
