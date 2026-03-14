@@ -85,6 +85,28 @@ api.nvim_create_autocmd("User", {
 	end,
 })
 
+api.nvim_create_autocmd("User", {
+	pattern = "visual_multi_start",
+	callback = function()
+		local ok, nes = pcall(require, "sidekick.nes")
+		if ok then
+			nes.enable(false)
+		end
+	end,
+	desc = "Disable sidekick NES during visual-multi",
+})
+
+api.nvim_create_autocmd("User", {
+	pattern = "visual_multi_exit",
+	callback = function()
+		local ok, nes = pcall(require, "sidekick.nes")
+		if ok then
+			nes.enable(true)
+		end
+	end,
+	desc = "Re-enable sidekick NES after visual-multi",
+})
+
 local ignore_filetypes = { "neo-tree", "Trouble", "help" }
 local ignore_buftypes = { "nofile", "prompt", "popup", "quickfix", "terminal" }
 

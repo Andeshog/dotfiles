@@ -613,11 +613,41 @@ return {
 			},
 		},
 		keys = {
-			{ "<leader>ng", function() require("neogen").generate() end, desc = "Generate doc comment" },
-			{ "<leader>nf", function() require("neogen").generate({ type = "func" }) end, desc = "Generate function doc" },
-			{ "<leader>nc", function() require("neogen").generate({ type = "class" }) end, desc = "Generate class doc" },
-			{ "<leader>nt", function() require("neogen").generate({ type = "type" }) end, desc = "Generate type doc" },
-			{ "<leader>nF", function() require("neogen").generate({ type = "file" }) end, desc = "Generate file doc" },
+			{
+				"<leader>ng",
+				function()
+					require("neogen").generate()
+				end,
+				desc = "Generate doc comment",
+			},
+			{
+				"<leader>nf",
+				function()
+					require("neogen").generate({ type = "func" })
+				end,
+				desc = "Generate function doc",
+			},
+			{
+				"<leader>nc",
+				function()
+					require("neogen").generate({ type = "class" })
+				end,
+				desc = "Generate class doc",
+			},
+			{
+				"<leader>nt",
+				function()
+					require("neogen").generate({ type = "type" })
+				end,
+				desc = "Generate type doc",
+			},
+			{
+				"<leader>nF",
+				function()
+					require("neogen").generate({ type = "file" })
+				end,
+				desc = "Generate file doc",
+			},
 		},
 	},
 
@@ -785,6 +815,10 @@ return {
 			},
 
 			format_on_save = function(bufnr)
+				-- Skip formatting while vim-visual-multi cursors are active
+				if vim.b.visual_multi then
+					return
+				end
 				local ft = vim.bo[bufnr].filetype
 				if ft == "c" or ft == "cpp" or ft == "lua" or ft == "go" or ft == "sh" then
 					return { timeout_ms = 2000, lsp_fallback = (ft == "go") }
@@ -1010,6 +1044,53 @@ return {
 		opts = {
 			render_modes = true,
 			sign = { enabled = false },
+		},
+	},
+
+	----------------------------------------------------------
+	----------------------- Notes ----------------------------
+	----------------------------------------------------------
+
+	{
+		"epwalsh/obsidian.nvim",
+		version = "*",
+		lazy = true,
+		ft = "markdown",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		opts = {
+			workspaces = {
+				{
+					name = "personal",
+					path = "~/obsidian/personal",
+				},
+				{
+					name = "work",
+					path = "~/obsidian/work",
+				},
+			},
+			completion = {
+				nvim_cmp = true,
+				min_chars = 2,
+			},
+			new_notes_location = "current_dir",
+			note_id_func = function(title)
+				if title ~= nil then
+					return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+				end
+				return tostring(os.time())
+			end,
+		},
+		keys = {
+			{ "<leader>On", "<cmd>ObsidianNew<cr>", desc = "Obsidian new note" },
+			{ "<leader>Oo", "<cmd>ObsidianOpen<cr>", desc = "Obsidian open in app" },
+			{ "<leader>Os", "<cmd>ObsidianSearch<cr>", desc = "Obsidian search" },
+			{ "<leader>Oq", "<cmd>ObsidianQuickSwitch<cr>", desc = "Obsidian quick switch" },
+			{ "<leader>Ol", "<cmd>ObsidianLinks<cr>", desc = "Obsidian links" },
+			{ "<leader>Ob", "<cmd>ObsidianBacklinks<cr>", desc = "Obsidian backlinks" },
+			{ "<leader>Ot", "<cmd>ObsidianToday<cr>", desc = "Obsidian daily note" },
+			{ "<leader>Ow", "<cmd>ObsidianWorkspace<cr>", desc = "Obsidian switch workspace" },
 		},
 	},
 
