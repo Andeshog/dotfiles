@@ -556,6 +556,7 @@ return {
 				"hrsh7th/cmp-nvim-lua",
 				"hrsh7th/cmp-nvim-lsp",
 				"hrsh7th/cmp-buffer",
+				"hrsh7th/cmp-nvim-lsp-signature-help",
 				--"https://codeberg.org/FelipeLema/cmp-async-path.git",
 			},
 		},
@@ -590,6 +591,33 @@ return {
 					-- if you want it tighter / further, tweak this number
 				},
 			},
+		},
+	},
+
+	{
+		"danymat/neogen",
+		dependencies = "nvim-treesitter/nvim-treesitter",
+		opts = {
+			snippet_engine = "luasnip",
+			languages = {
+				cpp = {
+					template = {
+						annotation_convention = "doxygen",
+					},
+				},
+				c = {
+					template = {
+						annotation_convention = "doxygen",
+					},
+				},
+			},
+		},
+		keys = {
+			{ "<leader>ng", function() require("neogen").generate() end, desc = "Generate doc comment" },
+			{ "<leader>nf", function() require("neogen").generate({ type = "func" }) end, desc = "Generate function doc" },
+			{ "<leader>nc", function() require("neogen").generate({ type = "class" }) end, desc = "Generate class doc" },
+			{ "<leader>nt", function() require("neogen").generate({ type = "type" }) end, desc = "Generate type doc" },
+			{ "<leader>nF", function() require("neogen").generate({ type = "file" }) end, desc = "Generate file doc" },
 		},
 	},
 

@@ -16,6 +16,7 @@ ts.setup({
 		"markdown_inline",
 		"diff",
 		"comment",
+		"doxygen",
 		"regex",
 	},
 	highlight = { enable = true },
