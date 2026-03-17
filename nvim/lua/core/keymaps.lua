@@ -274,6 +274,14 @@ map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnost
 map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer Diagnostics (Trouble)" })
 map("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List (Trouble)" })
 map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List (Trouble)" })
+map("n", "<leader>xv", function()
+	local current = vim.diagnostic.config().virtual_text
+	vim.diagnostic.config({ virtual_text = not current and {
+		prefix = "●",
+		source = "if_many",
+	} or false })
+	vim.notify("Diagnostic virtual text: " .. (current and "OFF" or "ON"))
+end, { desc = "Toggle diagnostic virtual text" })
 
 ----------------------------------------------------------
 ------------------------- LSP ----------------------------
