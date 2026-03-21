@@ -287,6 +287,7 @@ end, { desc = "Toggle diagnostic virtual text" })
 ------------------------- LSP ----------------------------
 ----------------------------------------------------------
 map("n", "<leader>c", "<nop>", { desc = "Code/LSP" })
+map("n", "<leader>cp", "<cmd>Fluoride<cr>", { desc = "Fluoride" })
 
 map("n", "<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "Symbols (Trouble)" })
 map(
