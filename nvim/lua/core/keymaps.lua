@@ -161,6 +161,19 @@ map("t", "<M-b>", "<C-\\><C-N><C-b>i", { desc = "Terminal: scroll up full page" 
 map("t", "<M-f>", "<C-\\><C-N><C-f>i", { desc = "Terminal: scroll down full page" })
 map("t", "<M-q>", "<C-\\><C-N>:q<CR>", { desc = "Terminal: quit window" })
 
+-- Increase/decrease terminal height from terminal mode
+map("t", "<M-Up>", function()
+	local win = vim.api.nvim_get_current_win()
+	local height = vim.api.nvim_win_get_height(win)
+	vim.api.nvim_win_set_height(win, height + 5)
+end, { desc = "Terminal: increase height" })
+
+map("t", "<M-Down>", function()
+	local win = vim.api.nvim_get_current_win()
+	local height = vim.api.nvim_win_get_height(win)
+	vim.api.nvim_win_set_height(win, height - 5)
+end, { desc = "Terminal: decrease height" })
+
 -- Auto-enter insert mode when entering terminal windows
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "term://*",

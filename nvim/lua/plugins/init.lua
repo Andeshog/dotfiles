@@ -385,6 +385,16 @@ return {
 		end,
 	},
 
+	{
+		"ruicsh/termite.nvim",
+		opts = {
+			height = 0.25,
+			position = "bottom",
+			border = "double",
+			winbar = false,
+		},
+	},
+
 	----------------------------------------------------------
 	--------------- Editing & Text Manipulation --------------
 	----------------------------------------------------------
