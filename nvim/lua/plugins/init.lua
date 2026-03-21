@@ -321,6 +321,14 @@ return {
 	"matze/vim-move",
 
 	{
+		"https://codeberg.org/knight9114/arc.nvim",
+		opts = {
+			hl_backdrop = "Ignore",
+			hl_label = "Search",
+		},
+	},
+
+	{
 		"rmagatti/auto-session",
 		lazy = false,
 		keys = {
