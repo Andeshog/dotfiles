@@ -118,6 +118,16 @@ return {
 	},
 
 	{
+		"RRethy/vim-illuminate",
+		config = function()
+			require("illuminate").configure({
+				delay = 100,
+				providers = { "treesitter", "regex" },
+			})
+		end,
+	},
+
+	{
 		"Isrothy/neominimap.nvim",
 		version = "v3.*", -- follow v3 releases
 		lazy = false, -- recommended by the plugin author
