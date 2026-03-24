@@ -1176,8 +1176,8 @@ return {
 	},
 
 	{
-		"scinac/vim-norm-trainer.nvim",
-		lazy = false,
+		"sphamba/smear-cursor.nvim",
+		opts = {},
 	},
 
 	{
