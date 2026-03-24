@@ -7,6 +7,11 @@ config.default_domain = "WSL:Ubuntu-22.04"
 config.font = wezterm.font("JetBrainsMonoNL Nerd Font Mono")
 config.font_size = 11
 config.color_scheme = "Dark+"
+config.enable_tab_bar = true
+config.use_fancy_tab_bar = true
+config.default_cursor_style = "BlinkingBar"
+config.cursor_blink_rate = 400
+config.cursor_thickness = "1pt"
 
 local act = wezterm.action
 
@@ -16,6 +21,8 @@ config.window_padding = {
 	top = 0,
 	bottom = 0,
 }
+
+config.window_decorations = "RESIZE"
 
 config.keys = {
 	{
@@ -42,6 +49,7 @@ config.keys = {
 	{ key = "F9", mods = "CTRL|SHIFT", action = act.ShowTabNavigator },
 	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
 	{ key = "C", mods = "CTRL", action = act.CopyTo("ClipboardAndPrimarySelection") },
+	{ key = "q", mods = "CTRL|SHIFT", action = wezterm.action.QuitApplication },
 }
 
 return config
