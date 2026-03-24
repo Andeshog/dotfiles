@@ -39,13 +39,9 @@ config.keys = {
 
 	{ key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
 	{ key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
-	{
-		key = "v",
-		mods = "CTRL",
-		action = act({
-			PasteFrom = "Clipboard",
-		}),
-	},
+	{ key = "F9", mods = "CTRL|SHIFT", action = act.ShowTabNavigator },
+	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
+	{ key = "C", mods = "CTRL", action = act.CopyTo("ClipboardAndPrimarySelection") },
 }
 
 return config
