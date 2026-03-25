@@ -1156,13 +1156,6 @@ return {
 	----------------------------------------------------------
 
 	{
-		"esensar/nvim-dev-container",
-		config = function()
-			require("config.devcontainer")
-		end,
-	},
-
-	{
 		"meatballs/notebook.nvim",
 		config = function()
 			require("notebook").setup()
