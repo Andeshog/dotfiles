@@ -1175,21 +1175,21 @@ return {
 		opts = {},
 	},
 
-	{
-		"sphamba/smear-cursor.nvim",
-		opts = {
-			smear_between_buffers = true,
-			smear_between_neighbor_lines = true,
-
-			stiffness = 0.8, -- snappiness (0-1)
-			trailing_stiffness = 0.5, -- trail follows (0-1)
-			distance_stop_animating = 0.5, -- stop threshold
-
-			legacy_computing_symbols_support = false,
-
-			transparent_bg_fallback_color = "#303030",
-		},
-	},
+	-- {
+	-- 	"sphamba/smear-cursor.nvim",
+	-- 	opts = {
+	-- 		smear_between_buffers = true,
+	-- 		smear_between_neighbor_lines = true,
+	--
+	-- 		stiffness = 0.8, -- snappiness (0-1)
+	-- 		trailing_stiffness = 0.5, -- trail follows (0-1)
+	-- 		distance_stop_animating = 0.5, -- stop threshold
+	--
+	-- 		legacy_computing_symbols_support = false,
+	--
+	-- 		transparent_bg_fallback_color = "#303030",
+	-- 	},
+	-- },
 
 	{
 		"folke/noice.nvim",
