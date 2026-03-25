@@ -27,11 +27,6 @@ config.font_rules = {
 		font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold", italic = true }),
 	},
 	{
-		intensity = "Normal",
-		italic = true,
-		font = wezterm.font("JetBrainsMono Nerd Font", { italic = true }),
-	},
-	{
 		intensity = "Half",
 		italic = true,
 		font = wezterm.font("JetBrainsMono Nerd Font", { italic = true }),
@@ -80,6 +75,19 @@ config.keys = {
 	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
 	{ key = "C", mods = "CTRL", action = act.CopyTo("ClipboardAndPrimarySelection") },
 	{ key = "q", mods = "CTRL|SHIFT", action = wezterm.action.QuitApplication },
+	{
+		key = "b",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action_callback(function(window)
+			local overrides = window:get_config_overrides() or {}
+			if overrides.enable_tab_bar == false then
+				overrides.enable_tab_bar = true
+			else
+				overrides.enable_tab_bar = false
+			end
+			window:set_config_overrides(overrides)
+		end),
+	},
 }
 
 return config
