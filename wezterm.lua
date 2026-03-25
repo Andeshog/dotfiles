@@ -38,6 +38,10 @@ config.font_rules = {
 	},
 }
 
+config.max_fps = 120
+config.front_end = "WebGpu"
+config.enable_wayland = false
+
 local act = wezterm.action
 
 config.window_padding = {
