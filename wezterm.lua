@@ -4,14 +4,44 @@ local config = wezterm.config_builder()
 
 config.default_domain = "WSL:Ubuntu-22.04"
 
-config.font = wezterm.font("JetBrainsMonoNL Nerd Font Mono")
-config.font_size = 11
+config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font_size = 9
 config.color_scheme = "Dark+"
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = true
 config.default_cursor_style = "BlinkingBar"
 config.cursor_blink_rate = 400
 config.cursor_thickness = "1pt"
+-- config.cell_width = 0.8
+-- config.line_height = 1.2
+
+config.font_rules = {
+	{
+		intensity = "Bold",
+		italic = false,
+		font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold" }),
+	},
+	{
+		intensity = "Bold",
+		italic = true,
+		font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold", italic = true }),
+	},
+	{
+		intensity = "Normal",
+		italic = true,
+		font = wezterm.font("JetBrainsMono Nerd Font", { italic = true }),
+	},
+	{
+		intensity = "Half",
+		italic = true,
+		font = wezterm.font("JetBrainsMono Nerd Font", { italic = true }),
+	},
+	{
+		intensity = "Half",
+		italic = false,
+		font = wezterm.font("JetBrainsMono Nerd Font"),
+	},
+}
 
 local act = wezterm.action
 
