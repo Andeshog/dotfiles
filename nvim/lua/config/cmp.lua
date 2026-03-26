@@ -49,7 +49,6 @@ local options = {
 		{ name = "luasnip" },
 		{ name = "buffer" },
 		{ name = "nvim_lua" },
-		{ name = "codecompanion" },
 		-- remove this if you don't have the async_path source plugin installed
 		{ name = "async_path" },
 	},
