@@ -13,15 +13,6 @@ return {
 		end,
 	},
 
-	{
-		"folke/tokyonight.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			require("colorschemes.tokyonight").setup()
-		end,
-	},
-
 	----------------------------------------------------------
 	--------------------- Core Dependencies ------------------
 	----------------------------------------------------------
@@ -114,110 +105,6 @@ return {
 				end,
 				once = true,
 			})
-		end,
-	},
-
-	{
-		"RRethy/vim-illuminate",
-		config = function()
-			require("illuminate").configure({
-				delay = 100,
-				providers = { "treesitter", "regex" },
-			})
-		end,
-	},
-
-	{
-		"Isrothy/neominimap.nvim",
-		version = "v3.*", -- follow v3 releases
-		lazy = false, -- recommended by the plugin author
-		init = function()
-			-- Recommended when using layout = "float"
-			vim.opt.wrap = false
-			vim.opt.sidescrolloff = 36
-
-			---@type Neominimap.UserConfig
-			vim.g.neominimap = {
-				-- Show minimap by default
-				auto_enable = false,
-
-				-- VSCode-like behavior: floating window on the right of each window
-				layout = "float",
-
-				-- Don't show minimap for these filetypes
-				exclude_filetypes = {
-					"help",
-					"neo-tree",
-					"NvimTree",
-					"TelescopePrompt",
-					"Trouble",
-					"gitcommit",
-				},
-
-				-- Don't show minimap for these buftypes
-				exclude_buftypes = {
-					"nofile",
-					"nowrite",
-					"quickfix",
-					"terminal",
-					"prompt",
-				},
-
-				-- Floating minimap settings
-				float = {
-					minimap_width = 16, -- a bit slimmer than default 20
-					max_minimap_height = nil, -- no vertical limit
-					margin = {
-						right = 0, -- stick to the right edge
-						top = 0,
-						bottom = 0,
-					},
-					z_index = 1,
-					window_border = "single",
-					persist = true,
-				},
-
-				-- show whole file (current line at its % in the file)
-				current_line_position = "percent",
-
-				-- Compression (how much code is squashed into the minimap)
-				x_multiplier = 4,
-				y_multiplier = 1,
-
-				sync_cursor = true,
-				click = {
-					enabled = true,
-					auto_switch_focus = false,
-				},
-
-				-- Enable diagnostics / git / search / treesitter, like VSCode’s minimap
-				diagnostic = {
-					enabled = true,
-					mode = "icon",
-				},
-				git = {
-					enabled = true,
-					mode = "sign",
-					priority = 6,
-					icon = {
-						add = "+",
-						change = "~",
-						delete = "-",
-					},
-				},
-				search = {
-					enabled = true,
-					mode = "line",
-				},
-				treesitter = {
-					enabled = true,
-					priority = 200,
-				},
-
-				fold = {
-					enabled = true,
-				},
-			}
 		end,
 	},
 
@@ -476,6 +363,7 @@ return {
 		dependencies = {
 			"sindrets/diffview.nvim",
 		},
+		event = "BufEnter",
 		config = function()
 			require("gitlineage").setup()
 		end,
@@ -949,37 +837,11 @@ return {
 	},
 
 	{
-		"olimorris/codecompanion.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-			-- optional but useful markdown rendering in chat
-			{ "MeanderingProgrammer/render-markdown.nvim" },
-		},
-		config = function()
-			require("codecompanion").setup({
-				strategies = {
-					chat = { adapter = { name = "copilot", model = "claude-sonnet-4.5" } },
-					inline = { adapter = { name = "copilot", model = "claude-sonnet-4.5" } },
-					cmd = { adapter = { name = "copilot", model = "claude-sonnet-4.5" } },
-				},
-			})
-		end,
-	},
-
-	{
 		"coder/claudecode.nvim",
 		dependencies = { "folke/snacks.nvim" },
 		config = function()
 			require("claudecode").setup()
 		end,
-	},
-
-	{
-		"folke/snacks.nvim",
-		priority = 1000,
-		lazy = false,
-		opts = {},
 	},
 
 	{
@@ -1080,75 +942,11 @@ return {
 	----------------------------------------------------------
 
 	{
-		"iamcco/markdown-preview.nvim",
-		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-		ft = { "markdown" },
-		build = function()
-			vim.fn["mkdp#util#install"]()
-		end,
-	},
-
-	{
-		"ellisonleao/glow.nvim",
-		branch = "main",
-		config = function()
-			require("config.glow")
-		end,
-	},
-
-	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		ft = { "markdown", "codecompanion" },
 		opts = {
 			render_modes = true,
 			sign = { enabled = false },
-		},
-	},
-
-	----------------------------------------------------------
-	----------------------- Notes ----------------------------
-	----------------------------------------------------------
-
-	{
-		"epwalsh/obsidian.nvim",
-		version = "*",
-		lazy = true,
-		ft = "markdown",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		opts = {
-			workspaces = {
-				{
-					name = "personal",
-					path = "~/obsidian/personal",
-				},
-				{
-					name = "work",
-					path = "~/obsidian/work",
-				},
-			},
-			completion = {
-				nvim_cmp = true,
-				min_chars = 2,
-			},
-			new_notes_location = "current_dir",
-			note_id_func = function(title)
-				if title ~= nil then
-					return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
-				end
-				return tostring(os.time())
-			end,
-		},
-		keys = {
-			{ "<leader>On", "<cmd>ObsidianNew<cr>", desc = "Obsidian new note" },
-			{ "<leader>Oo", "<cmd>ObsidianOpen<cr>", desc = "Obsidian open in app" },
-			{ "<leader>Os", "<cmd>ObsidianSearch<cr>", desc = "Obsidian search" },
-			{ "<leader>Oq", "<cmd>ObsidianQuickSwitch<cr>", desc = "Obsidian quick switch" },
-			{ "<leader>Ol", "<cmd>ObsidianLinks<cr>", desc = "Obsidian links" },
-			{ "<leader>Ob", "<cmd>ObsidianBacklinks<cr>", desc = "Obsidian backlinks" },
-			{ "<leader>Ot", "<cmd>ObsidianToday<cr>", desc = "Obsidian daily note" },
-			{ "<leader>Ow", "<cmd>ObsidianWorkspace<cr>", desc = "Obsidian switch workspace" },
 		},
 	},
 
@@ -1162,28 +960,6 @@ return {
 			require("notebook").setup()
 		end,
 	},
-
-	{
-		"folke/persistence.nvim",
-		event = "BufReadPre",
-		opts = {},
-	},
-
-	-- {
-	-- 	"sphamba/smear-cursor.nvim",
-	-- 	opts = {
-	-- 		smear_between_buffers = true,
-	-- 		smear_between_neighbor_lines = true,
-	--
-	-- 		stiffness = 0.8, -- snappiness (0-1)
-	-- 		trailing_stiffness = 0.5, -- trail follows (0-1)
-	-- 		distance_stop_animating = 0.5, -- stop threshold
-	--
-	-- 		legacy_computing_symbols_support = false,
-	--
-	-- 		transparent_bg_fallback_color = "#303030",
-	-- 	},
-	-- },
 
 	{
 		"folke/noice.nvim",
@@ -1210,25 +986,6 @@ return {
 					long_message_to_split = true, -- long messages will be sent to a split
 					inc_rename = false, -- enables an input dialog for inc-rename.nvim
 					lsp_doc_border = false, -- add a border to hover docs and signature help
-				},
-			})
-		end,
-	},
-
-	{
-		"Root-lee/screensaver.nvim",
-		config = function()
-			local scripts = vim.fn.stdpath("config") .. "/scripts"
-			local x = 3
-			require("screensaver").setup({
-				idle_ms = x * 60 * 1000, -- Start after X minutes of inactivity
-				exit_key = "j",
-				auto_start = false,
-				custom_commands = {
-					fireworks = "python3 " .. scripts .. "/screensaver_fireworks.py",
-				},
-				animations = {
-					"fireworks",
 				},
 			})
 		end,

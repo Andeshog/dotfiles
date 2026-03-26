@@ -138,15 +138,12 @@ map("n", "<leader>gp", function()
 end, { desc = "Preview git hunk inline" })
 map("n", "<leader>gb", "<C-o>", { desc = "Jump back" })
 map("n", "<leader>gf", "<C-i>", { desc = "Jump forward" })
+map("n", "<leader>gl", "<cmd>GitLineage<cr>", { desc = "Git lineage" })
 
 ----------------------------------------------------------
 ----------------------- Terminal -------------------------
 ----------------------------------------------------------
-map("n", "<leader>t", "<nop>", { desc = "Terminal/Test" })
 
-map("n", "<leader>t", function()
-	vim.cmd("botright 15split | terminal")
-end, { desc = "Open terminal in bottom split" })
 -- Terminal mode navigation
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "Terminal escape" })
 map("t", "<C-h>", "<C-\\><C-N><C-w>h", { desc = "Terminal: go to left window" })
@@ -185,7 +182,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 ----------------------------------------------------------
 ------------------------ Testing -------------------------
 ----------------------------------------------------------
--- (shares <leader>t with Terminal)
+map("n", "<leader>t", "<nop>", { desc = "Test" })
 
 map("n", "<leader>tc", "<cmd>ConfigureGtest<cr>", { desc = "Gtest: configure marked tests" })
 map("n", "<leader>td", "<cmd>TodoTelescope<CR>", { desc = "TODO comments" })
@@ -364,22 +361,6 @@ map(
 	'<cmd>lua require("spectre").open_file_search({select_word=true})<CR>',
 	{ desc = "Search on current file" }
 )
-
-----------------------------------------------------------
------------------------ Markdown -------------------------
-----------------------------------------------------------
-map("n", "<leader>m", "<nop>", { desc = "Markdown/Minimap" })
-
-map(
-	"n",
-	"<leader>mp",
-	":rightbelow vsplit | terminal glow %<CR>",
-	{ desc = "Markdown preview with glow", silent = true }
-)
-
--- Minimap
-map("n", "<leader>mm", "<cmd>Neominimap Toggle<cr>", { desc = "Toggle minimap (global)" })
-map("n", "<leader>mf", "<cmd>Neominimap Focus<cr>", { desc = "Focus minimap" })
 
 ----------------------------------------------------------
 ----------------------- AI/Copilot -----------------------
