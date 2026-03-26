@@ -48,7 +48,7 @@ end
 function M.setup()
 	require("lualine").setup({
 		options = {
-			theme = "catppuccin",
+			theme = "auto",
 			globalstatus = true,
 			icons_enabled = true,
 			component_separators = "",
@@ -179,20 +179,20 @@ function M.setup()
 						local base = vim.api.nvim_get_hl(0, { name = "lualine_z_normal", link = false })
 						local ok, status = pcall(require, "sidekick.status")
 						if not ok then
-							return { fg = base.fg, bg = "#5b6078", gui = "bold" }
+							return { fg = base.fg, bg = "#5b6078" }
 						end
 						local s = status.get()
 						if not s then
-							return { fg = base.fg, bg = "#5b6078", gui = "bold" }
+							return { fg = base.fg, bg = "#5b6078" }
 						end
 						if s.kind == "Error" then
-							return { fg = base.fg, bg = "#ed8796", gui = "bold" }
+							return { fg = base.fg, bg = "#ed8796" }
 						elseif s.busy or s.kind == "Warning" then
-							return { fg = base.fg, bg = "#eed49f", gui = "bold" }
+							return { fg = base.fg, bg = "#eed49f" }
 						elseif s.kind == "Inactive" then
-							return { fg = base.fg, bg = "#5b6078", gui = "bold" }
+							return { fg = base.fg, bg = "#5b6078" }
 						else
-							return { fg = base.fg, bg = "#a6da95", gui = "bold" }
+							return { fg = base.fg, bg = "#a6da95" }
 						end
 					end,
 				},
