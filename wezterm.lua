@@ -27,6 +27,11 @@ config.font_rules = {
 		font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold", italic = true }),
 	},
 	{
+		intensity = "Normal",
+		italic = true,
+		font = wezterm.font("JetBrainsMono Nerd Font", { italic = true }),
+	},
+	{
 		intensity = "Half",
 		italic = true,
 		font = wezterm.font("JetBrainsMono Nerd Font", { italic = true }),
