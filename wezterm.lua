@@ -44,7 +44,7 @@ config.font_rules = {
 }
 
 config.max_fps = 120
-config.front_end = "WebGpu"
+config.front_end = "OpenGL"
 config.enable_wayland = false
 
 local act = wezterm.action
