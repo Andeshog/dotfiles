@@ -22,21 +22,27 @@ require("statuscol").setup({
 	segments = {
 		-- Git signs
 		{
-			sign = { namespace = { "gitsigns" }, maxwidth = 1, colwidth = 1 },
+			sign = { namespace = { "gitsigns" }, maxwidth = 1, colwidth = 1, fillcharhl = "LineNr" },
 			click = "v:lua.ScSa",
 		},
 		-- Line numbers
 		{
 			text = { centered_lnum },
+			hl = "LineNr",
 			click = "v:lua.ScLa",
 		},
 		-- Most severe diagnostic sign for the line
 		{
-			sign = { namespace = { "diagnostic%.signs" }, maxwidth = 1, colwidth = 1, auto = " " },
+			sign = { namespace = { "diagnostic%.signs" }, maxwidth = 1, colwidth = 1, auto = " ", fillcharhl = "LineNr" },
 			click = "v:lua.ScSa",
 		},
 		{
 			text = { " " },
+			hl = "LineNr",
+		},
+		{
+			text = { "▏" },
+			hl = "WinSeparator",
 		},
 	},
 })
