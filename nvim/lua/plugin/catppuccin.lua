@@ -6,6 +6,20 @@ require("catppuccin").setup({
 		shade = "dark",
 		percentage = 0.15,
 	},
+	lsp_styles = {
+		virtual_text = {
+			errors = { "italic" },
+			hints = { "italic" },
+			warnings = { "italic" },
+			information = { "italic" },
+		},
+		underlines = {
+			errors = { "undercurl" },
+			hints = { "undercurl" },
+			warnings = { "undercurl" },
+			information = { "undercurl" },
+		},
+	},
 	integrations = {
 		gitsigns = true,
 		neotree = true,
@@ -20,21 +34,6 @@ require("catppuccin").setup({
 			colored_indent_levels = false,
 		},
 		markdown = true,
-		native_lsp = {
-			enabled = true,
-			virtual_text = {
-				errors = { "italic" },
-				hints = { "italic" },
-				warnings = { "italic" },
-				information = { "italic" },
-			},
-			underlines = {
-				errors = { "underline" },
-				hints = { "underline" },
-				warnings = { "underline" },
-				information = { "underline" },
-			},
-		},
 		semantic_tokens = true,
 		treesitter_context = true,
 		lsp_trouble = true,
@@ -118,6 +117,11 @@ require("catppuccin").setup({
 			-- ===== SPECIAL =====
 			["@constructor.cpp"] = { fg = colors.sapphire, style = { "bold" } },
 			["@label.cpp"] = { fg = colors.sapphire },
+
+			DiagnosticUnderlineError = { undercurl = true, sp = colors.red },
+			DiagnosticUnderlineWarn = { undercurl = true, sp = colors.yellow },
+			DiagnosticUnderlineInfo = { undercurl = true, sp = colors.sky },
+			DiagnosticUnderlineHint = { undercurl = true, sp = colors.teal },
 
 			-- ===== LSP MODIFIERS =====
 			["@lsp.mod.readonly.cpp"] = { style = { "italic" } },

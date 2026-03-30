@@ -11,6 +11,8 @@ opt.shiftwidth = 4
 opt.tabstop = 4
 opt.smartindent = true
 opt.laststatus = 3
+opt.ignorecase = true
+opt.termguicolors = true
 
 -- Use system clipboard for yanks etc
 opt.clipboard = "unnamedplus"
