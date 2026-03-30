@@ -46,6 +46,7 @@ config.font_rules = {
 config.max_fps = 120
 config.front_end = "OpenGL"
 config.enable_wayland = false
+config.send_composed_key_when_left_alt_is_pressed = false
 
 local act = wezterm.action
 
