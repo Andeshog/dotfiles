@@ -1,6 +1,6 @@
 return {
 	cmd = {
-		"clangd",
+		"clangd-20",
 		"--background-index",
 		"--clang-tidy",
 		"--header-insertion=iwyu",
@@ -9,7 +9,7 @@ return {
 		"--fallback-style=google",
 	},
 	filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
-	root_markers = { "compile_commands.json", "compile_flags.txt", ".clangd", ".git" },
+	root_markers = { "compile_commands.json", ".clangd", ".git" },
 
 	-- Enable native completion with autotrigger
 	on_attach = function(client, bufnr)
@@ -23,5 +23,4 @@ return {
 			vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
 		end
 	end,
-	capabilities = vim.lsp.protocol.make_client_capabilities(),
 }
