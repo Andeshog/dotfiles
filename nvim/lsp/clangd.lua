@@ -23,4 +23,5 @@ return {
 			vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
 		end
 	end,
+	capabilities = vim.lsp.protocol.make_client_capabilities(),
 }

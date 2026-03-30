@@ -7,9 +7,20 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-vim.api.nvim_create_user_command("LspRestart", function()
-	for _, client in ipairs(vim.lsp.get_clients()) do
-		client:stop()
-	end
-	vim.cmd("edit")
-end, { desc = "Restart all LSP clients" })
+vim.api.nvim_create_autocmd("FileType", {
+	callback = function()
+		vim.opt_local.formatoptions:remove({ "r", "o" })
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
+	callback = function()
+		vim.wo.cursorline = true
+	end,
+})
+
+vim.api.nvim_create_autocmd("WinLeave", {
+	callback = function()
+		vim.wo.cursorline = false
+	end,
+})
