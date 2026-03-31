@@ -1,3 +1,5 @@
+local diagnostics = require("diagnostics")
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("lsp-keymaps", {}),
 	callback = function(ev)
@@ -20,9 +22,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts("Rename symbol"))
 
 		-- Diagnostics
-		vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts("Previous diagnostic"))
-		vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts("Next diagnostic"))
-		vim.keymap.set("n", "<leader>ld", vim.diagnostic.open_float, opts("Line diagnostics"))
+		vim.keymap.set("n", "<leader>ld", diagnostics.open_float, opts("Line diagnostics"))
 
 		-- Workspace
 		vim.keymap.set("n", "<leader>lwa", vim.lsp.buf.add_workspace_folder, opts("Add workspace folder"))

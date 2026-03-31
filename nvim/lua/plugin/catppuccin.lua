@@ -36,7 +36,6 @@ require("catppuccin").setup({
 		markdown = true,
 		semantic_tokens = true,
 		treesitter_context = true,
-		lsp_trouble = true,
 		render_markdown = true,
 	},
 	custom_highlights = function(colors)

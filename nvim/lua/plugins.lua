@@ -55,7 +55,6 @@ vim.pack.add({
 	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline" },
 	{ src = "https://github.com/j-hui/fidget.nvim", name = "fidget" },
 	{ src = "https://github.com/folke/zen-mode.nvim", name = "zen-mode" },
-	{ src = "https://github.com/folke/trouble.nvim", name = "trouble" },
 	-- Git
 	{ src = "https://github.com/lewis6991/gitsigns.nvim", name = "gitsigns" },
 	{ src = "https://github.com/NeogitOrg/neogit", name = "neogit" },

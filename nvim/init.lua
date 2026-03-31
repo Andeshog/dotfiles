@@ -35,7 +35,6 @@ require("zen-mode").setup({
 	},
 })
 require("grug-far").setup({})
-require("trouble").setup({ focus = true })
 require("gitlineage").setup()
 require("inlinediff").setup({
 	colors = {
@@ -55,6 +54,10 @@ vim.diagnostic.config({
 	signs = true,
 	underline = true,
 	severity_sort = true,
+	float = {
+		border = "rounded",
+		source = "if_many",
+	},
 })
 
 vim.lsp.enable({ "clangd" })

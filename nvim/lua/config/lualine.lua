@@ -1,4 +1,5 @@
 local M = {}
+local diagnostics = require("diagnostics")
 
 ---------------------------------------------------------------------------
 ----------------- LSP status + progress helpers ---------------------------
@@ -156,7 +157,7 @@ function M.setup()
 						if button ~= "l" then
 							return
 						end
-						require("trouble").toggle("diagnostics")
+						diagnostics.toggle_buffer_list()
 					end,
 				},
 			},

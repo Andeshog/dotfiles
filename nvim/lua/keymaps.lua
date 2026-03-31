@@ -1,5 +1,6 @@
 local map = vim.keymap.set
 local opts = { silent = true }
+local diagnostics = require("diagnostics")
 
 -- Neo-tree
 map("n", "<leader>o", ":Neotree reveal<CR>", opts)
@@ -89,4 +90,46 @@ map("t", "<M-Down>", function()
 	vim.api.nvim_win_set_height(win, height - 5)
 end, { desc = "Terminal: decrease height" })
 
--- Grug-far (find and replace)
+-- Grug-far (find and replace) TODO:
+
+----------------------------------------------------------
+--------------------- Diagnostics ------------------------
+----------------------------------------------------------
+map("n", "<leader>x", "<nop>", { desc = "Diagnostics" })
+
+-- Navigation
+map("n", "[d", function()
+	vim.diagnostic.goto_prev()
+end, { desc = "Previous diagnostic" })
+map("n", "]d", function()
+	vim.diagnostic.goto_next()
+end, { desc = "Next diagnostic" })
+map("n", "[e", function()
+	vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+end, { desc = "Previous error" })
+map("n", "]e", function()
+	vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+end, { desc = "Next error" })
+map("n", "[w", function()
+	vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
+end, { desc = "Previous warning" })
+map("n", "]w", function()
+	vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
+end, { desc = "Next warning" })
+
+-- Inspection
+map("n", "<leader>xh", vim.diagnostic.open_float, { desc = "Hover diagnostics (line)" })
+
+-- Lists
+map("n", "<leader>xx", diagnostics.toggle_buffer_list, { desc = "Buffer diagnostics" })
+map("n", "<leader>xX", diagnostics.toggle_workspace_list, { desc = "Workspace diagnostics" })
+map("n", "<leader>xe", function()
+	vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR })
+end, { desc = "Workspace errors (quickfix)" })
+map("n", "<leader>xq", diagnostics.close_lists, { desc = "Close diagnostic lists" })
+
+-- Display toggles
+map("n", "<leader>xv", diagnostics.toggle_virtual_lines, { desc = "Toggle diagnostic virtual lines" })
+
+map("n", "<leader>xu", diagnostics.toggle_underline, { desc = "Toggle diagnostic underline" })
+map("n", "<leader>xd", diagnostics.toggle, { desc = "Toggle diagnostics" })
