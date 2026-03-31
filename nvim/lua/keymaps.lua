@@ -133,3 +133,8 @@ map("n", "<leader>xv", diagnostics.toggle_virtual_lines, { desc = "Toggle diagno
 
 map("n", "<leader>xu", diagnostics.toggle_underline, { desc = "Toggle diagnostic underline" })
 map("n", "<leader>xd", diagnostics.toggle, { desc = "Toggle diagnostics" })
+
+-- Fluoride
+map("n", "<leader>cp", function()
+	require("fluoride").toggle()
+end, { desc = "Toggle Fluoride" })

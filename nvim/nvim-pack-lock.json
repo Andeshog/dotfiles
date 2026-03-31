@@ -4,6 +4,10 @@
       "rev": "cefd2c9ec65b1701352e757bd9e8d0171de02149",
       "src": "https://codeberg.org/knight9114/arc.nvim"
     },
+    "auto-session": {
+      "rev": "62437532b38495551410b3f377bcf4aaac574ebe",
+      "src": "https://github.com/rmagatti/auto-session"
+    },
     "catppuccin": {
       "rev": "a7788416689dbefea659d9e9415c87926b0ba5d8",
       "src": "https://github.com/catppuccin/nvim"
@@ -15,6 +19,10 @@
     "fidget": {
       "rev": "7fa433a83118a70fe24c1ce88d5f0bd3453c0970",
       "src": "https://github.com/j-hui/fidget.nvim"
+    },
+    "fluoride": {
+      "rev": "8e7ae26bb2012de7581275e0ae65c7506a89c699",
+      "src": "https://github.com/Sang-it/fluoride"
     },
     "gitlineage": {
       "rev": "da795833925aae2e4d0cf75d2529d258bf4fb82c",
@@ -48,6 +56,10 @@
     "neogit": {
       "rev": "4681c1fdac1b730592ae195576e87406f7255750",
       "src": "https://github.com/NeogitOrg/neogit"
+    },
+    "noice": {
+      "rev": "7bfd942445fb63089b59f97ca487d605e715f155",
+      "src": "https://github.com/folke/noice.nvim"
     },
     "nui.nvim": {
       "rev": "de740991c12411b663994b2860f1a4fd0937c130",
@@ -121,6 +133,10 @@
     "vim-surround": {
       "rev": "3d188ed2113431cf8dac77be61b842acb64433d9",
       "src": "https://github.com/tpope/vim-surround"
+    },
+    "vim-visual-multi": {
+      "rev": "a6975e7c1ee157615bbc80fc25e4392f71c344d4",
+      "src": "https://github.com/mg979/vim-visual-multi"
     },
     "which-key": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",

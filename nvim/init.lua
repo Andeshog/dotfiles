@@ -46,6 +46,8 @@ require("inlinediff").setup({
 	},
 })
 require("neogit").setup({})
+require("fluoride").setup()
+require("auto-session").setup({ bypass_save_filetypes = { "dashboard" } })
 
 vim.cmd.colorscheme("catppuccin")
 -- TODO: Be able to toggle underlay and ghost text via keymap
@@ -58,6 +60,14 @@ vim.diagnostic.config({
 	float = {
 		border = "rounded",
 		source = "if_many",
+	},
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN] = "",
+			[vim.diagnostic.severity.INFO] = "",
+			[vim.diagnostic.severity.HINT] = "",
+		},
 	},
 })
 
