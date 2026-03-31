@@ -36,6 +36,10 @@
       "rev": "e76028634dc42376feedb5ee755ad0018353c00c",
       "src": "https://github.com/YouSame2/inlinediff-nvim"
     },
+    "lualine": {
+      "rev": "47f91c416daef12db467145e16bed5bbfe00add8",
+      "src": "https://github.com/nvim-lualine/lualine.nvim"
+    },
     "neo-tree.nvim": {
       "rev": "84c75e7a7e443586f60508d12fc50f90d9aee14e",
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim",

@@ -12,6 +12,7 @@ require("plugin.treesitter")
 require("plugin.statuscol")
 require("plugin.indent_blankline")
 require("plugin.telescope")
+require("plugin.lualine")
 require("plugin.lsp-keymaps")
 
 -- Plugins with default or small config
