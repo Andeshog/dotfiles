@@ -19,6 +19,7 @@ return {
 			for i = 32, 126 do
 				table.insert(chars, string.char(i))
 			end
+			client.server_capabilities.completionProvider = client.server_capabilities.completionProvider or {}
 			client.server_capabilities.completionProvider.triggerCharacters = chars
 			vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
 		end

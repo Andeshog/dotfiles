@@ -44,8 +44,8 @@ done
 
 echo -e "${BLUE}Setting up dotfiles...${NC}"
 
-# Get the directory where this script is located
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Get the repository root from the script directory
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
 # Function to create symlink
 create_symlink() {
