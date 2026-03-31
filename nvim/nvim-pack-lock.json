@@ -8,9 +8,17 @@
       "rev": "a7788416689dbefea659d9e9415c87926b0ba5d8",
       "src": "https://github.com/catppuccin/nvim"
     },
+    "diffview": {
+      "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
+      "src": "https://github.com/sindrets/diffview.nvim"
+    },
     "fidget": {
       "rev": "7fa433a83118a70fe24c1ce88d5f0bd3453c0970",
       "src": "https://github.com/j-hui/fidget.nvim"
+    },
+    "gitlineage": {
+      "rev": "da795833925aae2e4d0cf75d2529d258bf4fb82c",
+      "src": "https://github.com/lionyxml/gitlineage.nvim"
     },
     "gitsigns": {
       "rev": "50c205548d8b037b7ff6378fca6d21146f0b6161",
@@ -24,10 +32,18 @@
       "rev": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03",
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
+    "inlinediff": {
+      "rev": "e76028634dc42376feedb5ee755ad0018353c00c",
+      "src": "https://github.com/YouSame2/inlinediff-nvim"
+    },
     "neo-tree.nvim": {
       "rev": "84c75e7a7e443586f60508d12fc50f90d9aee14e",
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim",
       "version": "3.0.0 - 4.0.0"
+    },
+    "neogit": {
+      "rev": "4681c1fdac1b730592ae195576e87406f7255750",
+      "src": "https://github.com/NeogitOrg/neogit"
     },
     "nui.nvim": {
       "rev": "de740991c12411b663994b2860f1a4fd0937c130",

@@ -138,7 +138,7 @@ map("n", "<leader>gp", function()
 end, { desc = "Preview git hunk inline" })
 map("n", "<leader>gb", "<C-o>", { desc = "Jump back" })
 map("n", "<leader>gf", "<C-i>", { desc = "Jump forward" })
-map("n", "<leader>gl", "<cmd>GitLineage<cr>", { desc = "Git lineage" })
+map("v", "<leader>gl", "<cmd>GitLineage<cr>", { desc = "Git lineage" })
 
 ----------------------------------------------------------
 ----------------------- Terminal -------------------------

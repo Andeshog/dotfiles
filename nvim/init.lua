@@ -36,9 +36,19 @@ require("zen-mode").setup({
 })
 require("grug-far").setup({})
 require("trouble").setup({ focus = true })
+require("gitlineage").setup()
+require("inlinediff").setup({
+	colors = {
+		InlineDiffAddContext = "#283e00",
+		InlineDiffAddChange = "#507800",
+		InlineDiffDeleteContext = "#3e0008",
+		InlineDiffDeleteChange = "#78000a",
+	},
+})
+require("neogit").setup({})
 
 vim.cmd.colorscheme("catppuccin")
-
+-- TODO: Be able to toggle underlay and ghost text via keymap
 vim.diagnostic.config({
 	virtual_text = false,
 	virtual_lines = { current_line = true },

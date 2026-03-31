@@ -15,7 +15,7 @@ end, opts)
 -- Quit
 map("n", "q", "<cmd>q<cr>", { desc = "Quit window" })
 
--- Delete to black hole register (don't pollute clipboard)
+-- Delete to black hole register (don't pollute clipboard)
 map({ "n", "v" }, "d", '"_d', { desc = "Delete to black hole" })
 map({ "n", "v" }, "D", '"_D', { desc = "Delete to EOL (black hole)" })
 map({ "n", "v" }, "c", '"_c', { desc = "Change to black hole" })
@@ -47,3 +47,25 @@ map("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
 map("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
 map("n", "<leader>we", "<C-w>=", { desc = "Equalize window sizes" })
 map("n", "<leader>wc", "<cmd>close<cr>", { desc = "Close window" })
+
+-- Buffers
+map("n", "<leader>b", "<nop>", { desc = "Buffer" })
+
+-- Navigation
+map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer", silent = true })
+map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer", silent = true })
+map("n", "<leader>bb", "<cmd>b#<cr>", { desc = "Last buffer", silent = true })
+
+-- Close buffers
+map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer (keep window)", silent = true })
+map("n", "<leader>bD", "<cmd>bdelete!<cr>", { desc = "Force delete buffer", silent = true })
+map("n", "<leader>bo", "<cmd>%bdelete|edit#|bdelete#<cr>", { desc = "Delete other buffers", silent = true })
+map("n", "<leader>bq", "<cmd>bufdo bdelete<cr>", { desc = "Delete all buffers", silent = true })
+
+-- Git
+map("n", "<leader>g", "<nop>", { desc = "Git" })
+map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
+-- Git lineage is default mapped to v <leader>gl on selection
+map("n", "<leader>gd", function()
+	require("inlinediff").toggle()
+end, { desc = "Toggle inline diff" })

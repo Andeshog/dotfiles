@@ -58,6 +58,10 @@ vim.pack.add({
 	{ src = "https://github.com/folke/trouble.nvim", name = "trouble" },
 	-- Git
 	{ src = "https://github.com/lewis6991/gitsigns.nvim", name = "gitsigns" },
+	{ src = "https://github.com/NeogitOrg/neogit", name = "neogit" },
+	{ src = "https://github.com/sindrets/diffview.nvim", name = "diffview" },
+	{ src = "https://github.com/lionyxml/gitlineage.nvim", name = "gitlineage" },
+	{ src = "https://github.com/YouSame2/inlinediff-nvim", name = "inlinediff" },
 	-- Misc
 	{ src = "https://github.com/ruicsh/termite.nvim", name = "termite" },
 })
