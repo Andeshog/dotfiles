@@ -2,6 +2,7 @@ local map = vim.keymap.set
 local opts = { silent = true }
 local diagnostics = require("diagnostics")
 
+map("n", "<Esc>", "<cmd>nohlsearch | echon ''<cr>", { desc = "Clear search highlight + command line" })
 -- Neo-tree
 map("n", "<leader>o", ":Neotree reveal<CR>", opts)
 
