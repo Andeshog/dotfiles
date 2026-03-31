@@ -2,11 +2,31 @@ local map = vim.keymap.set
 local opts = { silent = true }
 local diagnostics = require("diagnostics")
 
+local function open_grug_far(options)
+	require("grug-far").open(options or {})
+end
+
+local function open_grug_far_current_file(options)
+	options = options or {}
+	options.prefills = vim.tbl_extend("force", options.prefills or {}, {
+		paths = vim.fn.expand("%"),
+	})
+	open_grug_far(options)
+end
+
 map("n", "<Esc>", "<cmd>nohlsearch | echon ''<cr>", { desc = "Clear search highlight + command line" })
 -- Neo-tree
 map("n", "<leader>o", ":Neotree reveal<CR>", opts)
 
 -- Treewalker
+map({ "n", "v" }, "<C-k>", "<cmd>Treewalker Up<cr>", { desc = "Treewalker up", silent = true })
+map({ "n", "v" }, "<C-j>", "<cmd>Treewalker Down<cr>", { desc = "Treewalker down", silent = true })
+map({ "n", "v" }, "<C-h>", "<cmd>Treewalker Left<cr>", { desc = "Treewalker left", silent = true })
+map({ "n", "v" }, "<C-l>", "<cmd>Treewalker Right<cr>", { desc = "Treewalker right", silent = true })
+map("n", "<C-S-k>", "<cmd>Treewalker SwapUp<cr>", { desc = "Treewalker swap up", silent = true })
+map("n", "<C-S-j>", "<cmd>Treewalker SwapDown<cr>", { desc = "Treewalker swap down", silent = true })
+map("n", "<C-S-h>", "<cmd>Treewalker SwapLeft<cr>", { desc = "Treewalker swap left", silent = true })
+map("n", "<C-S-l>", "<cmd>Treewalker SwapRight<cr>", { desc = "Treewalker swap right", silent = true })
 
 -- Save
 map("n", "<C-S>", ":w<CR>", opts)
@@ -94,6 +114,26 @@ map("t", "<M-Down>", function()
 end, { desc = "Terminal: decrease height" })
 
 -- Grug-far (find and replace) TODO:
+map("n", "<leader>sr", function()
+	open_grug_far()
+end, { desc = "Search and replace" })
+map("n", "<leader>sw", function()
+	open_grug_far({ prefills = { search = vim.fn.expand("<cword>") } })
+end, { desc = "Search current word" })
+map("v", "<leader>sw", function()
+	require("grug-far").with_visual_selection()
+end, { desc = "Search selection" })
+map("n", "<leader>sp", function()
+	open_grug_far_current_file({ prefills = { search = vim.fn.expand("<cword>") } })
+end, { desc = "Search current word in file" })
+map("v", "<leader>sp", function()
+	require("grug-far").with_visual_selection({
+		prefills = { paths = vim.fn.expand("%") },
+	})
+end, { desc = "Search selection in file" })
+map("n", "<leader>sf", function()
+	open_grug_far_current_file()
+end, { desc = "Search current file" })
 
 ----------------------------------------------------------
 --------------------- Diagnostics ------------------------
