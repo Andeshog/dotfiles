@@ -69,3 +69,24 @@ map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
 map("n", "<leader>gd", function()
 	require("inlinediff").toggle()
 end, { desc = "Toggle inline diff" })
+
+----------------------------------------------------------
+----------------------- Telescope ------------------------
+----------------------------------------------------------
+map("n", "<leader>f", "<nop>", { desc = "Find" })
+
+-- Terminal
+-- Increase/decrease terminal height from terminal mode
+map("t", "<M-Up>", function()
+	local win = vim.api.nvim_get_current_win()
+	local height = vim.api.nvim_win_get_height(win)
+	vim.api.nvim_win_set_height(win, height + 5)
+end, { desc = "Terminal: increase height" })
+
+map("t", "<M-Down>", function()
+	local win = vim.api.nvim_get_current_win()
+	local height = vim.api.nvim_win_get_height(win)
+	vim.api.nvim_win_set_height(win, height - 5)
+end, { desc = "Terminal: decrease height" })
+
+-- Grug-far (find and replace)
