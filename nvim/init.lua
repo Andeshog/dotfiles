@@ -8,6 +8,7 @@ require("plugins")
 --Plugins with config
 require("plugin.neo-tree")
 require("plugin.catppuccin")
+require("plugin.auto-session")
 require("plugin.treesitter")
 require("plugin.statuscol")
 require("plugin.indent_blankline")
@@ -16,7 +17,11 @@ require("plugin.lualine")
 require("plugin.lsp-keymaps")
 
 -- Plugins with default or small config
-require("fidget").setup({})
+require("fidget").setup({
+	notification = {
+		override_vim_notify = true,
+	},
+})
 require("which-key").setup({
 	delay = 800, -- ms before which-key popup shows
 })
@@ -47,7 +52,6 @@ require("inlinediff").setup({
 })
 require("neogit").setup({})
 require("fluoride").setup()
-require("auto-session").setup({ bypass_save_filetypes = { "dashboard" } })
 
 vim.cmd.colorscheme("catppuccin")
 -- TODO: Be able to toggle underlay and ghost text via keymap

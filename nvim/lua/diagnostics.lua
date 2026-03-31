@@ -64,13 +64,13 @@ end
 
 function M.goto_prev(opts)
 	return function()
-		vim.diagnostic.goto_prev(vim.tbl_extend("force", { float = true }, opts or {}))
+		vim.diagnostic.jump(vim.tbl_extend("force", { count = -1, float = true }, opts or {}))
 	end
 end
 
 function M.goto_next(opts)
 	return function()
-		vim.diagnostic.goto_next(vim.tbl_extend("force", { float = true }, opts or {}))
+		vim.diagnostic.jump(vim.tbl_extend("force", { count = 1, float = true }, opts or {}))
 	end
 end
 

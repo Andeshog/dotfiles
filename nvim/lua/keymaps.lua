@@ -15,6 +15,8 @@ end, opts)
 
 -- Quit
 map("n", "q", "<cmd>q<cr>", { desc = "Quit window" })
+map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit all" })
+map("n", "<leader>qQ", "<cmd>qa!<cr>", { desc = "Quit all (force)" })
 
 -- Delete to black hole register (don't pollute clipboard)
 map({ "n", "v" }, "d", '"_d', { desc = "Delete to black hole" })
@@ -98,25 +100,12 @@ end, { desc = "Terminal: decrease height" })
 map("n", "<leader>x", "<nop>", { desc = "Diagnostics" })
 
 -- Navigation
-map("n", "[d", function()
-	vim.diagnostic.goto_prev()
-end, { desc = "Previous diagnostic" })
-map("n", "]d", function()
-	vim.diagnostic.goto_next()
-end, { desc = "Next diagnostic" })
-map("n", "[e", function()
-	vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-end, { desc = "Previous error" })
-map("n", "]e", function()
-	vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-end, { desc = "Next error" })
-map("n", "[w", function()
-	vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
-end, { desc = "Previous warning" })
-map("n", "]w", function()
-	vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
-end, { desc = "Next warning" })
-
+map("n", "[d", diagnostics.goto_prev(), { desc = "Previous diagnostic" })
+map("n", "]d", diagnostics.goto_next(), { desc = "Next diagnostic" })
+map("n", "[e", diagnostics.goto_prev({ severity = vim.diagnostic.severity.ERROR }), { desc = "Previous error" })
+map("n", "]e", diagnostics.goto_next({ severity = vim.diagnostic.severity.ERROR }), { desc = "Next error" })
+map("n", "[w", diagnostics.goto_prev({ severity = vim.diagnostic.severity.WARN }), { desc = "Previous warning" })
+map("n", "]w", diagnostics.goto_next({ severity = vim.diagnostic.severity.WARN }), { desc = "Next warning" })
 -- Inspection
 map("n", "<leader>xh", vim.diagnostic.open_float, { desc = "Hover diagnostics (line)" })
 

@@ -14,6 +14,7 @@ opt.smartindent = true
 opt.laststatus = 3
 opt.ignorecase = true
 opt.termguicolors = true
+opt.sessionoptions = { "blank", "buffers", "curdir", "folds", "help", "tabpages", "winsize", "winpos", "terminal", "localoptions" }
 
 -- Use system clipboard for yanks etc
 opt.clipboard = "unnamedplus"
