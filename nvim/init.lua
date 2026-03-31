@@ -8,6 +8,9 @@ require("plugins")
 --Plugins with config
 require("plugin.neo-tree")
 require("plugin.catppuccin")
+require("plugin.mason")
+require("plugin.conform")
+require("plugin.lint")
 require("plugin.auto-session")
 require("plugin.treesitter")
 require("plugin.statuscol")
@@ -75,4 +78,4 @@ vim.diagnostic.config({
 	},
 })
 
-vim.lsp.enable({ "clangd" })
+vim.lsp.enable({ "clangd", "gopls", "bashls", "pyright" })

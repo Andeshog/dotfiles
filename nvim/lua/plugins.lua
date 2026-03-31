@@ -47,12 +47,15 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", name = "telescope-fzf-native" },
 	{ src = "https://github.com/nvim-telescope/telescope-live-grep-args.nvim", name = "telescope-live-grep-args" },
 	{ src = "https://github.com/rmagatti/auto-session", name = "auto-session" },
+	{ src = "https://github.com/williamboman/mason.nvim", name = "mason.nvim" },
 	-- Editing
 	{ src = "https://github.com/windwp/nvim-autopairs", name = "nvim-autopairs" },
 	{ src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
 	{ src = "https://github.com/MagicDuck/grug-far.nvim", name = "grug-far" },
 	{ src = "https://github.com/mg979/vim-visual-multi", name = "vim-visual-multi" },
 	{ src = "https://github.com/Sang-it/fluoride", name = "fluoride" },
+	{ src = "https://github.com/stevearc/conform.nvim", name = "conform" },
+	{ src = "https://github.com/mfussenegger/nvim-lint", name = "nvim-lint" },
 	-- UI
 	{ src = "https://github.com/luukvbaal/statuscol.nvim", name = "statuscol" },
 	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline" },

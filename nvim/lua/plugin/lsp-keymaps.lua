@@ -20,6 +20,21 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- Actions
 		vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, opts("Code action"))
 		vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts("Rename symbol"))
+		vim.keymap.set("n", "<leader>lf", function()
+			local ok, conform = pcall(require, "conform")
+			if ok then
+				conform.format({ bufnr = ev.buf, async = true, lsp_fallback = true })
+				return
+			end
+
+			vim.lsp.buf.format({ bufnr = ev.buf, async = true })
+		end, opts("Format buffer"))
+		vim.keymap.set("n", "<leader>ll", function()
+			local ok, lint = pcall(require, "lint")
+			if ok then
+				lint.try_lint()
+			end
+		end, opts("Lint buffer"))
 
 		-- Diagnostics
 		vim.keymap.set("n", "<leader>ld", diagnostics.open_float, opts("Line diagnostics"))
