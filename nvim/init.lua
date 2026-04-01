@@ -84,4 +84,4 @@ vim.diagnostic.config({
 	},
 })
 
-vim.lsp.enable({ "clangd", "gopls", "bashls", "pyright" })
+vim.lsp.enable({ "clangd", "gopls", "bashls", "pyright", "lua_ls" })

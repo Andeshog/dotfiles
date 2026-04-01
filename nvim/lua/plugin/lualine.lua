@@ -1,16 +1,21 @@
 local diagnostics = require("diagnostics")
 
+local function is_copilot_client(client)
+	local name = (client and client.name or ""):lower()
+	return name:find("copilot", 1, true) ~= nil
+end
+
 ---------------------------------------------------------------------------
 ----------------- LSP status + progress helpers ---------------------------
 ---------------------------------------------------------------------------
 
 local function lsp_status()
 	local bufnr = vim.api.nvim_get_current_buf()
-	local clients = vim.lsp.get_clients and vim.lsp.get_clients() or {}
+	local clients = vim.lsp.get_clients and vim.lsp.get_clients({ bufnr = bufnr }) or {}
 
 	local names = {}
 	for _, client in ipairs(clients) do
-		if client.attached_buffers and client.attached_buffers[bufnr] and client.name ~= "GitHub Copilot" then
+		if not is_copilot_client(client) then
 			table.insert(names, client.name)
 		end
 	end
@@ -27,22 +32,69 @@ local function lsp_component()
 	return lsp_status()
 end
 
-local function toggle_lspinfo() -- Look for an existing LspInfo window
-	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		local buf = vim.api.nvim_win_get_buf(win)
-		local ft = vim.bo[buf].filetype
-		local name = vim.api.nvim_buf_get_name(buf)
-		-- Match either by filetype or by buffer name
-		if ft == "checkhealth" and name == "health://" then
-			vim.api.nvim_win_close(win, true)
-			return
+local function show_lsp_status()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local clients = vim.lsp.get_clients and vim.lsp.get_clients({ bufnr = bufnr }) or {}
+	local lines = {}
+
+	for _, client in ipairs(clients) do
+		if not is_copilot_client(client) then
+			local root = client.root_dir or client.config.root_dir or "?"
+			table.insert(lines, string.format("%s [%s]", client.name, root))
 		end
-	end -- No LspInfo window found -> open it
-	vim.cmd("LspInfo")
+	end
+
+	if #lines == 0 then
+		vim.notify("No native LSP attached to current buffer", vim.log.levels.INFO, { title = "LSP" })
+		return
+	end
+
+	vim.notify(table.concat(lines, "\n"), vim.log.levels.INFO, { title = "LSP" })
 end
 
 local function copilot_icon()
 	return ""
+end
+
+local function copilot_color()
+	local base = vim.api.nvim_get_hl(0, { name = "lualine_z_normal", link = false })
+	local colors = {
+		inactive = "#5b6078",
+		busy = "#eed49f",
+		ready = "#a6da95",
+		error = "#ed8796",
+	}
+
+	local ok_client, client = pcall(require, "copilot.client")
+	if not ok_client or client.is_disabled() then
+		return { fg = base.fg, bg = colors.inactive }
+	end
+
+	local bufnr = vim.api.nvim_get_current_buf()
+	if client.startup_error then
+		return { fg = base.fg, bg = colors.error }
+	end
+
+	local ok_status, status = pcall(require, "copilot.status")
+	if ok_status then
+		if status.data.status == "InProgress" or status.data.status == "Warning" then
+			return { fg = base.fg, bg = colors.busy }
+		end
+		if status.data.status ~= "" and status.data.message ~= "" and status.data.message:lower():find("error", 1, true) then
+			return { fg = base.fg, bg = colors.error }
+		end
+	end
+
+	local ok_suggestion, suggestion = pcall(require, "copilot.suggestion")
+	if ok_suggestion and suggestion.is_visible() then
+		return { fg = base.fg, bg = colors.ready }
+	end
+
+	if client.get() and client.buf_is_attached(bufnr) then
+		return { fg = base.fg, bg = colors.ready }
+	end
+
+	return { fg = base.fg, bg = colors.inactive }
 end
 
 require("lualine").setup({
@@ -168,32 +220,19 @@ require("lualine").setup({
 					if button ~= "l" or clicks ~= 1 then
 						return
 					end
-					toggle_lspinfo()
+					show_lsp_status()
 				end,
 			},
 		},
 		lualine_z = {
 			{
 				copilot_icon,
-				color = function()
-					local base = vim.api.nvim_get_hl(0, { name = "lualine_z_normal", link = false })
-					local ok, status = pcall(require, "sidekick.status")
-					if not ok then
-						return { fg = base.fg, bg = "#5b6078" }
+				color = copilot_color,
+				on_click = function(clicks, button, _)
+					if button ~= "l" or clicks ~= 1 then
+						return
 					end
-					local s = status.get()
-					if not s then
-						return { fg = base.fg, bg = "#5b6078" }
-					end
-					if s.kind == "Error" then
-						return { fg = base.fg, bg = "#ed8796" }
-					elseif s.busy or s.kind == "Warning" then
-						return { fg = base.fg, bg = "#eed49f" }
-					elseif s.kind == "Inactive" then
-						return { fg = base.fg, bg = "#5b6078" }
-					else
-						return { fg = base.fg, bg = "#a6da95" }
-					end
+					vim.cmd("Copilot status")
 				end,
 			},
 		},

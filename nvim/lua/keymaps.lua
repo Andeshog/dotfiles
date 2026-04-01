@@ -135,6 +135,11 @@ map("n", "<leader>sf", function()
 	open_grug_far_current_file()
 end, { desc = "Search current file" })
 
+-- Zen mode
+map("n", "<leader>z", function()
+	require("zen-mode").toggle()
+end, { desc = "Toggle Zen mode" })
+
 ----------------------------------------------------------
 --------------------- Diagnostics ------------------------
 ----------------------------------------------------------
