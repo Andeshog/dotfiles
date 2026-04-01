@@ -24,15 +24,24 @@ neotest.setup({
 	},
 })
 
+local function run_and_redraw(...)
+	local args = { ... }
+	neotest.run.run(unpack(args))
+	-- Neotest places the running sign async; defer a redraw so statuscol picks it up
+	vim.defer_fn(function()
+		vim.cmd("redrawstatus!")
+	end, 50)
+end
+
 local map = vim.keymap.set
 
 map("n", "<leader>t", "<nop>", { desc = "Test" })
 map("n", "<leader>tc", "<cmd>ConfigureGtest<cr>", { desc = "Gtest: configure marked tests" })
 map("n", "<leader>tn", function()
-	neotest.run.run()
+	run_and_redraw()
 end, { desc = "Test: run nearest" })
 map("n", "<leader>tf", function()
-	neotest.run.run(vim.fn.expand("%"))
+	run_and_redraw(vim.fn.expand("%"))
 end, { desc = "Test: run file" })
 map("n", "<leader>ts", function()
 	neotest.summary.toggle()
@@ -47,7 +56,7 @@ map("n", "<leader>tq", function()
 	neotest.run.stop()
 end, { desc = "Test: stop" })
 map("n", "<leader>td", function()
-	neotest.run.run({ strategy = "dap" })
+	run_and_redraw({ strategy = "dap" })
 end, { desc = "Test: debug nearest" })
 map("n", "[t", function()
 	neotest.jump.prev({ status = "failed" })

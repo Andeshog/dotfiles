@@ -31,9 +31,9 @@ require("statuscol").setup({
 			hl = "LineNr",
 			click = "v:lua.ScLa",
 		},
-		-- Most severe diagnostic sign for the line
+		-- Neotest > DAP > diagnostics (first match wins)
 		{
-			sign = { namespace = { "diagnostic%.signs" }, maxwidth = 1, colwidth = 1, auto = " ", fillcharhl = "LineNr" },
+			sign = { name = { "neotest_.*", "Dap.*" }, namespace = { "diagnostic%.signs" }, maxwidth = 1, colwidth = 1, auto = " ", fillcharhl = "LineNr" },
 			click = "v:lua.ScSa",
 		},
 		{

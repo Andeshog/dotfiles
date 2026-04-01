@@ -38,7 +38,15 @@ local lga = require("telescope-live-grep-args.shortcuts")
 vim.keymap.set("n", "<leader>fg", function()
 	require("telescope").extensions.live_grep_args.live_grep_args()
 end, { desc = "Live grep (with args)" })
-vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Buffers" })
+vim.keymap.set("n", "<leader>fb", function()
+	local actions = require("telescope.actions")
+	builtin.buffers({
+		attach_mappings = function(_, map)
+			map({ "i", "n" }, "<C-d>", actions.delete_buffer)
+			return true
+		end,
+	})
+end, { desc = "Buffers" })
 vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Help tags" })
 vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Diagnostics" })

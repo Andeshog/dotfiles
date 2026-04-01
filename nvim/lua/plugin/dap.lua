@@ -82,14 +82,16 @@ dap.listeners.after.event_initialized["dapview_neotest"] = function()
 	pcall(vim.cmd, "Neotree close")
 end
 
-dap.listeners.before.event_terminated["neotest_cancel"] = function()
-	local ok, neotest = pcall(require, "neotest")
-	if ok then pcall(neotest.run.stop) end
-end
-
-dap.listeners.before.event_exited["neotest_cancel"] = function()
-	local ok, neotest = pcall(require, "neotest")
-	if ok then pcall(neotest.run.stop) end
+-- Ensure DAP jumps to a code window, not the dap-view (which has winfixbuf)
+dap.listeners.before.event_stopped["focus_code_window"] = function()
+	if vim.wo.winfixbuf then
+		for _, win in ipairs(vim.api.nvim_list_wins()) do
+			if not vim.wo[win].winfixbuf then
+				vim.api.nvim_set_current_win(win)
+				return
+			end
+		end
+	end
 end
 
 -----------------------------------------------------------
@@ -141,12 +143,10 @@ local session_keymaps = {
 	{ "n", "<leader>dc", dap.run_to_cursor, "DAP: run to cursor" },
 	{ "n", "<leader>dr", function() dap.repl.open({}, "belowright split") end, "DAP: open REPL (split)" },
 	{ "n", "<leader>dq", function()
-		local ok_nt, neotest = pcall(require, "neotest")
-		if ok_nt then pcall(neotest.run.stop) end
 		dap.terminate()
 		dap.disconnect({ terminateDebuggee = true })
 		pcall(dapview.close)
-	end, "DAP: stop (cancel neotest first)" },
+	end, "DAP: stop" },
 }
 
 local function set_session_keymaps()
