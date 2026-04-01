@@ -70,4 +70,15 @@ vim.pack.add({
 	{ src = "https://github.com/YouSame2/inlinediff-nvim", name = "inlinediff" },
 	-- Misc
 	{ src = "https://github.com/ruicsh/termite.nvim", name = "termite" },
+	-- AI/Copilot
+	{ src = "https://github.com/zbirenbaum/copilot.lua", name = "copilot.lua" },
+	-- DAP
+	{ src = "https://github.com/mfussenegger/nvim-dap", name = "nvim-dap" },
+	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view" },
+	{ src = "https://github.com/theHamsta/nvim-dap-virtual-text", name = "nvim-dap-virtual-text" },
+	-- Testing
+	{ src = "https://github.com/nvim-neotest/neotest", name = "neotest" },
+	{ src = "https://github.com/nvim-neotest/nvim-nio", name = "nvim-nio" },
+	{ src = "https://github.com/Andeshog/neotest-gtest", name = "neotest-gtest" },
+	{ src = "https://github.com/fredrikaverpil/neotest-golang", name = "neotest-golang" },
 })

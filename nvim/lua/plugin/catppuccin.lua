@@ -28,6 +28,7 @@ require("catppuccin").setup({
 		fidget = true,
 		mason = true,
 		dap = true,
+		neotest = true,
 		which_key = true,
 		indent_blankline = {
 			enabled = true,

@@ -1,5 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
+
+vim.cmd("packadd nvim.undotree")
+vim.keymap.set("n", "<leader>u", require("undotree").open)
+
 require("options")
 require("keymaps")
 require("autocmds")
@@ -18,6 +22,9 @@ require("plugin.indent_blankline")
 require("plugin.telescope")
 require("plugin.lualine")
 require("plugin.lsp-keymaps")
+require("plugin.copilot")
+require("plugin.dap")
+require("plugin.neotest")
 
 -- Plugins with default or small config
 require("fidget").setup({

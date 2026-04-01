@@ -13,6 +13,7 @@ opt.tabstop = 4
 opt.smartindent = true
 opt.laststatus = 3
 opt.ignorecase = true
+opt.smartcase = true
 opt.termguicolors = true
 opt.sessionoptions =
 	{ "blank", "buffers", "curdir", "folds", "help", "tabpages", "winsize", "winpos", "terminal", "localoptions" }
