@@ -25,6 +25,7 @@ opt.showmode = false
 opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 opt.completeopt = { "menuone", "noselect", "popup" }
+opt.undofile = true
 
 -- UI borders
 vim.o.winborder = "rounded"
