@@ -45,11 +45,7 @@ require("arc").setup({
 })
 require("treewalker").setup({})
 require("termite").setup({ height = 0.25, position = "bottom", border = "double", winbar = false, shell = "/bin/bash" })
-require("zen-mode").setup({
-	window = {
-		width = 0.8,
-	},
-})
+require("plugin.zen").setup()
 require("grug-far").setup({})
 require("gitlineage").setup()
 require("inlinediff").setup({

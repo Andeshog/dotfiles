@@ -137,7 +137,7 @@ end, { desc = "Search current file" })
 
 -- Zen mode
 map("n", "<leader>z", function()
-	require("zen-mode").toggle()
+	require("plugin.zen").toggle()
 end, { desc = "Toggle Zen mode" })
 
 ----------------------------------------------------------
