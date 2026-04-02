@@ -113,7 +113,7 @@ map("t", "<M-Down>", function()
 	vim.api.nvim_win_set_height(win, height - 5)
 end, { desc = "Terminal: decrease height" })
 
--- Grug-far (find and replace) TODO:
+-- Grug-far (find and replace)
 map("n", "<leader>sr", function()
 	open_grug_far()
 end, { desc = "Search and replace" })

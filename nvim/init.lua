@@ -58,10 +58,10 @@ require("grug-far").setup({})
 require("gitlineage").setup()
 require("inlinediff").setup({
 	colors = {
-		InlineDiffAddContext = "#283e00",
-		InlineDiffAddChange = "#507800",
-		InlineDiffDeleteContext = "#3e0008",
-		InlineDiffDeleteChange = "#78000a",
+		InlineDiffAddContext = "#2a3b29",
+		InlineDiffAddChange = "#3d5a3a",
+		InlineDiffDeleteContext = "#3d2529",
+		InlineDiffDeleteChange = "#5a2d33",
 	},
 })
 require("neogit").setup({})

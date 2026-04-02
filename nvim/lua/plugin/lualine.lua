@@ -1,5 +1,37 @@
 local diagnostics = require("diagnostics")
 
+-- Cache git repo name per directory to avoid blocking shell calls on every render
+local git_repo_cache = {}
+local function get_git_repo_name()
+	local cwd = vim.fn.getcwd()
+	if git_repo_cache[cwd] ~= nil then
+		return git_repo_cache[cwd]
+	end
+
+	local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+	if vim.v.shell_error ~= 0 or not git_root or git_root == "" then
+		git_repo_cache[cwd] = false
+		return false
+	end
+
+	local remote = vim.fn.systemlist("git config --get remote.origin.url")[1]
+	if not remote or remote == "" then
+		local name = vim.fn.fnamemodify(git_root, ":t")
+		git_repo_cache[cwd] = name
+		return name
+	end
+
+	local repo = remote:gsub("%.git$", ""):match("([^/]+)$") or remote
+	git_repo_cache[cwd] = repo
+	return repo
+end
+
+vim.api.nvim_create_autocmd("DirChanged", {
+	callback = function()
+		git_repo_cache = {}
+	end,
+})
+
 local function is_copilot_client(client)
 	local name = (client and client.name or ""):lower()
 	return name:find("copilot", 1, true) ~= nil
@@ -59,10 +91,10 @@ end
 local function copilot_color()
 	local base = vim.api.nvim_get_hl(0, { name = "lualine_z_normal", link = false })
 	local colors = {
-		inactive = "#5b6078",
-		busy = "#eed49f",
-		ready = "#a6da95",
-		error = "#ed8796",
+		inactive = "#626880",
+		busy = "#e5c890",
+		ready = "#a6d189",
+		error = "#e78284",
 	}
 
 	local ok_client, client = pcall(require, "copilot.client")
@@ -116,27 +148,10 @@ require("lualine").setup({
 						return ""
 					end
 
-					-- If we're not in a git repo, just show branch
-					local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-					if vim.v.shell_error ~= 0 or git_root == nil or git_root == "" then
+					local repo = get_git_repo_name()
+					if not repo then
 						return branch
 					end
-
-					-- Get remote origin URL
-					local remote = vim.fn.systemlist("git config --get remote.origin.url")[1]
-					if remote == nil or remote == "" then
-						-- fallback: directory name if no remote
-						local dir = vim.fn.fnamemodify(git_root, ":t")
-						return dir .. ":" .. branch
-					end
-
-					-- Extract repo name from URL:
-					--  - git@github.com:user/repo.git
-					--  - https://github.com/user/repo.git
-					--  - /some/path/repo.git
-					local repo = remote
-					repo = repo:gsub("%.git$", "") -- drop .git
-					repo = repo:match("([^/]+)$") or repo -- take last path component
 
 					return repo .. ":" .. branch
 				end,
@@ -158,20 +173,6 @@ require("lualine").setup({
 						return path .. " ●"
 					end
 					return path
-				end,
-			},
-			{
-				-- nvim-navic location
-				function()
-					local ok, navic = pcall(require, "nvim-navic")
-					if not ok then
-						return ""
-					end
-					return navic.get_location()
-				end,
-				cond = function()
-					local ok, navic = pcall(require, "nvim-navic")
-					return ok and navic.is_available()
 				end,
 			},
 		},
@@ -197,11 +198,11 @@ require("lualine").setup({
 					local warns = #vim.diagnostic.get(bufnr, { severity = vim.diagnostic.severity.WARN })
 
 					if errors > 0 then
-						return { fg = "#ed8796" } -- catppuccin-macchiato red
+						return { fg = "#e78284" } -- catppuccin-frappe red
 					elseif warns > 0 then
-						return { fg = "#eed49f" } -- catppuccin-macchiato yellow
+						return { fg = "#e5c890" } -- catppuccin-frappe yellow
 					else
-						return { fg = "#a6da95" } -- catppuccin-macchiato green
+						return { fg = "#a6d189" } -- catppuccin-frappe green
 					end
 				end,
 				on_click = function(clicks, button, modifiers)

@@ -1,5 +1,3 @@
-local blink = require("blink.cmp")
-
 require("blink.cmp").setup({
 	keymap = {
 		preset = "none",
@@ -93,21 +91,3 @@ require("blink.cmp").setup({
 		},
 	},
 })
-vim.keymap.set("i", "<Tab>", function()
-	if blink.is_menu_visible() then
-		return blink.select_next()
-	end
-	if blink.snippet_active({ direction = 1 }) then
-		return blink.snippet_forward()
-	end
-	return "<Tab>"
-end, { expr = true, silent = true, desc = "Blink next completion or snippet jump" })
-vim.keymap.set("i", "<S-Tab>", function()
-	if blink.is_menu_visible() then
-		return blink.select_prev()
-	end
-	if blink.snippet_active({ direction = -1 }) then
-		return blink.snippet_backward()
-	end
-	return "<S-Tab>"
-end, { expr = true, silent = true, desc = "Blink previous completion or snippet jump" })

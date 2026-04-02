@@ -21,8 +21,9 @@ opt.sessionoptions =
 -- Use system clipboard for yanks etc
 opt.clipboard = "unnamedplus"
 opt.showmode = false
--- TODO: Move fold settings to autocommand
+opt.foldmethod = "expr"
 opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldenable = false
 
 opt.completeopt = { "menuone", "noselect" }
 opt.undofile = true

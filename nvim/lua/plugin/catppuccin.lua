@@ -6,20 +6,6 @@ require("catppuccin").setup({
 		shade = "dark",
 		percentage = 0.15,
 	},
-	lsp_styles = {
-		virtual_text = {
-			errors = { "italic" },
-			hints = { "italic" },
-			warnings = { "italic" },
-			information = { "italic" },
-		},
-		underlines = {
-			errors = { "undercurl" },
-			hints = { "undercurl" },
-			warnings = { "undercurl" },
-			information = { "undercurl" },
-		},
-	},
 	integrations = {
 		gitsigns = true,
 		neotree = true,
@@ -42,87 +28,64 @@ require("catppuccin").setup({
 	custom_highlights = function(colors)
 		return {
 			-- ===== TYPES =====
-			["@lsp.type.class.cpp"] = { fg = colors.green, style = { "bold" } },
-			["@lsp.type.struct.cpp"] = { fg = colors.teal, style = { "bold" } },
-			["@lsp.type.enum.cpp"] = { fg = colors.yellow, style = { "bold" } },
-			["@lsp.type.interface.cpp"] = { fg = colors.sapphire, style = { "bold" } },
-			["@lsp.type.typeParameter.cpp"] = { fg = colors.mauve, style = { "italic" } },
-
-			["@type.cpp"] = { fg = colors.green },
-			["@type.builtin.cpp"] = { fg = colors.peach },
-			["@type.qualifier.cpp"] = { fg = colors.mauve, style = { "bold" } },
-			["@type.keyword.cpp"] = { fg = colors.mauve, style = { "bold" } },
-			["@keyword.import.cpp"] = { fg = colors.pink, style = { "bold" } },
+			-- LSP type-kind differentiation (defaults have no bold/color split)
+			["@lsp.type.class.cpp"] = { fg = colors.green, bold = true },
+			["@lsp.type.struct.cpp"] = { fg = colors.teal, bold = true },
+			["@lsp.type.enum.cpp"] = { fg = colors.yellow, bold = true },
+			["@lsp.type.interface.cpp"] = { fg = colors.sapphire, bold = true },
+			["@lsp.type.typeParameter.cpp"] = { fg = colors.mauve, italic = true },
+			["@type.builtin.cpp"] = { fg = colors.peach }, -- default: mauve
 
 			-- ===== NAMESPACE =====
-			["@lsp.type.namespace.cpp"] = { fg = colors.blue, style = { "bold" } },
-			["@namespace.cpp"] = { fg = colors.blue, style = { "bold" } },
+			["@lsp.type.namespace.cpp"] = { fg = colors.blue }, -- default: yellow italic
+			["@module.cpp"] = { fg = colors.blue },
 
 			-- ===== PREPROCESSOR =====
-			["@lsp.type.macro.cpp"] = { fg = colors.peach, style = { "bold" } },
-			["@constant.macro.cpp"] = { fg = colors.peach, style = { "bold" } },
-			["@preproc.cpp"] = { fg = colors.pink },
+			["@lsp.type.macro.cpp"] = { fg = colors.yellow }, -- default: mauve
+			["@constant.macro.cpp"] = { fg = colors.yellow },
+			["@keyword.directive.cpp"] = { fg = colors.yellow }, -- default: pink
 
 			-- ===== FUNCTIONS =====
-			["@lsp.type.function.cpp"] = { fg = colors.blue },
+			-- Methods distinguished from free functions (sky vs default blue)
 			["@lsp.type.method.cpp"] = { fg = colors.sky },
-			["@function.cpp"] = { fg = colors.blue },
 			["@function.method.cpp"] = { fg = colors.sky },
-			["@function.call.cpp"] = { fg = colors.blue },
 			["@function.method.call.cpp"] = { fg = colors.sky },
 
 			-- ===== PARAMETERS =====
-			["@lsp.type.parameter.cpp"] = { fg = colors.flamingo, style = { "italic" } },
-			["@parameter.cpp"] = { fg = colors.flamingo, style = { "italic" } },
+			["@lsp.type.parameter.cpp"] = { fg = colors.flamingo, italic = true }, -- default: maroon
+			["@variable.parameter.cpp"] = { fg = colors.flamingo, italic = true },
 
 			-- ===== VARIABLES =====
-			["@lsp.type.variable.cpp"] = { fg = colors.lavender },
-			["@lsp.type.property.cpp"] = { fg = colors.sky },
+			["@lsp.type.variable.cpp"] = { fg = colors.lavender }, -- default: text
 			["@variable.cpp"] = { fg = colors.lavender },
-			["@variable.member.cpp"] = { fg = colors.sky },
-			["@property.cpp"] = { fg = colors.sky },
 
 			-- ===== CONSTANTS =====
-			["@lsp.type.enumMember.cpp"] = { fg = colors.yellow, style = { "italic" } },
+			["@lsp.type.enumMember.cpp"] = { fg = colors.yellow, italic = true }, -- default: teal
 			["@constant.cpp"] = { fg = colors.peach },
-			["@constant.builtin.cpp"] = { fg = colors.peach },
 
 			-- ===== KEYWORDS =====
-			["@keyword.cpp"] = { fg = colors.mauve, style = { "italic" } },
-			["@keyword.function.cpp"] = { fg = colors.mauve, style = { "bold" } },
-			["@keyword.return.cpp"] = { fg = colors.mauve, style = { "bold" } },
-			["@keyword.operator.cpp"] = { fg = colors.sky },
-			["@keyword.type.cpp"] = { fg = colors.mauve, style = { "bold" } },
+			["@keyword.operator.cpp"] = { fg = colors.overlay1 }, -- default: mauve
 			["@keyword.storage.cpp"] = { fg = colors.lavender },
-			["@keyword.repeat.cpp"] = { fg = colors.mauve },
-			["@keyword.conditional.cpp"] = { fg = colors.mauve },
+			["@keyword.import.cpp"] = { fg = colors.blue }, -- catppuccin cpp default: yellow
 
-			-- ===== OPERATORS =====
-			["@operator.cpp"] = { fg = colors.sky },
-
-			-- ===== PUNCTUATION =====
-			["@punctuation.delimiter.cpp"] = { fg = colors.lavender },
-			["@punctuation.bracket.cpp"] = { fg = colors.overlay2 },
-			["@punctuation.special.cpp"] = { fg = colors.sky },
-
-			-- ===== STRINGS & NUMBERS =====
-			["@string.cpp"] = { fg = colors.green },
-			["@character.cpp"] = { fg = colors.teal },
-			["@number.cpp"] = { fg = colors.peach },
-			["@boolean.cpp"] = { fg = colors.peach },
+			-- ===== OPERATORS & PUNCTUATION =====
+			["@operator.cpp"] = { fg = colors.overlay1 }, -- default: sky
+			["@punctuation.delimiter.cpp"] = { fg = colors.overlay1 }, -- default: overlay2
+			["@punctuation.special.cpp"] = { fg = colors.overlay1 }, -- default: pink
 
 			-- ===== COMMENTS =====
-			["@comment.cpp"] = { fg = colors.overlay0, style = { "italic" } },
+			["@comment.cpp"] = { fg = colors.overlay1, italic = true }, -- default: overlay2
 
 			-- ===== SPECIAL =====
-			["@constructor.cpp"] = { fg = colors.sapphire, style = { "bold" } },
-			["@label.cpp"] = { fg = colors.sapphire },
+			["@constructor.cpp"] = { fg = colors.sapphire }, -- default: yellow
 
+			-- ===== DIAGNOSTICS =====
 			DiagnosticUnderlineError = { undercurl = true, sp = colors.red },
 			DiagnosticUnderlineWarn = { undercurl = true, sp = colors.yellow },
 			DiagnosticUnderlineInfo = { undercurl = true, sp = colors.sky },
 			DiagnosticUnderlineHint = { undercurl = true, sp = colors.teal },
 
+			-- ===== CODECOMPANION =====
 			CodeCompanionBorder = { fg = colors.sapphire, bg = colors.base, bold = true },
 			CodeCompanionWinBar = { fg = colors.base, bg = colors.sapphire, bold = true },
 			CodeCompanionWinBarNC = { fg = colors.text, bg = colors.surface0, bold = true },
@@ -132,9 +95,9 @@ require("catppuccin").setup({
 			CodeCompanionTokens = { fg = colors.sapphire, italic = true },
 
 			-- ===== LSP MODIFIERS =====
-			["@lsp.mod.readonly.cpp"] = { style = { "italic" } },
-			["@lsp.mod.static.cpp"] = { style = { "underline" } },
-			["@lsp.mod.abstract.cpp"] = { style = { "italic" } },
+			["@lsp.mod.readonly.cpp"] = { italic = true },
+			["@lsp.mod.static.cpp"] = { underline = true },
+			["@lsp.mod.abstract.cpp"] = { italic = true },
 		}
 	end,
 })
