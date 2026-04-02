@@ -223,6 +223,7 @@ require("lualine").setup({
 		lualine_z = {
 			{
 				copilot_icon,
+				padding = { left = 2, right = 2 },
 				color = copilot_color,
 				on_click = function(clicks, button, _)
 					if button ~= "l" or clicks ~= 1 then
