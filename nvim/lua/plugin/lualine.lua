@@ -43,7 +43,7 @@ end
 
 local function lsp_status()
 	local bufnr = vim.api.nvim_get_current_buf()
-	local clients = vim.lsp.get_clients and vim.lsp.get_clients({ bufnr = bufnr }) or {}
+	local clients = vim.lsp.get_clients({ bufnr = bufnr })
 
 	local names = {}
 	for _, client in ipairs(clients) do
@@ -59,14 +59,9 @@ local function lsp_status()
 	return "  " .. table.concat(names, ",")
 end
 
--- Single function that lualine actually calls
-local function lsp_component()
-	return lsp_status()
-end
-
 local function show_lsp_status()
 	local bufnr = vim.api.nvim_get_current_buf()
-	local clients = vim.lsp.get_clients and vim.lsp.get_clients({ bufnr = bufnr }) or {}
+	local clients = vim.lsp.get_clients({ bufnr = bufnr })
 	local lines = {}
 
 	for _, client in ipairs(clients) do
@@ -215,7 +210,7 @@ require("lualine").setup({
 		},
 		lualine_y = {
 			{
-				lsp_component,
+				lsp_status,
 				color = { gui = "bold" },
 				on_click = function(clicks, button, _)
 					if button ~= "l" or clicks ~= 1 then

@@ -24,6 +24,7 @@ require("catppuccin").setup({
 		semantic_tokens = true,
 		treesitter_context = true,
 		render_markdown = true,
+		blink_cmp = true,
 	},
 	custom_highlights = function(colors)
 		return {

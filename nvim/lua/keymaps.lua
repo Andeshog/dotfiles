@@ -1,5 +1,4 @@
 local map = vim.keymap.set
-local opts = { silent = true }
 local diagnostics = require("diagnostics")
 
 local function open_grug_far(options)
@@ -16,7 +15,7 @@ end
 
 map("n", "<Esc>", "<cmd>nohlsearch | echon ''<cr>", { desc = "Clear search highlight + command line" })
 -- Neo-tree
-map("n", "<leader>o", ":Neotree reveal<CR>", opts)
+map("n", "<leader>o", "<cmd>Neotree reveal<cr>", { desc = "Reveal in Neo-tree", silent = true })
 
 -- Treewalker
 map({ "n", "v" }, "<C-k>", "<cmd>Treewalker Up<cr>", { desc = "Treewalker up", silent = true })
@@ -29,10 +28,8 @@ map("n", "<C-S-h>", "<cmd>Treewalker SwapLeft<cr>", { desc = "Treewalker swap le
 map("n", "<C-S-l>", "<cmd>Treewalker SwapRight<cr>", { desc = "Treewalker swap right", silent = true })
 
 -- Save
-map("n", "<C-S>", ":w<CR>", opts)
-map("i", "<C-S>", function()
-	vim.cmd("w")
-end, opts)
+map("n", "<C-S>", "<cmd>w<cr>", { desc = "Save", silent = true })
+map("i", "<C-S>", "<cmd>w<cr>", { desc = "Save", silent = true })
 
 -- Quit
 map("n", "q", "<cmd>q<cr>", { desc = "Quit window" })
@@ -61,10 +58,10 @@ map("n", "<C-A>", "ggVG", { desc = "Select all" })
 map("n", "<leader>w", "<nop>", { desc = "Window" })
 
 -- Navigation
-map("n", "<Up>", "<C-w>k", opts)
-map("n", "<Down>", "<C-w>j", opts)
-map("n", "<Left>", "<C-w>h", opts)
-map("n", "<Right>", "<C-w>l", opts)
+map("n", "<Up>", "<C-w>k", { desc = "Window up", silent = true })
+map("n", "<Down>", "<C-w>j", { desc = "Window down", silent = true })
+map("n", "<Left>", "<C-w>h", { desc = "Window left", silent = true })
+map("n", "<Right>", "<C-w>l", { desc = "Window right", silent = true })
 
 -- Splits
 map("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
