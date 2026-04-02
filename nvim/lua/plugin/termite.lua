@@ -1,7 +1,10 @@
+vim.api.nvim_set_hl(0, "TermiteBorder", { fg = "#a6d189", bold = true })
+vim.api.nvim_set_hl(0, "TermiteBorderNC", { fg = "#51576d" })
+
 require("termite").setup({
 	height = 0.40,
 	position = "bottom",
-	border = "light",
+	border = "heavy",
 	winbar = false,
 	shell = "/bin/bash",
 	keymaps = {
@@ -17,7 +20,7 @@ require("termite").setup({
 		}, ","),
 	},
 	highlights = {
-		border_single = "TermiteBorderSingle",
+		border_single = "TermiteBorder",
 		border_active = "TermiteBorder",
 		border_inactive = "TermiteBorderNC",
 		winbar = "TermiteWinbar",
