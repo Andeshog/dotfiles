@@ -15,7 +15,9 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
 	callback = function()
-		vim.wo.cursorline = true
+		if vim.bo.buftype ~= "terminal" then
+			vim.wo.cursorline = true
+		end
 	end,
 })
 

@@ -25,6 +25,7 @@ require("plugin.lsp-keymaps")
 require("plugin.copilot")
 require("plugin.dap")
 require("plugin.neotest")
+require("plugin.termite")
 
 -- Plugins with default or small config
 require("fidget").setup({
@@ -44,7 +45,6 @@ require("arc").setup({
 	hl_label = "Search",
 })
 require("treewalker").setup({})
-require("termite").setup({ height = 0.25, position = "bottom", border = "double", winbar = false, shell = "/bin/bash" })
 require("plugin.zen").setup()
 require("grug-far").setup({})
 require("gitlineage").setup()
@@ -60,7 +60,6 @@ require("neogit").setup({})
 require("fluoride").setup()
 
 vim.cmd.colorscheme("catppuccin")
--- TODO: Be able to toggle underlay and ghost text via keymap
 vim.diagnostic.config({
 	virtual_text = false,
 	virtual_lines = { current_line = true },
