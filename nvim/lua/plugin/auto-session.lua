@@ -2,10 +2,7 @@ local ignored_filetypes = {
 	dashboard = true,
 	checkhealth = true,
 	termite = true,
-	toggleterm = true,
-	["copilot-chat"] = true,
 	codecompanion = true,
-	Avante = true,
 }
 
 local function close_session_ignored_windows()
@@ -39,6 +36,11 @@ end
 require("auto-session").setup({
 	args_allow_files_auto_save = true,
 	bypass_save_filetypes = { "dashboard" },
-	close_filetypes_on_save = { "checkhealth", "dashboard", "termite", "toggleterm", "copilot-chat", "codecompanion", "Avante" },
+	close_filetypes_on_save = {
+		"checkhealth",
+		"dashboard",
+		"termite",
+		"codecompanion",
+	},
 	pre_save_cmds = { close_session_ignored_windows },
 })
