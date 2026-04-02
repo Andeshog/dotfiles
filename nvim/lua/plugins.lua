@@ -70,6 +70,8 @@ vim.pack.add({
 	{ src = "https://github.com/YouSame2/inlinediff-nvim", name = "inlinediff" },
 	-- Misc
 	{ src = "https://github.com/ruicsh/termite.nvim", name = "termite" },
+	-- Markdown
+	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim", name = "render-markdown" },
 	-- AI/Copilot
 	{ src = "https://github.com/zbirenbaum/copilot.lua", name = "copilot.lua" },
 	-- DAP

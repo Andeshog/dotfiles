@@ -27,6 +27,11 @@ require("plugin.dap")
 require("plugin.neotest")
 require("plugin.termite")
 
+require("render-markdown").setup({
+	render_modes = true,
+	sign = { enabled = false },
+})
+
 -- Plugins with default or small config
 require("fidget").setup({
 	notification = {
