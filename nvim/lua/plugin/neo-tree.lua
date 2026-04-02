@@ -38,7 +38,7 @@ require("neo-tree").setup({
 		follow_current_file = {
 			enabled = true, -- sync with current file
 		},
-		hijack_netrw_behavior = "open_current",
+		hijack_netrw_behavior = "disabled",
 
 		window = {
 			mappings = {

@@ -35,6 +35,13 @@ end
 
 require("auto-session").setup({
 	args_allow_files_auto_save = true,
+	args_allow_single_directory = true,
 	bypass_save_filetypes = { "dashboard" },
+	close_filetypes_on_save = {
+		"checkhealth",
+		"dashboard",
+		"termite",
+		"codecompanion",
+	},
 	pre_save_cmds = { close_session_ignored_windows },
 })
