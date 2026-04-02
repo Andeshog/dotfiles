@@ -12,6 +12,10 @@
       "rev": "a7788416689dbefea659d9e9415c87926b0ba5d8",
       "src": "https://github.com/catppuccin/nvim"
     },
+    "codecompanion": {
+      "rev": "e0fe366cf3af6c80dcac86cb053ef3fe48aae911",
+      "src": "https://github.com/olimorris/codecompanion.nvim"
+    },
     "conform": {
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim"
@@ -157,6 +161,10 @@
     "termite": {
       "rev": "a3900826879d5172d60053d69f70b2f1219f38e3",
       "src": "https://github.com/ruicsh/termite.nvim"
+    },
+    "toggleterm.nvim": {
+      "rev": "9a88eae817ef395952e08650b3283726786fb5fb",
+      "src": "https://github.com/akinsho/toggleterm.nvim"
     },
     "treewalker": {
       "rev": "a37a12b6ae937c616d4cb16b5c26c07a85899b44",

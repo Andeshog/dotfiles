@@ -26,6 +26,7 @@ require("plugin.copilot")
 require("plugin.dap")
 require("plugin.neotest")
 require("plugin.termite")
+require("plugin.codecompanion")
 
 require("render-markdown").setup({
 	render_modes = true,

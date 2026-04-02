@@ -74,6 +74,7 @@ vim.pack.add({
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim", name = "render-markdown" },
 	-- AI/Copilot
 	{ src = "https://github.com/zbirenbaum/copilot.lua", name = "copilot.lua" },
+	{ src = "https://github.com/olimorris/codecompanion.nvim", name = "codecompanion" },
 	-- DAP
 	{ src = "https://github.com/mfussenegger/nvim-dap", name = "nvim-dap" },
 	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view" },
