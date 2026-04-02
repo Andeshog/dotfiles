@@ -79,10 +79,12 @@ end
 local function get_codecompanion_winhighlight()
 	return table.concat({
 		"Normal:Normal",
+		"NormalNC:NormalNC",
 		"EndOfBuffer:EndOfBuffer",
 		"SignColumn:SignColumn",
 		"FoldColumn:FoldColumn",
-		"WinBar:WinBar",
+		"WinBar:CodeCompanionWinBar",
+		"WinBarNC:CodeCompanionWinBarNC",
 	}, ",")
 end
 
@@ -272,6 +274,8 @@ api.nvim_create_autocmd("User", {
 		if bufnr and vim.bo[bufnr].filetype == "codecompanion" then
 			vim.schedule(function()
 				if api.nvim_buf_is_valid(bufnr) then
+					set_codecompanion_window_options()
+					set_codecompanion_keymaps(bufnr)
 					pcall(api.nvim_buf_call, bufnr, function()
 						vim.cmd.redrawstatus()
 					end)

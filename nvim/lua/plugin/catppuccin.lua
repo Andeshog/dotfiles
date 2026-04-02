@@ -123,6 +123,9 @@ require("catppuccin").setup({
 			DiagnosticUnderlineInfo = { undercurl = true, sp = colors.sky },
 			DiagnosticUnderlineHint = { undercurl = true, sp = colors.teal },
 
+			CodeCompanionBorder = { fg = colors.sapphire, bg = colors.base, bold = true },
+			CodeCompanionWinBar = { fg = colors.base, bg = colors.sapphire, bold = true },
+			CodeCompanionWinBarNC = { fg = colors.text, bg = colors.surface0, bold = true },
 			CodeCompanionChatHeader = { fg = colors.blue, bg = colors.surface0, bold = true },
 			CodeCompanionChatSeparator = { fg = colors.surface2 },
 			CodeCompanionVirtualText = { fg = colors.overlay1, italic = true },
