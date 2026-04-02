@@ -1,6 +1,91 @@
 local api = vim.api
 local map = vim.keymap.set
 
+local function is_gpt5_model(model)
+	return type(model) == "string" and vim.startswith(model, "gpt-5")
+end
+
+local function get_adapter_model(adapter)
+	if not adapter then
+		return nil
+	end
+
+	local model = adapter.model
+	if type(model) == "table" then
+		return model.formatted_name or model.name or model.id
+	end
+	if type(model) == "string" then
+		return model
+	end
+
+	local schema_model = adapter.schema and adapter.schema.model and adapter.schema.model.default
+	if type(schema_model) == "function" then
+		local ok, resolved = pcall(schema_model, adapter)
+		if ok then
+			schema_model = resolved
+		else
+			schema_model = nil
+		end
+	end
+
+	if type(schema_model) == "string" then
+		return schema_model
+	end
+end
+
+local function get_adapter_label(adapter)
+	if not adapter then
+		return "Unknown"
+	end
+
+	local parts = { adapter.formatted_name or adapter.name or "Unknown" }
+	local model = get_adapter_model(adapter)
+
+	if model and model ~= "" and model ~= parts[1] then
+		table.insert(parts, model)
+	elseif adapter.type == "acp" then
+		table.insert(parts, "ACP")
+	end
+
+	return table.concat(parts, " · ")
+end
+
+local function get_chat_status(bufnr)
+	local chat = require("codecompanion").buf_get_chat(bufnr)
+	if not chat then
+		return "ready"
+	end
+
+	if chat.status and chat.status ~= "" then
+		return chat.status
+	end
+
+	return "ready"
+end
+
+local function get_chat_winbar(bufnr)
+	local chat = require("codecompanion").buf_get_chat(bufnr)
+	if not chat or not chat.adapter then
+		return " CodeCompanion "
+	end
+
+	return string.format(
+		" CodeCompanion · %s · send <C-s> · ga switch · %s ",
+		get_adapter_label(chat.adapter),
+		get_chat_status(bufnr)
+	)
+end
+
+local function get_codecompanion_winhighlight()
+	return table.concat({
+		"Normal:Normal",
+		"EndOfBuffer:EndOfBuffer",
+		"SignColumn:SignColumn",
+		"FoldColumn:FoldColumn",
+		"WinBar:WinBar",
+	}, ",")
+end
+
 local function close_window()
 	vim.cmd.close()
 end
@@ -11,6 +96,7 @@ local function set_codecompanion_window_options()
 	vim.opt_local.foldcolumn = "0"
 	vim.opt_local.signcolumn = "no"
 	vim.opt_local.statuscolumn = ""
+	vim.opt_local.winhighlight = get_codecompanion_winhighlight()
 end
 
 local function set_codecompanion_keymaps(bufnr)
@@ -36,7 +122,24 @@ end
 require("codecompanion").setup({
 	interactions = {
 		chat = {
-			adapter = "copilot",
+			adapter = {
+				name = "copilot",
+				model = "gpt-5.4",
+			},
+			keymaps = {
+				send = {
+					modes = {
+						n = { "<CR>", "<C-s>" },
+						i = "<C-s>",
+					},
+				},
+			},
+			roles = {
+				llm = function(adapter)
+					return get_adapter_label(adapter)
+				end,
+				user = "You",
+			},
 		},
 		inline = {
 			adapter = "copilot",
@@ -75,18 +178,57 @@ require("codecompanion").setup({
 				return require("codecompanion.adapters").extend("claude_code", {})
 			end,
 		},
+		http = {
+			copilot = function()
+				return require("codecompanion.adapters").extend("copilot", {
+					schema = {
+						top_p = {
+							enabled = function(self)
+								local model = self.schema.model.default
+								if type(model) == "function" then
+									model = model(self)
+								end
+								return not vim.startswith(model, "o1") and not is_gpt5_model(model)
+							end,
+						},
+						n = {
+							enabled = function(self)
+								local model = self.schema.model.default
+								if type(model) == "function" then
+									model = model(self)
+								end
+								return not vim.startswith(model, "o1") and not is_gpt5_model(model)
+							end,
+						},
+					},
+				})
+			end,
+		},
 	},
 	display = {
 		chat = {
+			intro_message = "CodeCompanion chat · <C-s> sends · ga changes adapter/model · ? shows chat keymaps",
+			show_header_separator = true,
+			show_token_count = true,
+			token_count = function(tokens, adapter)
+				return string.format(" (%s · %d tokens)", get_adapter_label(adapter), tokens)
+			end,
 			window = {
 				layout = "vertical",
 				width = 0.35,
+				opts = {
+					winbar = "%!v:lua.CodeCompanionChatWinbar()",
+					winhighlight = get_codecompanion_winhighlight(),
+				},
 			},
 		},
 		cli = {
 			window = {
 				layout = "vertical",
 				width = 0.4,
+				opts = {
+					winhighlight = get_codecompanion_winhighlight(),
+				},
 			},
 		},
 		action_palette = {
@@ -99,6 +241,10 @@ require("codecompanion").setup({
 })
 
 local group = api.nvim_create_augroup("CodeCompanionConfig", { clear = true })
+
+_G.CodeCompanionChatWinbar = function()
+	return get_chat_winbar(api.nvim_get_current_buf())
+end
 
 api.nvim_create_autocmd("FileType", {
 	group = group,
@@ -114,6 +260,23 @@ api.nvim_create_autocmd("BufWinEnter", {
 	callback = function(event)
 		if vim.bo[event.buf].filetype == "codecompanion" or vim.bo[event.buf].filetype == "codecompanion_cli" then
 			set_codecompanion_window_options()
+		end
+	end,
+})
+
+api.nvim_create_autocmd("User", {
+	group = group,
+	pattern = { "CodeCompanionChatOpened", "CodeCompanionRequestStarted", "CodeCompanionRequestFinished" },
+	callback = function(args)
+		local bufnr = args.data and args.data.bufnr
+		if bufnr and vim.bo[bufnr].filetype == "codecompanion" then
+			vim.schedule(function()
+				if api.nvim_buf_is_valid(bufnr) then
+					pcall(api.nvim_buf_call, bufnr, function()
+						vim.cmd.redrawstatus()
+					end)
+				end
+			end)
 		end
 	end,
 })

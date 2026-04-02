@@ -26,6 +26,16 @@ vim.api.nvim_create_autocmd("PackChanged", {
 				vim.fn.system({ "make", "-C", path })
 			end
 		end
+
+		if name == "blink.cmp" and (kind == "install" or kind == "update") then
+			local path = vim.fs.find("blink.cmp", {
+				path = vim.fn.stdpath("data") .. "/site/pack",
+				type = "directory",
+			})[1]
+			if path and vim.fn.executable("cargo") == 1 then
+				vim.system({ "cargo", "build", "--release" }, { cwd = path }):wait()
+			end
+		end
 	end,
 })
 
@@ -46,6 +56,7 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-telescope/telescope.nvim", name = "telescope" },
 	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", name = "telescope-fzf-native" },
 	{ src = "https://github.com/nvim-telescope/telescope-live-grep-args.nvim", name = "telescope-live-grep-args" },
+	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim", name = "telescope-ui-select.nvim" },
 	{ src = "https://github.com/rmagatti/auto-session", name = "auto-session" },
 	{ src = "https://github.com/williamboman/mason.nvim", name = "mason.nvim" },
 	-- Editing
@@ -62,6 +73,7 @@ vim.pack.add({
 	{ src = "https://github.com/j-hui/fidget.nvim", name = "fidget" },
 	{ src = "https://github.com/folke/zen-mode.nvim", name = "zen-mode" },
 	{ src = "https://github.com/nvim-lualine/lualine.nvim", name = "lualine" },
+	{ src = "https://github.com/Saghen/blink.cmp", name = "blink.cmp", version = vim.version.range("1") },
 	-- Git
 	{ src = "https://github.com/lewis6991/gitsigns.nvim", name = "gitsigns" },
 	{ src = "https://github.com/NeogitOrg/neogit", name = "neogit" },

@@ -26,9 +26,11 @@ require("plugin.copilot")
 require("plugin.dap")
 require("plugin.neotest")
 require("plugin.termite")
+require("plugin.blink")
 require("plugin.codecompanion")
 
 require("render-markdown").setup({
+	file_types = { "markdown", "codecompanion" },
 	render_modes = true,
 	sign = { enabled = false },
 })

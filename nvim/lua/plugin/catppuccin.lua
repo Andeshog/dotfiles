@@ -123,6 +123,11 @@ require("catppuccin").setup({
 			DiagnosticUnderlineInfo = { undercurl = true, sp = colors.sky },
 			DiagnosticUnderlineHint = { undercurl = true, sp = colors.teal },
 
+			CodeCompanionChatHeader = { fg = colors.blue, bg = colors.surface0, bold = true },
+			CodeCompanionChatSeparator = { fg = colors.surface2 },
+			CodeCompanionVirtualText = { fg = colors.overlay1, italic = true },
+			CodeCompanionTokens = { fg = colors.sapphire, italic = true },
+
 			-- ===== LSP MODIFIERS =====
 			["@lsp.mod.readonly.cpp"] = { style = { "italic" } },
 			["@lsp.mod.static.cpp"] = { style = { "underline" } },

@@ -24,7 +24,7 @@ opt.showmode = false
 -- TODO: Move fold settings to autocommand
 opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
-opt.completeopt = { "menuone", "noselect", "popup" }
+opt.completeopt = { "menuone", "noselect" }
 opt.undofile = true
 
 -- UI borders

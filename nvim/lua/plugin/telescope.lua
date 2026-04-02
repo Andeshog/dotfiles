@@ -1,4 +1,5 @@
 vim.cmd.packadd("telescope-fzf-native.nvim")
+vim.cmd.packadd("telescope-ui-select.nvim")
 
 -- Check if the fzf extension is installed and build it if necessary
 local fzf_path = vim.fn.globpath(vim.o.packpath, "pack/*/opt/telescope-fzf-native.nvim", false, true)[1]
@@ -8,6 +9,7 @@ end
 
 local telescope = require("telescope")
 local lga_actions = require("telescope-live-grep-args.actions")
+local themes = require("telescope.themes")
 
 telescope.setup({
 	defaults = {
@@ -23,6 +25,9 @@ telescope.setup({
 			override_file_sorter = true,
 			case_mode = "smart_case",
 		},
+		["ui-select"] = themes.get_dropdown({
+			previewer = false,
+		}),
 		live_grep_args = {
 			auto_quoting = false,
 		},
@@ -30,6 +35,7 @@ telescope.setup({
 })
 
 telescope.load_extension("fzf")
+telescope.load_extension("ui-select")
 telescope.load_extension("live_grep_args")
 
 local builtin = require("telescope.builtin")
