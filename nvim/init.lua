@@ -41,12 +41,8 @@ require("render-markdown").setup({
 	sign = { enabled = false },
 })
 
--- Plugins with default or small config
-require("fidget").setup({
-	notification = {
-		override_vim_notify = true,
-	},
-})
+require("vim._core.ui2").enable({})
+
 require("which-key").setup({
 	delay = 800, -- ms before which-key popup shows
 })

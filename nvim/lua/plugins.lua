@@ -70,7 +70,6 @@ vim.pack.add({
 	-- UI
 	{ src = "https://github.com/luukvbaal/statuscol.nvim", name = "statuscol" },
 	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline" },
-	{ src = "https://github.com/j-hui/fidget.nvim", name = "fidget" },
 	{ src = "https://github.com/folke/zen-mode.nvim", name = "zen-mode" },
 	{ src = "https://github.com/nvim-lualine/lualine.nvim", name = "lualine" },
 	{ src = "https://github.com/Saghen/blink.cmp", name = "blink.cmp", version = vim.version.range("1") },
