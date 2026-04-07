@@ -29,7 +29,10 @@ EOF
     exit "${1:-0}"
 }
 
-die()  { echo "error: $*" >&2; exit 1; }
+die() {
+    echo "error: $*" >&2
+    exit 1
+}
 info() { echo ":: $*"; }
 
 # --- Parse arguments ---------------------------------------------------------
@@ -39,19 +42,32 @@ FORCE=0
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        -d|--dir)   NVIM_ROOT="$2"; shift 2 ;;
-        -b|--bin)   BIN_DIR="$2";   shift 2 ;;
-        -f|--force) FORCE=1;        shift   ;;
-        -h|--help)  usage 0                 ;;
-        -*)         die "unknown option: $1" ;;
-        *)
-            [[ -z "$NVIM_VERSION" ]] || die "unexpected argument: $1"
-            NVIM_VERSION="$1"; shift
-            ;;
+    -d | --dir)
+        NVIM_ROOT="$2"
+        shift 2
+        ;;
+    -b | --bin)
+        BIN_DIR="$2"
+        shift 2
+        ;;
+    -f | --force)
+        FORCE=1
+        shift
+        ;;
+    -h | --help) usage 0 ;;
+    -*) die "unknown option: $1" ;;
+    *)
+        [[ -z "$NVIM_VERSION" ]] || die "unexpected argument: $1"
+        NVIM_VERSION="$1"
+        shift
+        ;;
     esac
 done
 
-[[ -n "$NVIM_VERSION" ]] || { echo "error: version argument required" >&2; usage 1; }
+[[ -n "$NVIM_VERSION" ]] || {
+    echo "error: version argument required" >&2
+    usage 1
+}
 
 # Normalise: add leading 'v' for numbered releases (e.g. 0.12.0 -> v0.12.0)
 if [[ "$NVIM_VERSION" =~ ^[0-9] ]]; then
@@ -63,9 +79,9 @@ fi
 
 # --- Architecture ------------------------------------------------------------
 case "$ARCH" in
-    x86_64)  ASSET="nvim-linux-x86_64.appimage" ;;
-    aarch64) ASSET="nvim-linux-arm64.appimage"   ;;
-    *)       die "unsupported architecture: $ARCH" ;;
+x86_64) ASSET="nvim-linux-x86_64.appimage" ;;
+aarch64) ASSET="nvim-linux-arm64.appimage" ;;
+*) die "unsupported architecture: $ARCH" ;;
 esac
 
 DOWNLOAD_URL="https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/${ASSET}"
@@ -80,7 +96,10 @@ command -v curl >/dev/null 2>&1 || die "curl is required but not found"
 
 if [[ -d "$EXTRACT_DIR" && "$FORCE" -eq 0 ]]; then
     read -rp "Existing installation found at $NVIM_ROOT. Overwrite? [y/N] " ans
-    [[ "$ans" =~ ^[Yy]$ ]] || { info "Aborted."; exit 0; }
+    [[ "$ans" =~ ^[Yy]$ ]] || {
+        info "Aborted."
+        exit 0
+    }
 fi
 
 # --- Install -----------------------------------------------------------------
@@ -110,7 +129,7 @@ ln -sf "$NVIM_BIN" "$BIN_DIR/nvim"
 for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
     [[ -f "$rc" ]] || continue
     if ! grep -q 'local/bin' "$rc" 2>/dev/null; then
-        echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$rc"
+        echo "export PATH='$HOME/.local/bin:$PATH'" >>"$rc"
         info "Added ~/.local/bin to PATH in $(basename "$rc")"
     fi
 done

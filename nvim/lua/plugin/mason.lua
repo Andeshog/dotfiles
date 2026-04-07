@@ -9,6 +9,7 @@ local packages = {
 	"lua-language-server",
 	"shfmt",
 	"stylua",
+	"shellcheck",
 }
 
 local function ensure_installed()
