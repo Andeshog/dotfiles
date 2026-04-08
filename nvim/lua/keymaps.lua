@@ -69,6 +69,12 @@ map("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
 map("n", "<leader>we", "<C-w>=", { desc = "Equalize window sizes" })
 map("n", "<leader>wc", "<cmd>close<cr>", { desc = "Close window" })
 
+-- Resize splits
+map("n", "<M-Up>", "<cmd>resize +5<cr>", { desc = "Increase window height", silent = true })
+map("n", "<M-Down>", "<cmd>resize -5<cr>", { desc = "Decrease window height", silent = true })
+map("n", "<M-Left>", "<cmd>vertical resize +5<cr>", { desc = "Increase window width", silent = true })
+map("n", "<M-Right>", "<cmd>vertical resize -5<cr>", { desc = "Decrease window width", silent = true })
+
 -- Buffers
 map("n", "<leader>b", "<nop>", { desc = "Buffer" })
 
@@ -111,6 +117,18 @@ map("t", "<M-Down>", function()
 	local height = vim.api.nvim_win_get_height(win)
 	vim.api.nvim_win_set_height(win, height - 5)
 end, { desc = "Terminal: decrease height" })
+
+map("t", "<M-Left>", function()
+	local win = vim.api.nvim_get_current_win()
+	local width = vim.api.nvim_win_get_width(win)
+	vim.api.nvim_win_set_width(win, width + 5)
+end, { desc = "Terminal: increase width" })
+
+map("t", "<M-Right>", function()
+	local win = vim.api.nvim_get_current_win()
+	local width = vim.api.nvim_win_get_width(win)
+	vim.api.nvim_win_set_width(win, width - 5)
+end, { desc = "Terminal: decrease width" })
 
 -- Grug-far (find and replace)
 map("n", "<leader>sr", function()
