@@ -98,6 +98,7 @@ map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
 map("n", "<leader>gd", function()
 	require("inlinediff").toggle()
 end, { desc = "Toggle inline diff" })
+map("n", "<leader>gn", "<cmd>Gitsigns next_hunk<cr>", { desc = "Next git hunk" })
 
 ----------------------------------------------------------
 ----------------------- Telescope ------------------------
