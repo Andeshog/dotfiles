@@ -88,7 +88,7 @@ vim.pack.add({
 	{ src = "https://github.com/olimorris/codecompanion.nvim", name = "codecompanion" },
 	-- DAP
 	{ src = "https://github.com/mfussenegger/nvim-dap", name = "nvim-dap" },
-	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view" },
+	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view", version = vim.version.range("*") },
 	{ src = "https://github.com/theHamsta/nvim-dap-virtual-text", name = "nvim-dap-virtual-text" },
 	-- Testing
 	{ src = "https://github.com/nvim-neotest/neotest", name = "neotest" },
