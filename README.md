@@ -6,11 +6,12 @@ The `install` script will create symlinks for NeoVim and Tmux configs. If there 
 
 ```bash
 ./scripts/install.sh
-./scripts/install.sh --only-tmux
+./scripts/install.sh --tmux
+./scripts/install.sh --nvim
 ./scripts/install.sh --override
 ```
 
-### WezTerm symlink
+### WezTerm symlink on Windows
 ```bash
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.wezterm.lua" -Target "\\wsl$\Ubuntu-22.04\home\path_to_dotfiles\wezterm.lua"
 ```
