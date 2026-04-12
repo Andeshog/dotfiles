@@ -1,6 +1,6 @@
 return {
 	cmd = {
-		"clangd-20",
+		"clangd",
 		"--background-index",
 		"--clang-tidy",
 		"--header-insertion=iwyu",

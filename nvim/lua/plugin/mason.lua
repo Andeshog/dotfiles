@@ -10,6 +10,8 @@ local packages = {
 	"shfmt",
 	"stylua",
 	"shellcheck",
+	"clangd",
+	"clang-format",
 }
 
 local function ensure_installed()
