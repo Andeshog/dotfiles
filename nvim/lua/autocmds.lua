@@ -15,6 +15,10 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
 	callback = function()
+		local ft = vim.bo.filetype
+		if ft == "neo-tree" or ft == "neo-tree-popup" then
+			return
+		end
 		if vim.bo.buftype ~= "terminal" then
 			vim.wo.cursorline = true
 		end
@@ -23,6 +27,10 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
 
 vim.api.nvim_create_autocmd("WinLeave", {
 	callback = function()
+		local ft = vim.bo.filetype
+		if ft == "neo-tree" or ft == "neo-tree-popup" then
+			return
+		end
 		vim.wo.cursorline = false
 	end,
 })
@@ -38,6 +46,13 @@ vim.api.nvim_create_autocmd("LspProgress", {
 			status = value.kind ~= "end" and "running" or "success",
 			percent = value.percentage,
 		})
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "neo-tree-popup",
+	callback = function()
+		vim.opt_local.cursorline = false
 	end,
 })
 

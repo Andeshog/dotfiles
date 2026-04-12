@@ -1,4 +1,7 @@
 require("blink.cmp").setup({
+	enabled = function()
+		return vim.bo.buftype ~= "prompt" and vim.bo.filetype ~= "neo-tree-popup"
+	end,
 	keymap = {
 		preset = "none",
 		["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
@@ -26,8 +29,22 @@ require("blink.cmp").setup({
 			end,
 			"fallback",
 		},
-		["<Up>"] = { "select_prev", "fallback" },
-		["<Down>"] = { "select_next", "fallback" },
+		["<Up>"] = {
+			function(cmp)
+				if cmp.is_menu_visible() then
+					return cmp.select_prev()
+				end
+			end,
+			"fallback",
+		},
+		["<Down>"] = {
+			function(cmp)
+				if cmp.is_menu_visible() then
+					return cmp.select_next()
+				end
+			end,
+			"fallback",
+		},
 		["<C-p>"] = { "select_prev", "fallback_to_mappings" },
 		["<C-n>"] = { "select_next", "fallback_to_mappings" },
 		["<C-b>"] = { "scroll_documentation_up", "fallback" },
