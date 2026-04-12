@@ -3,13 +3,6 @@ vim.api.nvim_create_autocmd("PackChanged", {
 		local name = ev.data.spec.name
 		local kind = ev.data.kind
 
-		if name == "nvim-treesitter" and kind == "update" then
-			if not ev.data.active then
-				vim.cmd.packadd("nvim-treesitter")
-			end
-			vim.cmd("TSUpdate")
-		end
-
 		if name == "mason.nvim" and kind == "update" then
 			if not ev.data.active then
 				vim.cmd.packadd("mason.nvim")
@@ -47,7 +40,6 @@ vim.pack.add({
 	"https://github.com/nvim-tree/nvim-web-devicons",
 
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 	{ src = "https://github.com/folke/which-key.nvim", name = "which-key" },
 	--Navigation and files
 	{ src = "https://github.com/matze/vim-move", name = "vim-move" },
@@ -88,11 +80,9 @@ vim.pack.add({
 	{ src = "https://github.com/olimorris/codecompanion.nvim", name = "codecompanion" },
 	-- DAP
 	{ src = "https://github.com/mfussenegger/nvim-dap", name = "nvim-dap" },
-	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view", version = vim.version.range("*") },
-	{ src = "https://github.com/theHamsta/nvim-dap-virtual-text", name = "nvim-dap-virtual-text" },
+	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view", version = vim.version.range("1") },
 	-- Testing
 	{ src = "https://github.com/nvim-neotest/neotest", name = "neotest" },
 	{ src = "https://github.com/nvim-neotest/nvim-nio", name = "nvim-nio" },
 	{ src = "https://github.com/Andeshog/neotest-gtest", name = "neotest-gtest" },
-	{ src = "https://github.com/fredrikaverpil/neotest-golang", name = "neotest-golang" },
 })

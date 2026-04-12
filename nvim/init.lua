@@ -10,6 +10,8 @@ end
 vim.cmd("packadd nvim.undotree")
 vim.keymap.set("n", "<leader>u", require("undotree").open)
 
+vim.treesitter.language.register("bash", "sh")
+
 require("options")
 require("keymaps")
 require("autocmds")
@@ -22,7 +24,6 @@ require("plugin.mason")
 require("plugin.conform")
 require("plugin.lint")
 require("plugin.auto-session")
-require("plugin.treesitter")
 require("plugin.statuscol")
 require("plugin.indent_blankline")
 require("plugin.telescope")

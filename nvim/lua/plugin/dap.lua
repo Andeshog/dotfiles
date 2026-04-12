@@ -70,14 +70,16 @@ dapview.setup({
 	auto_toggle = true,
 })
 
-require("nvim-dap-virtual-text").setup({})
-
 -- Hide neotest panels and neo-tree when debugging starts
 dap.listeners.after.event_initialized["dapview_neotest"] = function()
 	local ok, neotest = pcall(require, "neotest")
 	if ok then
-		pcall(function() neotest.summary.close() end)
-		pcall(function() neotest.output_panel.close() end)
+		pcall(function()
+			neotest.summary.close()
+		end)
+		pcall(function()
+			neotest.output_panel.close()
+		end)
 	end
 	pcall(vim.cmd, "Neotree close")
 end
@@ -135,18 +137,51 @@ local session_keymaps = {
 	{ "n", "<leader>du", dapview.toggle, "DAP: toggle view" },
 	{ { "n", "v" }, "<leader>dh", widgets.hover, "DAP: hover variables" },
 	{ { "n", "v" }, "<leader>dp", widgets.preview, "DAP: preview variable" },
-	{ "n", "<leader>df", function() widgets.centered_float(widgets.frames) end, "DAP: show frames" },
-	{ "n", "<leader>ds", function() widgets.centered_float(widgets.scopes) end, "DAP: show scopes" },
+	{
+		"n",
+		"<leader>df",
+		function()
+			widgets.centered_float(widgets.frames)
+		end,
+		"DAP: show frames",
+	},
+	{
+		"n",
+		"<leader>ds",
+		function()
+			widgets.centered_float(widgets.scopes)
+		end,
+		"DAP: show scopes",
+	},
 	{ { "n", "v" }, "<leader>de", widgets.hover, "DAP: evaluate expression" },
-	{ "n", "<leader>dE", function() widgets.centered_float(widgets.expression) end, "DAP: show expressions" },
+	{
+		"n",
+		"<leader>dE",
+		function()
+			widgets.centered_float(widgets.expression)
+		end,
+		"DAP: show expressions",
+	},
 	{ "n", "<leader>dR", dap.restart, "DAP: restart session" },
 	{ "n", "<leader>dc", dap.run_to_cursor, "DAP: run to cursor" },
-	{ "n", "<leader>dr", function() dap.repl.open({}, "belowright split") end, "DAP: open REPL (split)" },
-	{ "n", "<leader>dq", function()
-		dap.terminate()
-		dap.disconnect({ terminateDebuggee = true })
-		pcall(dapview.close)
-	end, "DAP: stop" },
+	{
+		"n",
+		"<leader>dr",
+		function()
+			dap.repl.open({}, "belowright split")
+		end,
+		"DAP: open REPL (split)",
+	},
+	{
+		"n",
+		"<leader>dq",
+		function()
+			dap.terminate()
+			dap.disconnect({ terminateDebuggee = true })
+			pcall(dapview.close)
+		end,
+		"DAP: stop",
+	},
 }
 
 local function set_session_keymaps()

@@ -118,8 +118,10 @@ local function restore_summary_origin()
 	end)
 end
 
-neotest.setup({
-	adapters = {
+local adapters = {}
+if pcall(vim.treesitter.language.inspect, "cpp") then
+	table.insert(
+		adapters,
 		require("neotest-gtest").setup({
 			debug_adapter = "codelldb",
 			is_test_file = function(path)
@@ -131,20 +133,16 @@ neotest.setup({
 					or path:match("test_.*%.[^/]+$")
 					or path:match(".*_tests?%.[^/]+$")
 			end,
-		}),
-		-- require("neotest-ctest").setup({}),
-		require("neotest-golang")({
-			go_test_args = {
-				"-v",
-				"-count=1",
-			},
-		}),
-	},
+		})
+	)
+end
+
+neotest.setup({
+	adapters = adapters,
 	summary = {
 		open = open_summary_window,
 	},
 })
-
 local function run_and_redraw(...)
 	local args = { ... }
 	neotest.run.run(unpack(args))
@@ -201,7 +199,8 @@ vim.api.nvim_create_autocmd("User", {
 		end
 
 		local toggle = zen.get_last_toggle()
-		local should_focus = toggle.from_win == summary_win or (is_summary_win(toggle.from_win) and is_valid_win(toggle.from_win))
+		local should_focus = toggle.from_win == summary_win
+			or (is_summary_win(toggle.from_win) and is_valid_win(toggle.from_win))
 		reopen_summary_for_zen(should_focus)
 	end,
 })
@@ -216,7 +215,8 @@ vim.api.nvim_create_autocmd("User", {
 		end
 
 		local toggle = zen.get_last_toggle()
-		local should_focus = toggle.from_win == summary_win or (is_summary_win(toggle.from_win) and is_valid_win(toggle.from_win))
+		local should_focus = toggle.from_win == summary_win
+			or (is_summary_win(toggle.from_win) and is_valid_win(toggle.from_win))
 		reopen_summary_for_zen(should_focus)
 	end,
 })
