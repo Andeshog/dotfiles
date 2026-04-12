@@ -99,6 +99,20 @@ map("n", "<leader>gd", function()
 	require("inlinediff").toggle()
 end, { desc = "Toggle inline diff" })
 map("n", "<leader>gn", "<cmd>Gitsigns next_hunk<cr>", { desc = "Next git hunk" })
+map({ "n", "v" }, "<leader>gr", function()
+	local gs = require("gitsigns")
+	if vim.fn.mode():match("[vV]") then
+		local start_line = vim.fn.line("v")
+		local end_line = vim.fn.line(".")
+		if start_line > end_line then
+			start_line, end_line = end_line, start_line
+		end
+		gs.reset_hunk({ start_line, end_line })
+	else
+		local line = vim.api.nvim_win_get_cursor(0)[1]
+		gs.reset_hunk({ line, line })
+	end
+end, { desc = "Reset git hunk" })
 
 ----------------------------------------------------------
 ----------------------- Telescope ------------------------
