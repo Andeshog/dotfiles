@@ -67,7 +67,13 @@ local function show_lsp_status()
 	for _, client in ipairs(clients) do
 		if not is_copilot_client(client) then
 			local root = client.root_dir or client.config.root_dir or "?"
-			table.insert(lines, string.format("%s [%s]", client.name, root))
+			local version = ""
+			if client.server_info and client.server_info.version then
+				local ver = client.server_info.version
+				local short = ver:match("version (%d+%.%d+%.%d+)")
+				version = " v" .. (short or ver)
+			end
+			table.insert(lines, string.format("%s%s [%s]", client.name, version, root))
 		end
 	end
 
@@ -107,7 +113,11 @@ local function copilot_color()
 		if status.data.status == "InProgress" or status.data.status == "Warning" then
 			return { fg = base.fg, bg = colors.busy }
 		end
-		if status.data.status ~= "" and status.data.message ~= "" and status.data.message:lower():find("error", 1, true) then
+		if
+			status.data.status ~= ""
+			and status.data.message ~= ""
+			and status.data.message:lower():find("error", 1, true)
+		then
 			return { fg = base.fg, bg = colors.error }
 		end
 	end
