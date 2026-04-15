@@ -90,6 +90,7 @@ map("n", "<leader>bo", "<cmd>%bdelete|edit#|bdelete#<cr>", { desc = "Delete othe
 map("n", "<leader>bq", function()
 	vim.cmd("silent! %bdelete | intro")
 end, { desc = "Close all buffers", silent = true })
+map("n", "<leader>B", "<cmd>Neotree float buffers<cr>", { desc = "Buffer list (Neo-tree)", silent = true })
 
 -- Git
 map("n", "<leader>g", "<nop>", { desc = "Git" })
