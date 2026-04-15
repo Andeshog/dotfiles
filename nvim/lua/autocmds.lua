@@ -2,7 +2,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
 		if lang and vim.treesitter.language.add(lang) then
-			vim.treesitter.start()
+			pcall(vim.treesitter.start)
 		end
 	end,
 })
