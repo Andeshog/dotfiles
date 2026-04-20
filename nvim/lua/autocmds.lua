@@ -1,3 +1,9 @@
+vim.api.nvim_create_autocmd("ColorScheme", {
+	callback = function()
+		vim.api.nvim_set_hl(0, "SnippetTabstop", {})
+	end,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
