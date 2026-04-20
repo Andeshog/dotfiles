@@ -13,6 +13,10 @@ local function open_grug_far_current_file(options)
 	open_grug_far(options)
 end
 
+-- Scrolling
+map({ "n", "v" }, "<C-d>", "<C-d>zz", { desc = "Scroll down (centered)", silent = true })
+map({ "n", "v" }, "<C-u>", "<C-u>zz", { desc = "Scroll up (centered)", silent = true })
+
 map("n", "<Esc>", "<cmd>nohlsearch | echon ''<cr>", { desc = "Clear search highlight + command line" })
 -- Neo-tree
 map("n", "<leader>o", "<cmd>Neotree reveal<cr>", { desc = "Reveal in Neo-tree", silent = true })
