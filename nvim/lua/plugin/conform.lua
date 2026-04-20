@@ -29,6 +29,9 @@ require("conform").setup({
 		},
 	},
 	format_on_save = function(bufnr)
+		if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+			return
+		end
 		if vim.b[bufnr].visual_multi then
 			return
 		end
@@ -39,3 +42,8 @@ require("conform").setup({
 		end
 	end,
 })
+
+vim.api.nvim_create_user_command("FormatOnSaveToggle", function()
+	vim.g.disable_autoformat = not vim.g.disable_autoformat
+	vim.notify("Format on save: " .. (vim.g.disable_autoformat and "off" or "on"))
+end, { desc = "Toggle format on save" })
