@@ -2,6 +2,9 @@ require("blink.cmp").setup({
 	enabled = function()
 		return vim.bo.buftype ~= "prompt" and vim.bo.filetype ~= "neo-tree-popup"
 	end,
+	signature = {
+		enabled = true,
+	},
 	keymap = {
 		preset = "none",
 		["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
