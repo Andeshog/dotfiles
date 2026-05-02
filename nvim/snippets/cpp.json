@@ -1,0 +1,173 @@
+{
+  "struct": {
+    "prefix": "struct",
+    "description": "Struct definition",
+    "body": [
+      "struct ${1:Name} {",
+      "\t$0",
+      "};"
+    ]
+  },
+  "class": {
+    "prefix": "class",
+    "description": "Class definition",
+    "body": [
+      "class ${1:Name} {",
+      "public:",
+      "\t${1}();",
+      "\t~${1}();",
+      "",
+      "private:",
+      "\t$0",
+      "};"
+    ]
+  },
+  "class-rule-of-five": {
+    "prefix": "class5",
+    "description": "Class with rule of five",
+    "body": [
+      "class ${1:Name} {",
+      "public:",
+      "\t${1}();",
+      "\t~${1}();",
+      "\t${1}(const ${1}& other);",
+      "\t${1}(${1}&& other) noexcept;",
+      "\t${1}& operator=(const ${1}& other);",
+      "\t${1}& operator=(${1}&& other) noexcept;",
+      "",
+      "private:",
+      "\t$0",
+      "};"
+    ]
+  },
+  "enum-class": {
+    "prefix": "enumc",
+    "description": "Scoped enum",
+    "body": [
+      "enum class ${1:Name} {",
+      "\t$0",
+      "};"
+    ]
+  },
+  "for-range": {
+    "prefix": "forr",
+    "description": "Range-based for loop",
+    "body": [
+      "for (${1:const auto&} ${2:elem} : ${3:container}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "for-index": {
+    "prefix": "fori",
+    "description": "Index-based for loop",
+    "body": [
+      "for (${1:std::size_t} ${2:i} = 0; ${2} < ${3:count}; ++${2}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "if": {
+    "prefix": "if",
+    "description": "If statement",
+    "body": [
+      "if (${1:condition}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "template-class": {
+    "prefix": "tclass",
+    "description": "Templated class",
+    "body": [
+      "template <typename ${1:T}>",
+      "class ${2:Name} {",
+      "public:",
+      "\t$0",
+      "};"
+    ]
+  },
+  "template-function": {
+    "prefix": "tfun",
+    "description": "Templated function",
+    "body": [
+      "template <typename ${1:T}>",
+      "${2:auto} ${3:name}(${4:${1} const& arg}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "unique-ptr": {
+    "prefix": "uptr",
+    "description": "std::unique_ptr",
+    "body": "auto ${1:ptr} = std::make_unique<${2:Type}>(${3});"
+  },
+  "shared-ptr": {
+    "prefix": "sptr",
+    "description": "std::shared_ptr",
+    "body": "auto ${1:ptr} = std::make_shared<${2:Type}>(${3});"
+  },
+  "include-guard": {
+    "prefix": "guard",
+    "description": "Header include guard",
+    "body": [
+      "#ifndef ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H}",
+      "#define ${1}",
+      "",
+      "$0",
+      "",
+      "#endif // ${1}"
+    ]
+  },
+  "pragma-once": {
+    "prefix": "pragma",
+    "description": "Pragma once",
+    "body": "#pragma once"
+  },
+  "namespace": {
+    "prefix": "ns",
+    "description": "Namespace",
+    "body": [
+      "namespace ${1:name} {",
+      "",
+      "$0",
+      "",
+      "} // namespace ${1}"
+    ]
+  },
+  "cout": {
+    "prefix": "cout",
+    "description": "std::cout",
+    "body": "std::cout << ${1:\"message\"} << '\\n';"
+  },
+  "lambda": {
+    "prefix": "lam",
+    "description": "Lambda expression",
+    "body": "[${1:&}](${2:auto const& arg}) { ${0:return arg;} }"
+  },
+  "switch": {
+    "prefix": "switch",
+    "description": "Switch statement",
+    "body": [
+      "switch (${1:value}) {",
+      "case ${2:val}: {",
+      "\t$0",
+      "\tbreak;",
+      "}",
+      "default:",
+      "\tbreak;",
+      "}"
+    ]
+  },
+  "try-catch": {
+    "prefix": "try",
+    "description": "Try-catch block",
+    "body": [
+      "try {",
+      "\t$0",
+      "} catch (const ${1:std::exception}& ${2:e}) {",
+      "\t${3:// handle error}",
+      "}"
+    ]
+  }
+}
