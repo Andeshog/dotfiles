@@ -32,7 +32,7 @@ require("conform").setup({
 		if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
 			return
 		end
-		if vim.b[bufnr].visual_multi then
+		if require("multicursor-nvim").hasCursors() then
 			return
 		end
 

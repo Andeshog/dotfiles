@@ -55,7 +55,7 @@ vim.pack.add({
 	{ src = "https://github.com/windwp/nvim-autopairs", name = "nvim-autopairs" },
 	{ src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
 	{ src = "https://github.com/MagicDuck/grug-far.nvim", name = "grug-far" },
-	{ src = "https://github.com/mg979/vim-visual-multi", name = "vim-visual-multi" },
+	{ src = "https://github.com/jake-stewart/multicursor.nvim", name = "multicursor" },
 	{ src = "https://github.com/Sang-it/fluoride", name = "fluoride" },
 	{ src = "https://github.com/stevearc/conform.nvim", name = "conform" },
 	{ src = "https://github.com/mfussenegger/nvim-lint", name = "nvim-lint" },

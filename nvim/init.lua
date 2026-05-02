@@ -35,6 +35,7 @@ require("plugin.neotest")
 require("plugin.termite")
 require("plugin.blink")
 require("plugin.codecompanion")
+require("plugin.multicursor")
 
 require("render-markdown").setup({
 	file_types = { "markdown", "codecompanion" },

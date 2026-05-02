@@ -70,6 +70,10 @@
       "rev": "cb8445f8ce85d957416c106b780efd51c6298f89",
       "src": "https://github.com/williamboman/mason.nvim"
     },
+    "multicursor": {
+      "rev": "704b99f10a72cc05d370cfeb294ff83412a8ab55",
+      "src": "https://github.com/jake-stewart/multicursor.nvim"
+    },
     "neo-tree.nvim": {
       "rev": "84c75e7a7e443586f60508d12fc50f90d9aee14e",
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim",
@@ -170,10 +174,6 @@
     "vim-surround": {
       "rev": "3d188ed2113431cf8dac77be61b842acb64433d9",
       "src": "https://github.com/tpope/vim-surround"
-    },
-    "vim-visual-multi": {
-      "rev": "a6975e7c1ee157615bbc80fc25e4392f71c344d4",
-      "src": "https://github.com/mg979/vim-visual-multi"
     },
     "which-key": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
