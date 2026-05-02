@@ -43,10 +43,7 @@ require("render-markdown").setup({
 })
 
 vim.o.cmdheight = 1
-require("vim._core.ui2").enable({
-	enable = true,
-	msg = { target = "msg", timeout = 1000 },
-})
+require("vim._core.ui2").enable()
 
 require("which-key").setup({
 	delay = 800, -- ms before which-key popup shows
@@ -72,7 +69,9 @@ require("inlinediff").setup({
 	},
 })
 require("neogit").setup({})
-require("fluoride").setup()
+require("fluoride").setup({
+	max_depth = 3,
+})
 
 vim.cmd.colorscheme("catppuccin")
 vim.diagnostic.config({
