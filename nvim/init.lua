@@ -73,6 +73,11 @@ require("neogit").setup({})
 require("fluoride").setup({
 	max_depth = 3,
 })
+require("diffview").setup({
+	default_args = {
+		DiffviewOpen = { "--imply-local" },
+	},
+})
 
 vim.cmd.colorscheme("catppuccin")
 vim.diagnostic.config({

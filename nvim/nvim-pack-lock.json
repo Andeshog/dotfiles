@@ -5,7 +5,7 @@
       "src": "https://codeberg.org/knight9114/arc.nvim"
     },
     "auto-session": {
-      "rev": "62437532b38495551410b3f377bcf4aaac574ebe",
+      "rev": "daa7c996a0395e26342934843938647d0f1e87f4",
       "src": "https://github.com/rmagatti/auto-session"
     },
     "blink.cmp": {
@@ -18,7 +18,7 @@
       "src": "https://github.com/catppuccin/nvim"
     },
     "codecompanion": {
-      "rev": "9d985b1cc4e650a676a977ab1f9ed50dc6d0f4d8",
+      "rev": "2e33fbdd1ace1e5019ffba8891c5a23711005707",
       "src": "https://github.com/olimorris/codecompanion.nvim"
     },
     "conform": {
@@ -26,7 +26,7 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.lua": {
-      "rev": "78c638293f0ea6a2245eca46e9933ee271792d7e",
+      "rev": "61784cb7a1a109d72b9cb107ee70d11bc7d095ff",
       "src": "https://github.com/zbirenbaum/copilot.lua"
     },
     "dap-view": {
@@ -35,8 +35,8 @@
       "version": "1.0.0 - 2.0.0"
     },
     "diffview": {
-      "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
-      "src": "https://github.com/sindrets/diffview.nvim"
+      "rev": "2086ca265a189665a84d0806fd5f7f0acf23b1ac",
+      "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "fluoride": {
       "rev": "df30862c6144f250250a340d183d0d324fe6f075",
@@ -80,7 +80,7 @@
       "version": "3.0.0 - 4.0.0"
     },
     "neogit": {
-      "rev": "88000e7e60177558d1b428a0d561c92e5d81341e",
+      "rev": "e74dfb42c04b493031f323aec8fa5f28b0427b9e",
       "src": "https://github.com/NeogitOrg/neogit"
     },
     "neotest": {
@@ -128,15 +128,15 @@
       "src": "https://github.com/luukvbaal/statuscol.nvim"
     },
     "telescope": {
-      "rev": "62cc79911abf0af91b63830744889a6eb029d786",
+      "rev": "f04ab730b8f9c6bf3f54a206d0dcddfd70c52d59",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "telescope-fzf-native": {
-      "rev": "6fea601bd2b694c6f2ae08a6c6fab14930c60e2c",
+      "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
       "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
     },
     "telescope-fzf-native.nvim": {
-      "rev": "6fea601bd2b694c6f2ae08a6c6fab14930c60e2c",
+      "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
       "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
     },
     "telescope-live-grep-args": {
@@ -152,7 +152,7 @@
       "src": "https://github.com/nvim-telescope/telescope-ui-select.nvim"
     },
     "telescope.nvim": {
-      "rev": "62cc79911abf0af91b63830744889a6eb029d786",
+      "rev": "f04ab730b8f9c6bf3f54a206d0dcddfd70c52d59",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "termite": {

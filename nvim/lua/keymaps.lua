@@ -210,3 +210,6 @@ map("n", "<leader>xd", diagnostics.toggle, { desc = "Toggle diagnostics" })
 map("n", "<leader>cp", function()
 	require("fluoride").toggle()
 end, { desc = "Toggle Fluoride" })
+
+-- Diffview
+map("n", "<leader>dv", "<cmd>DiffviewOpen origin/main...HEAD<cr>", { desc = "Diffview: current branch vs main" })
