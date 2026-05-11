@@ -92,6 +92,21 @@ local function close_window()
 	vim.cmd.close()
 end
 
+local function toggle_cli_agent(agent_name)
+	local cli = require("codecompanion.interactions.cli")
+	local instance = cli.find_by_agent(agent_name)
+	if instance then
+		if instance.ui:is_visible() then
+			instance.ui:hide()
+		else
+			instance.ui:open()
+			instance:focus()
+		end
+	else
+		require("codecompanion").cli({ agent = agent_name })
+	end
+end
+
 local function set_codecompanion_window_options()
 	vim.opt_local.number = false
 	vim.opt_local.relativenumber = false
@@ -303,13 +318,15 @@ map(
 	"<cmd>CodeCompanionChat Add<cr>",
 	{ noremap = true, silent = true, desc = "AI: Add Selection to Chat" }
 )
-map("n", "<leader>aC", "<cmd>CodeCompanionCLI<cr>", { noremap = true, silent = true, desc = "AI: Claude Code CLI" })
-map(
-	"n",
-	"<leader>aP",
-	"<cmd>CodeCompanionCLI agent=copilot_cli<cr>",
-	{ noremap = true, silent = true, desc = "AI: Copilot CLI" }
-)
+map("n", "<leader>aC", function()
+	toggle_cli_agent("claude_code")
+end, { noremap = true, silent = true, desc = "AI: Toggle Claude Code CLI" })
+map("n", "<leader>aP", function()
+	toggle_cli_agent("copilot_cli")
+end, { noremap = true, silent = true, desc = "AI: Toggle Copilot CLI" })
+map("n", "<leader>a<space>", function()
+	require("codecompanion").toggle()
+end, { noremap = true, silent = true, desc = "AI: Toggle last interaction (chat/CLI)" })
 map({ "n", "v" }, "<leader>ai", "<cmd>CodeCompanion<cr>", { noremap = true, silent = true, desc = "AI: Inline Prompt" })
 map("v", "<leader>ae", "<cmd>CodeCompanion /explain<cr>", { noremap = true, silent = true, desc = "AI: Explain Code" })
 map("v", "<leader>af", "<cmd>CodeCompanion /fix<cr>", { noremap = true, silent = true, desc = "AI: Fix Code" })
