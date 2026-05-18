@@ -38,6 +38,10 @@
       "rev": "2086ca265a189665a84d0806fd5f7f0acf23b1ac",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
+    "filemention": {
+      "rev": "f2bde456b9d74c41ea5f392615adf6c37450b0b2",
+      "src": "https://github.com/not-manu/filemention.nvim"
+    },
     "fluoride": {
       "rev": "df30862c6144f250250a340d183d0d324fe6f075",
       "src": "https://github.com/Sang-it/fluoride"

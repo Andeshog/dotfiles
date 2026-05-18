@@ -51,6 +51,7 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim", name = "telescope-ui-select.nvim" },
 	{ src = "https://github.com/rmagatti/auto-session", name = "auto-session" },
 	{ src = "https://github.com/williamboman/mason.nvim", name = "mason.nvim" },
+	{ src = "https://github.com/not-manu/filemention.nvim", name = "filemention" },
 	-- Editing
 	{ src = "https://github.com/windwp/nvim-autopairs", name = "nvim-autopairs" },
 	{ src = "https://github.com/tpope/vim-surround", name = "vim-surround" },

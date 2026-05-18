@@ -75,7 +75,7 @@ require("blink.cmp").setup({
 		},
 	},
 	sources = {
-		default = { "lsp", "path", "snippets", "buffer" },
+		default = { "lsp", "path", "snippets", "buffer", "filemention" },
 		per_filetype = {
 			codecompanion = { "codecompanion" },
 			codecompanion_input = { "codecompanion" },
@@ -97,6 +97,10 @@ require("blink.cmp").setup({
 				name = "CodeCompanion",
 				module = "codecompanion.providers.completion.blink",
 				score_offset = 10,
+			},
+			filemention = {
+				name = "filemention",
+				module = "filemention.sources.blink",
 			},
 		},
 	},

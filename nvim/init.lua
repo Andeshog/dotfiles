@@ -43,6 +43,10 @@ require("render-markdown").setup({
 	sign = { enabled = false },
 })
 
+require("filemention").setup({
+	filetypes = { "markdown", "text", "gitcommit", "codecompanion" },
+})
+
 vim.o.cmdheight = 1
 require("vim._core.ui2").enable()
 
