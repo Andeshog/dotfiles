@@ -34,7 +34,7 @@ local function close_session_ignored_windows()
 end
 
 require("auto-session").setup({
-	args_allow_files_auto_save = true,
+	args_allow_files_auto_save = false,
 	args_allow_single_directory = true,
 	bypass_save_filetypes = { "dashboard" },
 	close_filetypes_on_save = {
