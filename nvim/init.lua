@@ -64,7 +64,6 @@ require("arc").setup({
 require("treewalker").setup({})
 require("plugin.zen").setup()
 require("grug-far").setup({})
-require("gitlineage").setup()
 require("inlinediff").setup({
 	colors = {
 		InlineDiffAddContext = "#2a3b29",

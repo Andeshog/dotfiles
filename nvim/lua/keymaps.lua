@@ -99,7 +99,9 @@ map("n", "<leader>B", "<cmd>Neotree float buffers<cr>", { desc = "Buffer list (N
 -- Git
 map("n", "<leader>g", "<nop>", { desc = "Git" })
 map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
--- Git lineage is default mapped to v <leader>gl on selection
+map("n", "<leader>gl", "<cmd>.DiffviewFileHistory %<cr>", { desc = "Git line history" })
+map("v", "<leader>gl", ":<C-u>'<,'>DiffviewFileHistory %<cr>", { desc = "Git line history" })
+map("n", "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", { desc = "Git file history" })
 map("n", "<leader>gd", function()
 	require("inlinediff").toggle()
 end, { desc = "Toggle inline diff" })
