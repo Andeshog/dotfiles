@@ -61,7 +61,9 @@ require("arc").setup({
 	hl_backdrop = "Ignore",
 	hl_label = "Search",
 })
-require("treewalker").setup({})
+require("treewalker").setup({
+	scope_confined = true,
+})
 require("plugin.zen").setup()
 require("grug-far").setup({})
 require("inlinediff").setup({
