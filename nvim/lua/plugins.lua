@@ -54,6 +54,7 @@ vim.pack.add({
 	{ src = "https://github.com/Sang-it/fluoride", name = "fluoride" },
 	{ src = "https://github.com/stevearc/conform.nvim", name = "conform" },
 	{ src = "https://github.com/mfussenegger/nvim-lint", name = "nvim-lint" },
+	{ src = "https://github.com/numToStr/Comment.nvim", name = "Comment" },
 	-- UI
 	{ src = "https://github.com/luukvbaal/statuscol.nvim", name = "statuscol" },
 	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline" },
