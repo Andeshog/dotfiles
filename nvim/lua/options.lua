@@ -22,7 +22,6 @@ opt.sessionoptions =
 opt.clipboard = "unnamedplus"
 opt.showmode = false
 
-opt.completeopt = { "menuone", "noselect" }
 opt.undofile = true
 
 -- UI borders

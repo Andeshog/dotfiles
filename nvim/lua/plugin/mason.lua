@@ -12,6 +12,7 @@ local packages = {
 	"shellcheck",
 	"clangd",
 	"clang-format",
+	"codelldb",
 }
 
 local function ensure_installed()

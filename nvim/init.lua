@@ -87,7 +87,7 @@ require("diffview").setup({
 vim.cmd.colorscheme("catppuccin")
 vim.diagnostic.config({
 	virtual_text = false,
-	virtual_lines = { current_line = true },
+	virtual_lines = false,
 	underline = true,
 	severity_sort = true,
 	float = {
