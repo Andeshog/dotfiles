@@ -69,7 +69,6 @@ require("blink.cmp").setup({
 				columns = {
 					{ "kind_icon" },
 					{ "label", "label_description", gap = 1 },
-					{ "source_name" },
 				},
 			},
 		},
@@ -104,12 +103,26 @@ require("blink.cmp").setup({
 			},
 		},
 	},
+	term = {
+		enabled = true,
+	},
 	cmdline = {
-		keymap = { preset = "inherit" },
+		enabled = true,
+		keymap = {
+			preset = "cmdline",
+			["<CR>"] = { "accept", "fallback" },
+		},
 		completion = {
+			list = {
+				selection = {
+					preselect = true,
+					auto_insert = true,
+				},
+			},
 			menu = {
 				auto_show = function()
-					return vim.fn.getcmdtype() == ":"
+					local t = vim.fn.getcmdtype()
+					return t == ":" or t == "@"
 				end,
 			},
 		},

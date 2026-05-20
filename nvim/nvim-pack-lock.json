@@ -9,9 +9,12 @@
       "src": "https://github.com/rmagatti/auto-session"
     },
     "blink.cmp": {
-      "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
-      "src": "https://github.com/Saghen/blink.cmp",
-      "version": "1.0.0 - 2.0.0"
+      "rev": "35e3923a09ff3db150ceff80004befcbbfa071a0",
+      "src": "https://github.com/Saghen/blink.cmp"
+    },
+    "blink.lib": {
+      "rev": "f29d8bac6549bc1e7d699c83f680823d7def98bd",
+      "src": "https://github.com/Saghen/blink.lib"
     },
     "catppuccin": {
       "rev": "426dbebe06b5c69fd846ceb17b42e12f890aedf1",
@@ -164,7 +167,7 @@
       "src": "https://github.com/akinsho/toggleterm.nvim"
     },
     "treewalker": {
-      "rev": "ba74c5ec8bd128297170476d56389125ecb23799",
+      "rev": "0b081bf6c6875cf3e478b633796a9e2b64b730e8",
       "src": "https://github.com/aaronik/treewalker.nvim"
     },
     "vim-move": {

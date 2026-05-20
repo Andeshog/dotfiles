@@ -21,13 +21,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 		end
 
 		if name == "blink.cmp" and (kind == "install" or kind == "update") then
-			local path = vim.fs.find("blink.cmp", {
-				path = vim.fn.stdpath("data") .. "/site/pack",
-				type = "directory",
-			})[1]
-			if path and vim.fn.executable("cargo") == 1 then
-				vim.system({ "cargo", "build", "--release" }, { cwd = path }):wait()
-			end
+			require("blink.cmp").build():wait(60000)
 		end
 	end,
 })
@@ -65,7 +59,9 @@ vim.pack.add({
 	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline" },
 	{ src = "https://github.com/folke/zen-mode.nvim", name = "zen-mode" },
 	{ src = "https://github.com/nvim-lualine/lualine.nvim", name = "lualine" },
-	{ src = "https://github.com/Saghen/blink.cmp", name = "blink.cmp", version = vim.version.range("1") },
+	-- Completion
+	"https://github.com/Saghen/blink.lib",
+	{ src = "https://github.com/Saghen/blink.cmp", name = "blink.cmp" },
 	-- Git
 	{ src = "https://github.com/lewis6991/gitsigns.nvim", name = "gitsigns" },
 	{ src = "https://github.com/NeogitOrg/neogit", name = "neogit" },
