@@ -1,6 +1,97 @@
 local api = vim.api
 local map = vim.keymap.set
 
+local request_state = {}
+local spinner_frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+
+local function redraw_codecompanion(bufnr)
+	vim.schedule(function()
+		if api.nvim_buf_is_valid(bufnr) then
+			pcall(api.nvim_buf_call, bufnr, function()
+				vim.cmd.redrawstatus()
+			end)
+		end
+	end)
+end
+
+local function stop_request_indicator(bufnr)
+	local state = request_state[bufnr]
+	if not state then
+		return
+	end
+
+	if state.timer then
+		pcall(function()
+			state.timer:stop()
+		end)
+		if not state.timer:is_closing() then
+			pcall(function()
+				state.timer:close()
+			end)
+		end
+	end
+
+	request_state[bufnr] = nil
+	redraw_codecompanion(bufnr)
+end
+
+local function start_request_indicator(bufnr, text)
+	stop_request_indicator(bufnr)
+
+	local timer = vim.uv.new_timer()
+	request_state[bufnr] = {
+		timer = timer,
+		frame = 1,
+		text = text or "Thinking…",
+	}
+
+	if timer then
+		timer:start(
+			0,
+			120,
+			vim.schedule_wrap(function()
+				local state = request_state[bufnr]
+				if not state or not api.nvim_buf_is_valid(bufnr) then
+					stop_request_indicator(bufnr)
+					return
+				end
+
+				state.frame = (state.frame % #spinner_frames) + 1
+				redraw_codecompanion(bufnr)
+			end)
+		)
+	end
+
+	redraw_codecompanion(bufnr)
+end
+
+local function update_request_indicator(bufnr, text)
+	local state = request_state[bufnr]
+	if not state then
+		start_request_indicator(bufnr, text)
+		return
+	end
+
+	if text and text ~= "" and state.text ~= text then
+		state.text = text
+		redraw_codecompanion(bufnr)
+	end
+end
+
+local function get_chat_event_bufnr(args)
+	local candidates = {
+		args and args.data and args.data.bufnr,
+		args and args.buf,
+		api.nvim_get_current_buf(),
+	}
+
+	for _, bufnr in ipairs(candidates) do
+		if type(bufnr) == "number" and api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].filetype == "codecompanion" then
+			return bufnr
+		end
+	end
+end
+
 local function is_gpt5_model(model)
 	return type(model) == "string" and vim.startswith(model, "gpt-5")
 end
@@ -51,6 +142,11 @@ local function get_adapter_label(adapter)
 end
 
 local function get_chat_status(bufnr)
+	local state = request_state[bufnr]
+	if state then
+		return string.format("%s %s", spinner_frames[state.frame] or spinner_frames[1], state.text)
+	end
+
 	local chat = require("codecompanion").buf_get_chat(bufnr)
 	if not chat then
 		return "ready"
@@ -63,16 +159,20 @@ local function get_chat_status(bufnr)
 	return "ready"
 end
 
+local function escape_statusline(text)
+	return tostring(text or ""):gsub("%%", "%%%%")
+end
+
 local function get_chat_winbar(bufnr)
-	local chat = require("codecompanion").buf_get_chat(bufnr)
-	if not chat or not chat.adapter then
+	local ok, chat = pcall(require("codecompanion").buf_get_chat, bufnr)
+	if not ok or not chat or not chat.adapter then
 		return " CodeCompanion "
 	end
 
 	return string.format(
-		" CodeCompanion · %s · send <C-s> · ga switch · %s ",
-		get_adapter_label(chat.adapter),
-		get_chat_status(bufnr)
+		" CodeCompanion · %s · send <C-s> · %s ",
+		escape_statusline(get_adapter_label(chat.adapter)),
+		escape_statusline(get_chat_status(bufnr))
 	)
 end
 
@@ -107,16 +207,30 @@ local function toggle_cli_agent(agent_name)
 	end
 end
 
-local function set_codecompanion_window_options()
-	vim.opt_local.number = false
-	vim.opt_local.relativenumber = false
-	vim.opt_local.foldcolumn = "0"
-	vim.opt_local.signcolumn = "no"
-	vim.opt_local.statuscolumn = ""
-	vim.opt_local.winhighlight = get_codecompanion_winhighlight()
+local function set_codecompanion_window_options(winid)
+	if not winid or not api.nvim_win_is_valid(winid) then
+		return
+	end
+
+	vim.wo[winid].number = false
+	vim.wo[winid].relativenumber = false
+	vim.wo[winid].foldcolumn = "0"
+	vim.wo[winid].signcolumn = "no"
+	vim.wo[winid].statuscolumn = ""
+	vim.wo[winid].winhighlight = get_codecompanion_winhighlight()
+end
+
+local function refresh_codecompanion_windows(bufnr)
+	for _, winid in ipairs(vim.fn.win_findbuf(bufnr)) do
+		set_codecompanion_window_options(winid)
+	end
 end
 
 local function set_codecompanion_keymaps(bufnr)
+	if vim.b[bufnr].codecompanion_keymaps_set then
+		return
+	end
+
 	map("n", "q", close_window, { buffer = bufnr, silent = true, desc = "Close CodeCompanion window" })
 	map("n", "<C-w>q", close_window, { buffer = bufnr, silent = true, desc = "Close CodeCompanion window" })
 	map("i", "<C-w>q", "<Esc><Cmd>close<CR>", { buffer = bufnr, silent = true, desc = "Close CodeCompanion window" })
@@ -134,6 +248,8 @@ local function set_codecompanion_keymaps(bufnr)
 		map("t", "<C-w>h", [[<C-\><C-n><C-w>h]], { buffer = bufnr, silent = true, desc = "Focus left window" })
 		map("t", "<C-w>p", [[<C-\><C-n><C-w>p]], { buffer = bufnr, silent = true, desc = "Focus previous window" })
 	end
+
+	vim.b[bufnr].codecompanion_keymaps_set = true
 end
 
 require("codecompanion").setup({
@@ -224,7 +340,7 @@ require("codecompanion").setup({
 	},
 	display = {
 		chat = {
-			intro_message = "CodeCompanion chat · <C-s> sends · ga changes adapter/model · ? shows chat keymaps",
+			intro_message = "CodeCompanion chat · <C-s> sends · ? shows chat keymaps",
 			show_header_separator = true,
 			show_token_count = true,
 			token_count = function(tokens, adapter)
@@ -234,7 +350,7 @@ require("codecompanion").setup({
 				layout = "vertical",
 				width = 0.35,
 				opts = {
-					winbar = "%!v:lua.CodeCompanionChatWinbar()",
+					winbar = "%!v:lua.CodeCompanionChatWinbarDotfiles()",
 					winhighlight = get_codecompanion_winhighlight(),
 				},
 			},
@@ -259,15 +375,19 @@ require("codecompanion").setup({
 
 local group = api.nvim_create_augroup("CodeCompanionConfig", { clear = true })
 
-_G.CodeCompanionChatWinbar = function()
-	return get_chat_winbar(api.nvim_get_current_buf())
+_G.CodeCompanionChatWinbarDotfiles = function()
+	local ok, winbar = pcall(get_chat_winbar, api.nvim_get_current_buf())
+	if ok then
+		return winbar
+	end
+	return " CodeCompanion "
 end
 
 api.nvim_create_autocmd("FileType", {
 	group = group,
 	pattern = { "codecompanion", "codecompanion_cli" },
 	callback = function(event)
-		set_codecompanion_window_options()
+		refresh_codecompanion_windows(event.buf)
 		set_codecompanion_keymaps(event.buf)
 	end,
 })
@@ -276,27 +396,51 @@ api.nvim_create_autocmd("BufWinEnter", {
 	group = group,
 	callback = function(event)
 		if vim.bo[event.buf].filetype == "codecompanion" or vim.bo[event.buf].filetype == "codecompanion_cli" then
-			set_codecompanion_window_options()
+			refresh_codecompanion_windows(event.buf)
 		end
 	end,
 })
 
 api.nvim_create_autocmd("User", {
 	group = group,
-	pattern = { "CodeCompanionChatOpened", "CodeCompanionRequestStarted", "CodeCompanionRequestFinished" },
+	pattern = {
+		"CodeCompanionChatOpened",
+		"CodeCompanionChatSubmitted",
+		"CodeCompanionRequestStarted",
+		"CodeCompanionRequestStreaming",
+		"CodeCompanionRequestFinished",
+		"CodeCompanionChatDone",
+		"CodeCompanionChatAdapter",
+		"CodeCompanionChatModel",
+	},
 	callback = function(args)
-		local bufnr = args.data and args.data.bufnr
-		if bufnr and vim.bo[bufnr].filetype == "codecompanion" then
-			vim.schedule(function()
-				if api.nvim_buf_is_valid(bufnr) then
-					set_codecompanion_window_options()
-					set_codecompanion_keymaps(bufnr)
-					pcall(api.nvim_buf_call, bufnr, function()
-						vim.cmd.redrawstatus()
-					end)
-				end
-			end)
+		local bufnr = get_chat_event_bufnr(args)
+		if not bufnr then
+			return
 		end
+
+		if args.match == "CodeCompanionChatSubmitted" or args.match == "CodeCompanionRequestStarted" then
+			start_request_indicator(bufnr, "Thinking…")
+		elseif args.match == "CodeCompanionRequestStreaming" then
+			update_request_indicator(bufnr, "Responding…")
+		elseif args.match == "CodeCompanionRequestFinished" or args.match == "CodeCompanionChatDone" then
+			stop_request_indicator(bufnr)
+		end
+
+		vim.schedule(function()
+			if api.nvim_buf_is_valid(bufnr) then
+				refresh_codecompanion_windows(bufnr)
+				set_codecompanion_keymaps(bufnr)
+				redraw_codecompanion(bufnr)
+			end
+		end)
+	end,
+})
+
+api.nvim_create_autocmd("BufWipeout", {
+	group = group,
+	callback = function(args)
+		stop_request_indicator(args.buf)
 	end,
 })
 
