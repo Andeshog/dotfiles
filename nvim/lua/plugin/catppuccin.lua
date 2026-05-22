@@ -1,10 +1,12 @@
+FLAVOURS = { LATTE = "latte", FRAPPE = "frappe", MACCHIATO = "macchiato", MOCHA = "mocha" }
+
 require("catppuccin").setup({
-	flavour = "frappe",
+	flavour = FLAVOURS.MOCHA,
 	transparent_background = false,
 	dim_inactive = {
 		enabled = true,
 		shade = "dark",
-		percentage = 0.05,
+		percentage = 0.001,
 	},
 	integrations = {
 		gitsigns = true,
@@ -79,6 +81,10 @@ require("catppuccin").setup({
 
 			-- ===== SPECIAL =====
 			["@constructor.cpp"] = { fg = colors.sapphire }, -- default: yellow
+
+			-- ===== UI =====
+			WinSeparator = { fg = colors.sky },
+			StatusColSeparator = { fg = colors.surface1 },
 
 			-- ===== DIAGNOSTICS =====
 			DiagnosticUnderlineError = { undercurl = true, sp = colors.red },

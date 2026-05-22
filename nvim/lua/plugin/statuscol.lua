@@ -43,7 +43,7 @@ require("statuscol").setup({
 		},
 		{
 			text = { "▏" },
-			hl = "WinSeparator",
+			hl = "StatusColSeparator",
 		},
 	},
 })
