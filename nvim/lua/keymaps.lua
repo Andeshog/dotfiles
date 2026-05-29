@@ -90,7 +90,27 @@ map("n", "<leader>bb", "<cmd>b#<cr>", { desc = "Last buffer", silent = true })
 -- Close buffers
 map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer (keep window)", silent = true })
 map("n", "<leader>bD", "<cmd>bdelete!<cr>", { desc = "Force delete buffer", silent = true })
-map("n", "<leader>bo", "<cmd>%bdelete|edit#|bdelete#<cr>", { desc = "Delete other buffers", silent = true })
+local function is_codecompanion_buffer(bufnr)
+	local ft = vim.bo[bufnr].filetype
+	local name = vim.api.nvim_buf_get_name(bufnr)
+
+	return ft:match("^codecompanion") ~= nil or name:match("CodeCompanion") ~= nil
+end
+
+map("n", "<leader>bo", function()
+	local current = vim.api.nvim_get_current_buf()
+
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		if
+			vim.api.nvim_buf_is_valid(bufnr)
+			and vim.bo[bufnr].buflisted
+			and bufnr ~= current
+			and not is_codecompanion_buffer(bufnr)
+		then
+			vim.cmd("bdelete " .. bufnr)
+		end
+	end
+end, { desc = "Delete other buffers", silent = true })
 map("n", "<leader>bq", function()
 	vim.cmd("silent! %bdelete | intro")
 end, { desc = "Close all buffers", silent = true })
