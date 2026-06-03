@@ -235,3 +235,6 @@ end, { desc = "Toggle Fluoride" })
 
 -- Diffview
 map("n", "<leader>dv", "<cmd>DiffviewOpen origin/main...HEAD<cr>", { desc = "Diffview: current branch vs main" })
+
+-- Peeper-picker
+map("n", "<leader>rr", "<cmd>PeeperPicker<cr>", { desc = "Peeper-picker: show lsp references" })

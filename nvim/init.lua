@@ -76,6 +76,9 @@ require("inlinediff").setup({
 		InlineDiffDeleteChange = "#5a2d33",
 	},
 })
+require("peeper_picker").setup({
+	jump = "edit",
+})
 require("neogit").setup({})
 require("fluoride").setup({
 	max_depth = 3,
