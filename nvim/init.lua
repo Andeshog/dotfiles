@@ -68,6 +68,14 @@ require("plugin.zen").setup()
 require("grug-far").setup({})
 require("Comment").setup()
 require("custom_plugins.comment_textobject")
+require("custom_plugins.buffer_history").setup({
+	ignored_filetypes = {
+		dashboard = true,
+		checkhealth = true,
+		termite = true,
+		codecompanion = true,
+	},
+})
 require("inlinediff").setup({
 	colors = {
 		InlineDiffAddContext = "#2a3b29",

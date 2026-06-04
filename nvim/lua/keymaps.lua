@@ -83,8 +83,9 @@ map("n", "<M-Right>", "<cmd>vertical resize -5<cr>", { desc = "Decrease window w
 map("n", "<leader>b", "<nop>", { desc = "Buffer" })
 
 -- Navigation
-map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer", silent = true })
-map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer", silent = true })
+local buffer_history = require("custom_plugins.buffer_history")
+map("n", "<S-l>", buffer_history.next, { desc = "Next buffer (history)", silent = true })
+map("n", "<S-h>", buffer_history.prev, { desc = "Prev buffer (history)", silent = true })
 map("n", "<leader>bb", "<cmd>b#<cr>", { desc = "Last buffer", silent = true })
 
 -- Close buffers
