@@ -13,6 +13,7 @@ local packages = {
 	"clangd",
 	"clang-format",
 	"codelldb",
+	"neocmakelsp",
 }
 
 local function ensure_installed()
