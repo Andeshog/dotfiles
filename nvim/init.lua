@@ -97,6 +97,8 @@ require("diffview").setup({
 	},
 })
 
+require("nvim-surround").setup()
+
 vim.cmd.colorscheme("catppuccin")
 vim.diagnostic.config({
 	virtual_text = false,

@@ -49,7 +49,7 @@ vim.pack.add({
 	{ src = "https://github.com/parwest/peeper-picker.nvim", name = "peeper-picker" },
 	-- Editing
 	{ src = "https://github.com/windwp/nvim-autopairs", name = "nvim-autopairs" },
-	{ src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
+	{ src = "https://github.com/kylechui/nvim-surround", name = "nvim-surround", version = vim.version.range("4.x") },
 	{ src = "https://github.com/MagicDuck/grug-far.nvim", name = "grug-far" },
 	{ src = "https://github.com/jake-stewart/multicursor.nvim", name = "multicursor" },
 	{ src = "https://github.com/Sang-it/fluoride", name = "fluoride" },
