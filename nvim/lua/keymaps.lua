@@ -230,9 +230,8 @@ map("n", "<leader>xu", diagnostics.toggle_underline, { desc = "Toggle diagnostic
 map("n", "<leader>xd", diagnostics.toggle, { desc = "Toggle diagnostics" })
 
 -- Fluoride
-map("n", "<leader>cp", function()
-	require("fluoride").toggle()
-end, { desc = "Toggle Fluoride" })
+map("n", "<leader>cp", "<cmd>Fluoride<cr>", { desc = "Fluoride" })
+map("n", "<leader>cv", "<cmd>Fluoride vsplit<cr>", { desc = "Fluoride (vertical split)" })
 
 -- Diffview
 map("n", "<leader>dv", "<cmd>DiffviewOpen origin/main...HEAD<cr>", { desc = "Diffview: current branch vs main" })
