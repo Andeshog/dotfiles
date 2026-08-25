@@ -86,7 +86,7 @@ require("inlinediff").setup({
 })
 require("peeper_picker").setup({
 	jump = "edit",
-	ignored_dirs = { "install" },
+	ignored_dirs = { "install", "log" },
 })
 require("neogit").setup({})
 require("fluoride").setup({
