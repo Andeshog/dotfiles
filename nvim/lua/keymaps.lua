@@ -229,6 +229,36 @@ map("n", "<leader>xv", diagnostics.toggle_virtual_lines, { desc = "Toggle diagno
 map("n", "<leader>xu", diagnostics.toggle_underline, { desc = "Toggle diagnostic underline" })
 map("n", "<leader>xd", diagnostics.toggle, { desc = "Toggle diagnostics" })
 
+local saved_config = nil
+
+vim.keymap.set("n", "<leader>de", function()
+	if saved_config then
+		vim.diagnostic.config(saved_config)
+		saved_config = nil
+		vim.notify("Diagnostics: all severities")
+		return
+	end
+
+	-- config() with no args returns a deepcopy of the current global config
+	saved_config = vim.diagnostic.config()
+
+	local cfg = vim.deepcopy(saved_config)
+	local only = vim.diagnostic.severity.ERROR
+
+	for _, handler in ipairs({ "underline", "virtual_text", "virtual_lines", "signs", "float" }) do
+		local v = cfg[handler]
+		if v == true or v == nil then
+			cfg[handler] = { severity = only }
+		elseif type(v) == "table" then
+			v.severity = only
+		end
+		-- `false` stays false; you don't want to turn on a handler you'd disabled
+	end
+
+	vim.diagnostic.config(cfg)
+	vim.notify("Diagnostics: errors only")
+end, { desc = "Toggle errors-only diagnostics" })
+
 -- Fluoride
 map("n", "<leader>cp", "<cmd>Fluoride<cr>", { desc = "Fluoride" })
 map("n", "<leader>cv", "<cmd>Fluoride vsplit<cr>", { desc = "Fluoride (vertical split)" })
