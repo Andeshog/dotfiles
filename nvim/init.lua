@@ -10,8 +10,6 @@ end
 vim.cmd("packadd nvim.undotree")
 vim.keymap.set("n", "<leader>u", require("undotree").open)
 
-vim.treesitter.language.register("bash", "sh")
-
 require("options")
 require("keymaps")
 require("autocmds")
@@ -36,6 +34,7 @@ require("plugin.termite")
 require("plugin.blink")
 require("plugin.codecompanion")
 require("plugin.multicursor")
+require("plugin.treesitter")
 
 require("render-markdown").setup({
 	file_types = { "markdown", "codecompanion" },

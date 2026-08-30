@@ -27,6 +27,20 @@ set({ "n", "x" }, "<leader>mx", mc.deleteCursor)
 set({ "n", "x" }, "<M-n>", mc.nextCursor)
 set({ "n", "x" }, "<M-p>", mc.prevCursor)
 
+-- Add or skip cursor above/below the main cursor.
+set({ "n", "x" }, "<C-up>", function()
+	mc.lineAddCursor(-1)
+end)
+set({ "n", "x" }, "<C-down>", function()
+	mc.lineAddCursor(1)
+end)
+set({ "n", "x" }, "<leader><up>", function()
+	mc.lineSkipCursor(-1)
+end)
+set({ "n", "x" }, "<leader><down>", function()
+	mc.lineSkipCursor(1)
+end)
+
 -- Mouse support
 set("n", "<c-leftmouse>", mc.handleMouse)
 set("n", "<c-leftdrag>", mc.handleMouseDrag)
