@@ -30,7 +30,6 @@ vim.pack.add({
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	{ src = "https://github.com/folke/which-key.nvim", name = "which-key" },
 	--Navigation and files
-	{ src = "https://codeberg.org/knight9114/arc.nvim", name = "arc" },
 	{ src = "https://github.com/aaronik/treewalker.nvim", name = "treewalker" },
 	{ src = "https://github.com/nvim-telescope/telescope.nvim", name = "telescope" },
 	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", name = "telescope-fzf-native" },
@@ -49,7 +48,6 @@ vim.pack.add({
 	{ src = "https://github.com/Sang-it/fluoride", name = "fluoride" },
 	{ src = "https://github.com/stevearc/conform.nvim", name = "conform" },
 	{ src = "https://github.com/mfussenegger/nvim-lint", name = "nvim-lint" },
-	{ src = "https://github.com/numToStr/Comment.nvim", name = "Comment" },
 	-- UI
 	{ src = "https://github.com/luukvbaal/statuscol.nvim", name = "statuscol" },
 	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline" },
@@ -71,6 +69,8 @@ vim.pack.add({
 	-- DAP
 	{ src = "https://github.com/mfussenegger/nvim-dap", name = "nvim-dap" },
 	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view", version = vim.version.range("1") },
+	-- Build
+	{ src = "https://github.com/Civitasv/cmake-tools.nvim", name = "cmake-tools" },
 	-- Testing
 	{ src = "https://github.com/nvim-neotest/neotest", name = "neotest" },
 	{ src = "https://github.com/nvim-neotest/nvim-nio", name = "nvim-nio" },

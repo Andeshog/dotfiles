@@ -236,7 +236,7 @@ map("n", "<leader>xh", vim.diagnostic.open_float, { desc = "Hover diagnostics (l
 map("n", "<leader>xx", diagnostics.toggle_buffer_list, { desc = "Buffer diagnostics" })
 map("n", "<leader>xX", diagnostics.toggle_workspace_list, { desc = "Workspace diagnostics" })
 map("n", "<leader>xe", function()
-	vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR })
+	vim.diagnostic.setqflist({ open = true, severity = vim.diagnostic.severity.ERROR, title = "Workspace Errors" })
 end, { desc = "Workspace errors (quickfix)" })
 map("n", "<leader>xq", diagnostics.close_lists, { desc = "Close diagnostic lists" })
 

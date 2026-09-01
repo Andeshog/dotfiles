@@ -34,6 +34,7 @@ require("plugin.termite")
 require("plugin.blink")
 require("plugin.multicursor")
 require("plugin.treesitter")
+require("plugin.cmake")
 
 require("render-markdown").setup({
 	file_types = { "markdown" },
@@ -55,21 +56,15 @@ require("gitsigns").setup({
 	current_line_blame = true,
 })
 require("nvim-autopairs").setup({ fast_wrap = {}, disable_filetype = { "TelescopePrompt", "vim" } })
-require("arc").setup({
-	hl_backdrop = "Ignore",
-	hl_label = "Search",
-})
 require("treewalker").setup({
 	scope_confined = true,
 })
 require("grug-far").setup({})
-require("Comment").setup()
 require("custom_plugins.comment_textobject")
 require("custom_plugins.asm").setup()
 require("custom_plugins.pack_ui").setup()
 require("custom_plugins.buffer_history").setup({
 	ignored_filetypes = {
-		dashboard = true,
 		checkhealth = true,
 		termite = true,
 	},
@@ -96,7 +91,15 @@ require("diffview").setup({
 	},
 })
 
-require("nvim-surround").setup()
+require("nvim-surround").setup({
+	surrounds = {
+		["c"] = {
+			add = { "/*", "*/" },
+			find = "/%*.-%*/",
+			delete = "^(/%*)().-(%*/)()$",
+		},
+	},
+})
 
 vim.cmd.colorscheme("catppuccin")
 vim.diagnostic.config({

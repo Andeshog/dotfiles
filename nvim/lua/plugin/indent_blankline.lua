@@ -8,7 +8,4 @@ require("ibl").setup({
 		show_start = true,
 		show_end = false,
 	},
-	exclude = {
-		filetypes = { "dashboard" },
-	},
 })

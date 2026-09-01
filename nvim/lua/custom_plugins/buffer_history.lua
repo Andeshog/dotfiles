@@ -2,7 +2,6 @@ local M = {}
 
 local config = {
 	ignored_filetypes = {
-		dashboard = true,
 		checkhealth = true,
 		termite = true,
 	},

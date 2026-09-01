@@ -1,12 +1,14 @@
+local formatters_by_ft = {
+	c = { "clang_format" },
+	cpp = { "clang_format" },
+	lua = { "stylua" },
+	go = { "goimports", "gofmt" },
+	sh = { "shfmt" },
+	bash = { "shfmt" },
+}
+
 require("conform").setup({
-	formatters_by_ft = {
-		c = { "clang_format" },
-		cpp = { "clang_format" },
-		lua = { "stylua" },
-		go = { "goimports", "gofmt" },
-		sh = { "shfmt" },
-		bash = { "shfmt" },
-	},
+	formatters_by_ft = formatters_by_ft,
 	formatters = {
 		clang_format = {
 			command = "clang-format",
@@ -38,7 +40,7 @@ require("conform").setup({
 		end
 
 		local ft = vim.bo[bufnr].filetype
-		if ft == "c" or ft == "cpp" or ft == "lua" or ft == "go" or ft == "sh" or ft == "bash" then
+		if formatters_by_ft[ft] then
 			return { timeout_ms = 2000, lsp_fallback = ft == "go" }
 		end
 	end,

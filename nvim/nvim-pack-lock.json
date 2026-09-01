@@ -1,13 +1,5 @@
 {
   "plugins": {
-    "Comment": {
-      "rev": "e30b7f2008e52442154b66f7c519bfd2f1e32acb",
-      "src": "https://github.com/numToStr/Comment.nvim"
-    },
-    "arc": {
-      "rev": "cefd2c9ec65b1701352e757bd9e8d0171de02149",
-      "src": "https://codeberg.org/knight9114/arc.nvim"
-    },
     "auto-session": {
       "rev": "c8e6139a2e52a38101fecaba6014d7dd75489044",
       "src": "https://github.com/rmagatti/auto-session"
@@ -23,6 +15,10 @@
     "catppuccin": {
       "rev": "edefef779ab08ce1a4a404713e3012b0d202bd35",
       "src": "https://github.com/catppuccin/nvim"
+    },
+    "cmake-tools": {
+      "rev": "ee807ac4e62591720de2f6ad0abbfb966c4c7b97",
+      "src": "https://github.com/Civitasv/cmake-tools.nvim"
     },
     "conform": {
       "rev": "016802de402556da54c36bd7359b441266b01cdd",

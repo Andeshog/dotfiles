@@ -8,7 +8,22 @@ local config = {
 	split = "vsplit",
 }
 
+local function cmake_target()
+	local ok, cmake = pcall(require, "cmake-tools")
+	if not ok then
+		return nil
+	end
+
+	local path = cmake.get_launch_target_path()
+	return path and vim.fn.executable(path) == 1 and path or nil
+end
+
 local function binary()
+	local from_cmake = cmake_target()
+	if from_cmake then
+		return from_cmake
+	end
+
 	local target = launch.get()
 	if target.program and vim.fn.executable(target.program) == 1 then
 		return target.program
