@@ -39,124 +39,12 @@ dap.adapters.codelldb = {
 }
 
 -----------------------------------------------------------
--- Launch target (executable + args), remembered per cwd
+-- Launch target
 -----------------------------------------------------------
-local launch_state_path = vim.fn.stdpath("state") .. "/dap-launch.json"
-local launch_state
-
-local function read_launch_state()
-	if launch_state then
-		return launch_state
-	end
-
-	launch_state = {}
-	local file = io.open(launch_state_path, "r")
-	if file then
-		local content = file:read("*a")
-		file:close()
-		local ok, decoded = pcall(vim.json.decode, content)
-		if ok and type(decoded) == "table" then
-			launch_state = decoded
-		end
-	end
-
-	return launch_state
-end
-
-local function write_launch_state()
-	local file = io.open(launch_state_path, "w")
-	if file then
-		file:write(vim.json.encode(read_launch_state()))
-		file:close()
-	end
-end
-
---- The remembered launch target for the current working directory
-local function launch_target()
-	local state = read_launch_state()
-	local key = vim.fn.getcwd()
-	state[key] = state[key] or {}
-	return state[key]
-end
-
---- Split an args string on whitespace, keeping "quoted segments" intact
---- so a path containing spaces survives as a single argument
-local function split_args(input)
-	local args, i = {}, 1
-
-	while i <= #input do
-		local char = input:sub(i, i)
-
-		if char:match("%s") then
-			i = i + 1
-		elseif char == '"' then
-			local close = input:find('"', i + 1, true)
-			table.insert(args, input:sub(i + 1, (close or #input + 1) - 1))
-			i = (close or #input) + 1
-		else
-			local stop = input:find("%s", i) or (#input + 1)
-			table.insert(args, input:sub(i, stop - 1))
-			i = stop
-		end
-	end
-
-	return vim.tbl_map(function(arg)
-		return arg:sub(1, 1) == "~" and vim.fn.expand(arg) or arg
-	end, args)
-end
-
---- Re-quote for display so editing a stored value round-trips
-local function join_args(args)
-	return table.concat(
-		vim.tbl_map(function(arg)
-			return arg:find("%s") and ('"' .. arg .. '"') or arg
-		end, args or {}),
-		" "
-	)
-end
-
---- Prompt for executable and args, remembering both
-local function prompt_launch_target()
-	local target = launch_target()
-
-	local program = vim.fn.input({
-		prompt = "Executable: ",
-		default = target.program or (vim.fn.getcwd() .. "/"),
-		completion = "file",
-	})
-	if program == "" then
-		return nil
-	end
-
-	local args = vim.fn.input({
-		prompt = "Args: ",
-		default = join_args(target.args),
-		completion = "file",
-	})
-
-	target.program = vim.fn.expand(program)
-	target.args = split_args(args)
-	write_launch_state()
-
-	return target
-end
-
---- Use the remembered target, prompting only if nothing is set yet
-local function ensure_launch_target()
-	local target = launch_target()
-	if not target.program or target.program == "" then
-		return prompt_launch_target()
-	end
-	return target
-end
+local launch = require("custom_plugins.launch_target")
 
 local function warn_if_no_debug_info(program)
-	if vim.fn.filereadable(program) ~= 1 or vim.fn.executable("readelf") ~= 1 then
-		return
-	end
-
-	local out = vim.fn.system({ "readelf", "-S", "--wide", program })
-	if vim.v.shell_error == 0 and not out:find(".debug_info", 1, true) then
+	if launch.has_debug_info(program) == false then
 		local msg =
 			"DAP: %s has no debug info -- breakpoints will be rejected (R).\nRebuild with -DCMAKE_BUILD_TYPE=Debug"
 		vim.notify(msg:format(vim.fn.fnamemodify(program, ":t")), vim.log.levels.WARN)
@@ -169,7 +57,7 @@ dap.configurations.cpp = {
 		type = "codelldb",
 		request = "launch",
 		program = function()
-			local target = ensure_launch_target()
+			local target = launch.ensure()
 			if not target then
 				return dap.ABORT
 			end
@@ -177,7 +65,7 @@ dap.configurations.cpp = {
 			return target.program
 		end,
 		args = function()
-			local target = ensure_launch_target()
+			local target = launch.ensure()
 			return target and target.args or {}
 		end,
 		cwd = "${workspaceFolder}",
@@ -197,8 +85,6 @@ dapview.setup({
 		controls = { enabled = true },
 	},
 	windows = { position = "below" },
-	-- Opening/closing the view is driven by <leader>dd (debug mode) instead,
-	-- so the view survives a session ending and breakpoints can be adjusted.
 	auto_toggle = false,
 })
 
@@ -291,7 +177,7 @@ local session_keymaps = {
 			"n",
 			"<leader>dP",
 			function()
-				local target = prompt_launch_target()
+				local target = launch.prompt()
 				if target then
 					vim.notify("DAP target: " .. target.program)
 				end
@@ -410,7 +296,7 @@ local session_keymaps = {
 }
 
 -----------------------------------------------------------
--- Cheatsheet float, rendered from session_keymaps
+-- Cheatsheet
 -----------------------------------------------------------
 local help_ns = vim.api.nvim_create_namespace("dap-cheatsheet")
 
@@ -424,7 +310,7 @@ local function build_help_lines()
 
 	local lines, marks = {}, {}
 
-	local target = launch_target()
+	local target = launch.get()
 	table.insert(lines, "Target")
 	table.insert(marks, { #lines - 1, 0, -1, "Title" })
 	local program = target.program and vim.fn.fnamemodify(target.program, ":~") or "(unset -- <leader>dP)"
@@ -507,7 +393,7 @@ end
 table.insert(session_keymaps[#session_keymaps], { "n", "<leader>d?", show_help, "Show this cheatsheet" })
 
 -----------------------------------------------------------
--- Debug mode: install/remove the buffer-local mappings
+-- Debug mode
 -----------------------------------------------------------
 local session_augroup = vim.api.nvim_create_augroup("dap-session-keymaps", { clear = true })
 local mapped_buffers = {}
@@ -562,7 +448,6 @@ local function enter_debug_mode()
 		end
 	end
 
-	-- Buffers opened later (stepping into a new file) get them too
 	vim.api.nvim_create_autocmd("BufEnter", {
 		group = session_augroup,
 		callback = function(ev)
@@ -570,8 +455,6 @@ local function enter_debug_mode()
 		end,
 	})
 
-	-- dapview.open() focuses the view; keep the cursor in the code window
-	-- so stepping and <M-Right> resolve against the source buffer
 	local origin = vim.api.nvim_get_current_win()
 	dapview.open()
 	if vim.api.nvim_win_is_valid(origin) then
@@ -607,5 +490,4 @@ map("n", "<leader>dd", function()
 	end
 end, { desc = "DAP: toggle debug mode (view + keymaps)", silent = true })
 
--- A session started another way (e.g. neotest <leader>td) enters debug mode too
 dap.listeners.after.event_initialized["debug_mode"] = enter_debug_mode

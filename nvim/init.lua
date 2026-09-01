@@ -65,6 +65,7 @@ require("treewalker").setup({
 require("grug-far").setup({})
 require("Comment").setup()
 require("custom_plugins.comment_textobject")
+require("custom_plugins.asm").setup()
 require("custom_plugins.buffer_history").setup({
 	ignored_filetypes = {
 		dashboard = true,
