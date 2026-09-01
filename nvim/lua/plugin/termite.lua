@@ -1,5 +1,7 @@
-vim.api.nvim_set_hl(0, "TermiteBorder", { fg = "#a6d189", bold = true })
-vim.api.nvim_set_hl(0, "TermiteBorderNC", { fg = "#51576d" })
+local palette = require("catppuccin.palettes").get_palette()
+
+vim.api.nvim_set_hl(0, "TermiteBorder", { fg = palette.green, bold = true })
+vim.api.nvim_set_hl(0, "TermiteBorderNC", { fg = palette.surface1 })
 
 require("termite").setup({
 	height = 0.40,

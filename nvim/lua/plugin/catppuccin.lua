@@ -1,4 +1,4 @@
-FLAVOURS = { LATTE = "latte", FRAPPE = "frappe", MACCHIATO = "macchiato", MOCHA = "mocha" }
+local FLAVOURS = { LATTE = "latte", FRAPPE = "frappe", MACCHIATO = "macchiato", MOCHA = "mocha" }
 
 require("catppuccin").setup({
 	flavour = FLAVOURS.MOCHA,

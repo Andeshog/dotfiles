@@ -64,9 +64,18 @@ lint.linters_by_ft = {
 }
 
 local lint_augroup = vim.api.nvim_create_augroup("nvim-lint", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+local lint_timer = assert(vim.uv.new_timer())
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
 	group = lint_augroup,
 	callback = function()
-		require("lint").try_lint()
+		lint_timer:stop()
+		lint_timer:start(
+			300,
+			0,
+			vim.schedule_wrap(function()
+				require("lint").try_lint()
+			end)
+		)
 	end,
 })

@@ -1,14 +1,4 @@
-vim.cmd.packadd("telescope-fzf-native.nvim")
-vim.cmd.packadd("telescope-ui-select.nvim")
-
--- Check if the fzf extension is installed and build it if necessary
-local fzf_path = vim.fn.globpath(vim.o.packpath, "pack/*/opt/telescope-fzf-native.nvim", false, true)[1]
-if fzf_path and vim.fn.filereadable(fzf_path .. "/build/libfzf.so") == 0 then
-	vim.fn.system({ "make", "-C", fzf_path })
-end
-
 local telescope = require("telescope")
-local lga_actions = require("telescope-live-grep-args.actions")
 local themes = require("telescope.themes")
 
 telescope.setup({
@@ -34,9 +24,9 @@ telescope.setup({
 	},
 })
 
-telescope.load_extension("fzf")
-telescope.load_extension("ui-select")
-telescope.load_extension("live_grep_args")
+for _, extension in ipairs({ "fzf", "ui-select", "live_grep_args" }) do
+	pcall(telescope.load_extension, extension)
+end
 
 local builtin = require("telescope.builtin")
 local lga = require("telescope-live-grep-args.shortcuts")

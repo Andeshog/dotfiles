@@ -88,6 +88,7 @@ function M.setup(opts)
 end
 
 vim.api.nvim_create_autocmd("BufEnter", {
+	group = vim.api.nvim_create_augroup("buffer-history", { clear = true }),
 	callback = function(ev)
 		push(ev.buf)
 	end,

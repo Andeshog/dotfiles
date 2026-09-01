@@ -10,14 +10,8 @@ vim.api.nvim_create_autocmd("PackChanged", {
 			vim.cmd("MasonUpdate")
 		end
 
-		if name == "telescope-fzf-native.nvim" and (kind == "install" or kind == "update") then
-			local path = vim.fs.find("telescope-fzf-native.nvim", {
-				path = vim.fn.stdpath("data") .. "/site/pack",
-				type = "directory",
-			})[1]
-			if path then
-				vim.fn.system({ "make", "-C", path })
-			end
+		if name == "telescope-fzf-native" and (kind == "install" or kind == "update") then
+			vim.system({ "make" }, { cwd = ev.data.path })
 		end
 
 		if name == "blink.cmp" and (kind == "install" or kind == "update") then

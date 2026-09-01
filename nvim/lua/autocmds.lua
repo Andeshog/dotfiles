@@ -1,10 +1,14 @@
+local group = vim.api.nvim_create_augroup("dotfiles", { clear = true })
+
 vim.api.nvim_create_autocmd("ColorScheme", {
+	group = group,
 	callback = function()
 		vim.api.nvim_set_hl(0, "SnippetTabstop", {})
 	end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+	group = group,
 	callback = function()
 		local ok, lang = pcall(vim.treesitter.language.get_lang, vim.bo.filetype)
 		if not ok or not lang then
@@ -19,12 +23,14 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+	group = group,
 	callback = function()
 		vim.opt_local.formatoptions:remove({ "r", "o" })
 	end,
 })
 
 vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
+	group = group,
 	callback = function()
 		local ft = vim.bo.filetype
 		if ft == "neo-tree" or ft == "neo-tree-popup" then
@@ -37,6 +43,7 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
 })
 
 vim.api.nvim_create_autocmd("WinLeave", {
+	group = group,
 	callback = function()
 		local ft = vim.bo.filetype
 		if ft == "neo-tree" or ft == "neo-tree-popup" then
@@ -47,6 +54,7 @@ vim.api.nvim_create_autocmd("WinLeave", {
 })
 
 vim.api.nvim_create_autocmd("LspProgress", {
+	group = group,
 	callback = function(ev)
 		local value = ev.data.params.value
 		vim.api.nvim_echo({ { value.message or "Done" } }, false, {
@@ -61,6 +69,7 @@ vim.api.nvim_create_autocmd("LspProgress", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+	group = group,
 	pattern = "neo-tree-popup",
 	callback = function()
 		vim.opt_local.cursorline = false
@@ -68,6 +77,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+	group = group,
 	pattern = "msg",
 	callback = function()
 		local ok, ui2 = pcall(require, "vim._core.ui2")

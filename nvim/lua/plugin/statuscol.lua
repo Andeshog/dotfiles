@@ -33,7 +33,14 @@ require("statuscol").setup({
 		},
 		-- Neotest > DAP > diagnostics (first match wins)
 		{
-			sign = { name = { "neotest_.*", "Dap.*" }, namespace = { "diagnostic%.signs" }, maxwidth = 1, colwidth = 1, auto = " ", fillcharhl = "LineNr" },
+			sign = {
+				name = { "neotest_.*", "Dap.*" },
+				namespace = { "diagnostic%.signs" },
+				maxwidth = 1,
+				colwidth = 1,
+				auto = " ",
+				fillcharhl = "LineNr",
+			},
 			click = "v:lua.ScSa",
 		},
 		{

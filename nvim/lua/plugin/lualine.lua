@@ -1,4 +1,5 @@
 local diagnostics = require("diagnostics")
+local palette = require("catppuccin.palettes").get_palette()
 
 -- Cache git repo name per directory to avoid blocking shell calls on every render
 local git_repo_cache = {}
@@ -27,6 +28,7 @@ local function get_git_repo_name()
 end
 
 vim.api.nvim_create_autocmd("DirChanged", {
+	group = vim.api.nvim_create_augroup("lualine-git-cache", { clear = true }),
 	callback = function()
 		git_repo_cache = {}
 	end,
@@ -92,10 +94,10 @@ end
 local function copilot_color()
 	local base = vim.api.nvim_get_hl(0, { name = "lualine_z_normal", link = false })
 	local colors = {
-		inactive = "#626880",
-		busy = "#e5c890",
-		ready = "#a6d189",
-		error = "#e78284",
+		inactive = palette.overlay0,
+		busy = palette.yellow,
+		ready = palette.green,
+		error = palette.red,
 	}
 
 	local ok_client, client = pcall(require, "copilot.client")
@@ -203,11 +205,11 @@ require("lualine").setup({
 					local warns = #vim.diagnostic.get(bufnr, { severity = vim.diagnostic.severity.WARN })
 
 					if errors > 0 then
-						return { fg = "#e78284" } -- catppuccin-frappe red
+						return { fg = palette.red }
 					elseif warns > 0 then
-						return { fg = "#e5c890" } -- catppuccin-frappe yellow
+						return { fg = palette.yellow }
 					else
-						return { fg = "#a6d189" } -- catppuccin-frappe green
+						return { fg = palette.green }
 					end
 				end,
 				on_click = function(clicks, button, modifiers)

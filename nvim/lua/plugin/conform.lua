@@ -13,7 +13,8 @@ require("conform").setup({
 			stdin = true,
 			args = function(_, ctx)
 				local args = {}
-				local local_cfg = vim.fs.find({ ".clang-format", "_clang-format" }, { path = ctx.filename, upward = true })[1]
+				local local_cfg =
+					vim.fs.find({ ".clang-format", "_clang-format" }, { path = ctx.filename, upward = true })[1]
 
 				if local_cfg ~= nil then
 					table.insert(args, "--style=file")
