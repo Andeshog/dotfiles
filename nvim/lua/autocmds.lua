@@ -6,8 +6,13 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
-		local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
-		if lang and vim.treesitter.language.add(lang) then
+		local ok, lang = pcall(vim.treesitter.language.get_lang, vim.bo.filetype)
+		if not ok or not lang then
+			return
+		end
+
+		local added, has_parser = pcall(vim.treesitter.language.add, lang)
+		if added and has_parser then
 			pcall(vim.treesitter.start)
 		end
 	end,
@@ -65,7 +70,11 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "msg",
 	callback = function()
-		local ui2 = require("vim._core.ui2")
+		local ok, ui2 = pcall(require, "vim._core.ui2")
+		if not ok then
+			return
+		end
+
 		local win = ui2.wins and ui2.wins.msg
 		if win and vim.api.nvim_win_is_valid(win) then
 			vim.api.nvim_set_option_value(

@@ -38,20 +38,150 @@ dap.adapters.codelldb = {
 	},
 }
 
+-----------------------------------------------------------
+-- Launch target (executable + args), remembered per cwd
+-----------------------------------------------------------
+local launch_state_path = vim.fn.stdpath("state") .. "/dap-launch.json"
+local launch_state
+
+local function read_launch_state()
+	if launch_state then
+		return launch_state
+	end
+
+	launch_state = {}
+	local file = io.open(launch_state_path, "r")
+	if file then
+		local content = file:read("*a")
+		file:close()
+		local ok, decoded = pcall(vim.json.decode, content)
+		if ok and type(decoded) == "table" then
+			launch_state = decoded
+		end
+	end
+
+	return launch_state
+end
+
+local function write_launch_state()
+	local file = io.open(launch_state_path, "w")
+	if file then
+		file:write(vim.json.encode(read_launch_state()))
+		file:close()
+	end
+end
+
+--- The remembered launch target for the current working directory
+local function launch_target()
+	local state = read_launch_state()
+	local key = vim.fn.getcwd()
+	state[key] = state[key] or {}
+	return state[key]
+end
+
+--- Split an args string on whitespace, keeping "quoted segments" intact
+--- so a path containing spaces survives as a single argument
+local function split_args(input)
+	local args, i = {}, 1
+
+	while i <= #input do
+		local char = input:sub(i, i)
+
+		if char:match("%s") then
+			i = i + 1
+		elseif char == '"' then
+			local close = input:find('"', i + 1, true)
+			table.insert(args, input:sub(i + 1, (close or #input + 1) - 1))
+			i = (close or #input) + 1
+		else
+			local stop = input:find("%s", i) or (#input + 1)
+			table.insert(args, input:sub(i, stop - 1))
+			i = stop
+		end
+	end
+
+	return vim.tbl_map(function(arg)
+		return arg:sub(1, 1) == "~" and vim.fn.expand(arg) or arg
+	end, args)
+end
+
+--- Re-quote for display so editing a stored value round-trips
+local function join_args(args)
+	return table.concat(
+		vim.tbl_map(function(arg)
+			return arg:find("%s") and ('"' .. arg .. '"') or arg
+		end, args or {}),
+		" "
+	)
+end
+
+--- Prompt for executable and args, remembering both
+local function prompt_launch_target()
+	local target = launch_target()
+
+	local program = vim.fn.input({
+		prompt = "Executable: ",
+		default = target.program or (vim.fn.getcwd() .. "/"),
+		completion = "file",
+	})
+	if program == "" then
+		return nil
+	end
+
+	local args = vim.fn.input({
+		prompt = "Args: ",
+		default = join_args(target.args),
+		completion = "file",
+	})
+
+	target.program = vim.fn.expand(program)
+	target.args = split_args(args)
+	write_launch_state()
+
+	return target
+end
+
+--- Use the remembered target, prompting only if nothing is set yet
+local function ensure_launch_target()
+	local target = launch_target()
+	if not target.program or target.program == "" then
+		return prompt_launch_target()
+	end
+	return target
+end
+
+local function warn_if_no_debug_info(program)
+	if vim.fn.filereadable(program) ~= 1 or vim.fn.executable("readelf") ~= 1 then
+		return
+	end
+
+	local out = vim.fn.system({ "readelf", "-S", "--wide", program })
+	if vim.v.shell_error == 0 and not out:find(".debug_info", 1, true) then
+		local msg =
+			"DAP: %s has no debug info -- breakpoints will be rejected (R).\nRebuild with -DCMAKE_BUILD_TYPE=Debug"
+		vim.notify(msg:format(vim.fn.fnamemodify(program, ":t")), vim.log.levels.WARN)
+	end
+end
+
 dap.configurations.cpp = {
 	{
-		name = "Launch (prompt)",
+		name = "Launch",
 		type = "codelldb",
 		request = "launch",
 		program = function()
-			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+			local target = ensure_launch_target()
+			if not target then
+				return dap.ABORT
+			end
+			warn_if_no_debug_info(target.program)
+			return target.program
+		end,
+		args = function()
+			local target = ensure_launch_target()
+			return target and target.args or {}
 		end,
 		cwd = "${workspaceFolder}",
 		stopOnEntry = false,
-		args = function()
-			local input = vim.fn.input("Args: ")
-			return input == "" and {} or vim.split(input, "%s+")
-		end,
 		runInTerminal = true,
 	},
 }
@@ -100,149 +230,318 @@ end
 
 -----------------------------------------------------------
 -- DAP keymaps
---
--- <leader>dd is the only global mapping: it toggles "debug mode",
--- which opens dap-view and installs every other DAP mapping as
--- buffer-local. Buffer-local means they shadow global mappings
--- instead of replacing them -- teardown can never delete a global.
---
--- Debug mode is deliberately not tied to session lifetime: it stays
--- on after a session ends so breakpoints can be adjusted and the
--- program re-run with <M-Right> (continue).
 -----------------------------------------------------------
 local map = vim.keymap.set
 
 map("n", "<leader>d", "<nop>", { desc = "Debug" })
 
+local debug_filetype
+
+local function configured_filetype()
+	for _, ft in ipairs({ vim.bo.filetype, debug_filetype }) do
+		if ft and next(dap.configurations[ft] or {}) then
+			return ft
+		end
+	end
+
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.api.nvim_buf_is_loaded(bufnr) then
+			local ft = vim.bo[bufnr].filetype
+			if next(dap.configurations[ft] or {}) then
+				return ft
+			end
+		end
+	end
+end
+
+local function continue()
+	if dap.session() then
+		dap.continue()
+		return
+	end
+
+	local ft = configured_filetype()
+	if not ft then
+		vim.notify("DAP: no configuration matches any open buffer", vim.log.levels.WARN)
+		return
+	end
+
+	local configs = dap.configurations[ft]
+	if #configs == 1 then
+		dap.run(configs[1], { filetype = ft })
+		return
+	end
+
+	vim.ui.select(configs, {
+		prompt = "Configuration: ",
+		format_item = function(config)
+			return config.name
+		end,
+	}, function(choice)
+		if choice then
+			dap.run(choice, { filetype = ft })
+		end
+	end)
+end
+
 local session_keymaps = {
-	-- Stepping
-	{ "n", "<M-Right>", dap.continue, "DAP: continue" },
-	{ "n", "<M-Up>", dap.step_over, "DAP: step over" },
-	{ "n", "<M-Down>", dap.step_into, "DAP: step into" },
-	{ "n", "<M-Left>", dap.step_out, "DAP: step out" },
-	{ "n", "<leader>dc", dap.run_to_cursor, "DAP: run to cursor" },
-
-	-- Breakpoints
-	{ "n", "<leader>db", dap.toggle_breakpoint, "DAP: toggle breakpoint" },
 	{
-		"n",
-		"<leader>dB",
-		function()
-			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-		end,
-		"DAP: conditional breakpoint",
+		name = "Launch",
+		{
+			"n",
+			"<leader>dP",
+			function()
+				local target = prompt_launch_target()
+				if target then
+					vim.notify("DAP target: " .. target.program)
+				end
+			end,
+			"Set executable + args",
+		},
 	},
 	{
-		"n",
-		"<leader>dl",
-		function()
-			dap.set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
-		end,
-		"DAP: logpoint",
+		name = "Stepping",
+		{ "n", "<M-Right>", continue, "Continue / start running" },
+		{ "n", "<M-Up>", dap.step_over, "Step over" },
+		{ "n", "<M-Down>", dap.step_into, "Step into" },
+		{ "n", "<M-Left>", dap.step_out, "Step out" },
+		{ "n", "<leader>dc", dap.run_to_cursor, "Run to cursor" },
 	},
 	{
-		"n",
-		"<leader>d?",
-		function()
-			local cond = vim.fn.input("Condition (empty for none): ")
-			local hit = vim.fn.input("Hit count (empty for none): ")
-			local log = vim.fn.input("Log message (empty for none): ")
-			dap.set_breakpoint((cond ~= "" and cond) or nil, (hit ~= "" and hit) or nil, (log ~= "" and log) or nil)
-		end,
-		"DAP: set breakpoint (cond/hit/log)",
+		name = "Breakpoints",
+		{ "n", "<leader>db", dap.toggle_breakpoint, "Toggle breakpoint" },
+		{
+			"n",
+			"<leader>dB",
+			function()
+				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+			end,
+			"Conditional breakpoint",
+		},
+		{
+			"n",
+			"<leader>dl",
+			function()
+				dap.set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
+			end,
+			"Logpoint",
+		},
+		{
+			"n",
+			"<leader>da",
+			function()
+				local cond = vim.fn.input("Condition (empty for none): ")
+				local hit = vim.fn.input("Hit count (empty for none): ")
+				local log = vim.fn.input("Log message (empty for none): ")
+				dap.set_breakpoint((cond ~= "" and cond) or nil, (hit ~= "" and hit) or nil, (log ~= "" and log) or nil)
+			end,
+			"Advanced breakpoint (cond/hit/log)",
+		},
+		{
+			"n",
+			"<leader>dx",
+			function()
+				dap.set_exception_breakpoints({ "cpp_throw", "cpp_catch" })
+				vim.notify("DAP: break on C++ throw/catch enabled")
+			end,
+			"Break on C++ throw/catch",
+		},
+		{
+			"n",
+			"<leader>dC",
+			function()
+				dap.clear_breakpoints()
+				vim.notify("DAP: cleared all breakpoints")
+			end,
+			"Clear all breakpoints",
+		},
 	},
 	{
-		"n",
-		"<leader>dC",
-		function()
-			dap.clear_breakpoints()
-			vim.notify("DAP: cleared all breakpoints")
-		end,
-		"DAP: clear all breakpoints",
+		name = "Inspection",
+		{ { "n", "v" }, "<leader>dh", widgets.hover, "Hover / evaluate under cursor" },
+		{ { "n", "v" }, "<leader>dp", widgets.preview, "Preview variable" },
+		{
+			"n",
+			"<leader>df",
+			function()
+				widgets.centered_float(widgets.frames)
+			end,
+			"Show frames",
+		},
+		{
+			"n",
+			"<leader>ds",
+			function()
+				widgets.centered_float(widgets.scopes)
+			end,
+			"Show scopes",
+		},
+		{
+			"n",
+			"<leader>dE",
+			function()
+				widgets.centered_float(widgets.expression)
+			end,
+			"Show expressions",
+		},
 	},
 	{
-		"n",
-		"<leader>dx",
-		function()
-			dap.set_exception_breakpoints({ "cpp_throw", "cpp_catch" })
-			vim.notify("DAP: break on C++ throw/catch enabled")
-		end,
-		"DAP: break on exceptions (C++)",
-	},
-
-	-- Inspection
-	{ { "n", "v" }, "<leader>dh", widgets.hover, "DAP: hover / evaluate" },
-	{ { "n", "v" }, "<leader>dp", widgets.preview, "DAP: preview variable" },
-	{
-		"n",
-		"<leader>df",
-		function()
-			widgets.centered_float(widgets.frames)
-		end,
-		"DAP: show frames",
-	},
-	{
-		"n",
-		"<leader>ds",
-		function()
-			widgets.centered_float(widgets.scopes)
-		end,
-		"DAP: show scopes",
-	},
-	{
-		"n",
-		"<leader>dE",
-		function()
-			widgets.centered_float(widgets.expression)
-		end,
-		"DAP: show expressions",
-	},
-
-	-- Session control
-	{ "n", "<leader>dR", dap.restart, "DAP: restart session" },
-	{
-		"n",
-		"<leader>dr",
-		function()
-			dap.repl.open({}, "belowright split")
-		end,
-		"DAP: open REPL (split)",
-	},
-	{
-		"n",
-		"<leader>dq",
-		function()
-			dap.terminate()
-			dap.disconnect({ terminateDebuggee = true })
-			pcall(dapview.close)
-		end,
-		"DAP: stop",
+		name = "Session",
+		{ "n", "<leader>dR", dap.restart, "Restart session" },
+		{
+			"n",
+			"<leader>dr",
+			function()
+				dap.repl.open({}, "belowright split")
+			end,
+			"Open REPL (split)",
+		},
+		{
+			"n",
+			"<leader>dq",
+			function()
+				dap.terminate()
+				dap.disconnect({ terminateDebuggee = true })
+			end,
+			"Stop program (stay in debug mode)",
+		},
+		{ "n", "<leader>dd", nil, "Exit debug mode (closes view)" },
 	},
 }
 
+-----------------------------------------------------------
+-- Cheatsheet float, rendered from session_keymaps
+-----------------------------------------------------------
+local help_ns = vim.api.nvim_create_namespace("dap-cheatsheet")
+
+local function build_help_lines()
+	local width = 0
+	for _, group in ipairs(session_keymaps) do
+		for _, km in ipairs(group) do
+			width = math.max(width, #km[2])
+		end
+	end
+
+	local lines, marks = {}, {}
+
+	local target = launch_target()
+	table.insert(lines, "Target")
+	table.insert(marks, { #lines - 1, 0, -1, "Title" })
+	local program = target.program and vim.fn.fnamemodify(target.program, ":~") or "(unset -- <leader>dP)"
+	table.insert(lines, "  " .. program)
+	if target.args and #target.args > 0 then
+		table.insert(lines, "  args: " .. table.concat(target.args, " "))
+	end
+
+	for _, group in ipairs(session_keymaps) do
+		table.insert(lines, "")
+
+		table.insert(lines, group.name)
+		table.insert(marks, { #lines - 1, 0, -1, "Title" })
+
+		for _, km in ipairs(group) do
+			local lhs = km[2]
+			table.insert(lines, string.format("  %s  %s", lhs .. (" "):rep(width - #lhs), km[4]))
+			table.insert(marks, { #lines - 1, 2, 2 + #lhs, "Special" })
+		end
+	end
+
+	table.insert(lines, "")
+	table.insert(lines, "q / <Esc> to close")
+	table.insert(marks, { #lines - 1, 0, -1, "Comment" })
+
+	return lines, marks
+end
+
+local function show_help()
+	local lines, marks = build_help_lines()
+
+	local width = 0
+	for _, line in ipairs(lines) do
+		width = math.max(width, vim.fn.strdisplaywidth(line))
+	end
+	width = math.min(width + 2, vim.o.columns - 4)
+	local height = math.min(#lines, vim.o.lines - 6)
+
+	local buf = vim.api.nvim_create_buf(false, true)
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+
+	for _, m in ipairs(marks) do
+		vim.api.nvim_buf_set_extmark(buf, help_ns, m[1], m[2], {
+			end_col = m[3] == -1 and #lines[m[1] + 1] or m[3],
+			hl_group = m[4],
+		})
+	end
+
+	vim.bo[buf].modifiable = false
+	vim.bo[buf].bufhidden = "wipe"
+
+	local win = vim.api.nvim_open_win(buf, true, {
+		relative = "editor",
+		width = width,
+		height = height,
+		row = math.max(0, math.floor((vim.o.lines - height) / 2) - 1),
+		col = math.floor((vim.o.columns - width) / 2),
+		style = "minimal",
+		border = "rounded",
+		title = " Debug mode ",
+		title_pos = "center",
+	})
+
+	vim.wo[win].wrap = false
+	vim.wo[win].cursorline = false
+
+	local function close()
+		if vim.api.nvim_win_is_valid(win) then
+			vim.api.nvim_win_close(win, true)
+		end
+	end
+
+	for _, lhs in ipairs({ "q", "<Esc>", "<CR>", "<leader>d?" }) do
+		map("n", lhs, close, { buffer = buf, nowait = true, silent = true, desc = "Close cheatsheet" })
+	end
+
+	vim.api.nvim_create_autocmd("WinLeave", { buffer = buf, once = true, callback = close })
+end
+
+table.insert(session_keymaps[#session_keymaps], { "n", "<leader>d?", show_help, "Show this cheatsheet" })
+
+-----------------------------------------------------------
+-- Debug mode: install/remove the buffer-local mappings
+-----------------------------------------------------------
 local session_augroup = vim.api.nvim_create_augroup("dap-session-keymaps", { clear = true })
 local mapped_buffers = {}
+
+local function each_keymap(fn)
+	for _, group in ipairs(session_keymaps) do
+		for _, km in ipairs(group) do
+			if km[3] then
+				fn(km)
+			end
+		end
+	end
+end
 
 local function set_buf_keymaps(bufnr)
 	if mapped_buffers[bufnr] or not vim.api.nvim_buf_is_valid(bufnr) then
 		return
 	end
 
-	for _, km in ipairs(session_keymaps) do
-		map(km[1], km[2], km[3], { buffer = bufnr, desc = km[4], silent = true })
-	end
+	each_keymap(function(km)
+		map(km[1], km[2], km[3], { buffer = bufnr, desc = "DAP: " .. km[4], silent = true })
+	end)
 
 	mapped_buffers[bufnr] = true
 end
 
 local function clear_buf_keymaps(bufnr)
 	if vim.api.nvim_buf_is_valid(bufnr) then
-		for _, km in ipairs(session_keymaps) do
+		each_keymap(function(km)
 			local modes = type(km[1]) == "table" and km[1] or { km[1] }
 			for _, mode in ipairs(modes) do
 				pcall(vim.keymap.del, mode, km[2], { buffer = bufnr })
 			end
-		end
+		end)
 	end
 
 	mapped_buffers[bufnr] = nil
@@ -255,6 +554,7 @@ local function enter_debug_mode()
 		return
 	end
 	debug_mode = true
+	debug_filetype = next(dap.configurations[vim.bo.filetype] or {}) and vim.bo.filetype or debug_filetype
 
 	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
 		if vim.api.nvim_buf_is_loaded(bufnr) then
@@ -270,7 +570,13 @@ local function enter_debug_mode()
 		end,
 	})
 
+	-- dapview.open() focuses the view; keep the cursor in the code window
+	-- so stepping and <M-Right> resolve against the source buffer
+	local origin = vim.api.nvim_get_current_win()
 	dapview.open()
+	if vim.api.nvim_win_is_valid(origin) then
+		vim.api.nvim_set_current_win(origin)
+	end
 end
 
 local function exit_debug_mode()
