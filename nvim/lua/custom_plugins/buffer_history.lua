@@ -5,7 +5,6 @@ local config = {
 		dashboard = true,
 		checkhealth = true,
 		termite = true,
-		codecompanion = true,
 	},
 }
 

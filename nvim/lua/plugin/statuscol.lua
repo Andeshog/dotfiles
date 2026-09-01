@@ -18,7 +18,6 @@ local function centered_lnum(args)
 end
 
 require("statuscol").setup({
-	ft_ignore = { "codecompanion", "codecompanion_cli" },
 	relculright = true,
 	segments = {
 		-- Git signs

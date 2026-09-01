@@ -36,7 +36,6 @@ vim.pack.add({
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	{ src = "https://github.com/folke/which-key.nvim", name = "which-key" },
 	--Navigation and files
-	{ src = "https://github.com/matze/vim-move", name = "vim-move" },
 	{ src = "https://codeberg.org/knight9114/arc.nvim", name = "arc" },
 	{ src = "https://github.com/aaronik/treewalker.nvim", name = "treewalker" },
 	{ src = "https://github.com/nvim-telescope/telescope.nvim", name = "telescope" },
@@ -60,7 +59,6 @@ vim.pack.add({
 	-- UI
 	{ src = "https://github.com/luukvbaal/statuscol.nvim", name = "statuscol" },
 	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline" },
-	{ src = "https://github.com/folke/zen-mode.nvim", name = "zen-mode" },
 	{ src = "https://github.com/nvim-lualine/lualine.nvim", name = "lualine" },
 	-- Completion
 	"https://github.com/Saghen/blink.lib",
@@ -76,7 +74,6 @@ vim.pack.add({
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim", name = "render-markdown" },
 	-- AI/Copilot
 	{ src = "https://github.com/zbirenbaum/copilot.lua", name = "copilot.lua" },
-	{ src = "https://github.com/olimorris/codecompanion.nvim", name = "codecompanion" },
 	-- DAP
 	{ src = "https://github.com/mfussenegger/nvim-dap", name = "nvim-dap" },
 	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view", version = vim.version.range("1") },

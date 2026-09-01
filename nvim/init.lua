@@ -32,18 +32,17 @@ require("plugin.dap")
 require("plugin.neotest")
 require("plugin.termite")
 require("plugin.blink")
-require("plugin.codecompanion")
 require("plugin.multicursor")
 require("plugin.treesitter")
 
 require("render-markdown").setup({
-	file_types = { "markdown", "codecompanion" },
+	file_types = { "markdown" },
 	render_modes = true,
 	sign = { enabled = false },
 })
 
 require("filemention").setup({
-	filetypes = { "markdown", "text", "gitcommit", "codecompanion" },
+	filetypes = { "markdown", "text", "gitcommit" },
 })
 
 vim.o.cmdheight = 1
@@ -63,7 +62,6 @@ require("arc").setup({
 require("treewalker").setup({
 	scope_confined = true,
 })
-require("plugin.zen").setup()
 require("grug-far").setup({})
 require("Comment").setup()
 require("custom_plugins.comment_textobject")
@@ -72,7 +70,6 @@ require("custom_plugins.buffer_history").setup({
 		dashboard = true,
 		checkhealth = true,
 		termite = true,
-		codecompanion = true,
 	},
 })
 require("inlinediff").setup({

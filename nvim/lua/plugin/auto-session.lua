@@ -2,7 +2,6 @@ local ignored_filetypes = {
 	dashboard = true,
 	checkhealth = true,
 	termite = true,
-	codecompanion = true,
 }
 
 local function close_session_ignored_windows()
@@ -41,7 +40,6 @@ require("auto-session").setup({
 		"checkhealth",
 		"dashboard",
 		"termite",
-		"codecompanion",
 	},
 	pre_save_cmds = { close_session_ignored_windows },
 })

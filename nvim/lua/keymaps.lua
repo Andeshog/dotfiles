@@ -56,6 +56,40 @@ end, { desc = "Yank (keep cursor)", silent = true })
 -- Select all
 map("n", "<C-A>", "ggVG", { desc = "Select all" })
 
+-- Move lines / selection up and down (replaces vim-move)
+local function move_line(dir)
+	return function()
+		local line = vim.fn.line(".")
+		if (dir > 0 and line >= vim.fn.line("$")) or (dir < 0 and line <= 1) then
+			return
+		end
+
+		vim.cmd(("silent move %d"):format(dir > 0 and line + 1 or line - 2))
+		vim.cmd("normal! ==")
+	end
+end
+
+local function move_selection(dir)
+	return function()
+		-- Leave visual mode so the '< and '> marks are set
+		vim.cmd("normal! \27")
+
+		local first, last = vim.fn.line("'<"), vim.fn.line("'>")
+		if (dir > 0 and last >= vim.fn.line("$")) or (dir < 0 and first <= 1) then
+			vim.cmd("normal! gv")
+			return
+		end
+
+		vim.cmd(("silent %d,%dmove %d"):format(first, last, dir > 0 and last + 1 or first - 2))
+		vim.cmd("normal! gv=gv")
+	end
+end
+
+map("n", "<A-j>", move_line(1), { desc = "Move line down", silent = true })
+map("n", "<A-k>", move_line(-1), { desc = "Move line up", silent = true })
+map("x", "<A-j>", move_selection(1), { desc = "Move selection down", silent = true })
+map("x", "<A-k>", move_selection(-1), { desc = "Move selection up", silent = true })
+
 ----------------------------------------------------------
 -------------------- Window Management -------------------
 ----------------------------------------------------------
@@ -91,23 +125,11 @@ map("n", "<leader>bb", "<cmd>b#<cr>", { desc = "Last buffer", silent = true })
 -- Close buffers
 map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer (keep window)", silent = true })
 map("n", "<leader>bD", "<cmd>bdelete!<cr>", { desc = "Force delete buffer", silent = true })
-local function is_codecompanion_buffer(bufnr)
-	local ft = vim.bo[bufnr].filetype
-	local name = vim.api.nvim_buf_get_name(bufnr)
-
-	return ft:match("^codecompanion") ~= nil or name:match("CodeCompanion") ~= nil
-end
-
 map("n", "<leader>bo", function()
 	local current = vim.api.nvim_get_current_buf()
 
 	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-		if
-			vim.api.nvim_buf_is_valid(bufnr)
-			and vim.bo[bufnr].buflisted
-			and bufnr ~= current
-			and not is_codecompanion_buffer(bufnr)
-		then
+		if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted and bufnr ~= current then
 			vim.cmd("bdelete " .. bufnr)
 		end
 	end
@@ -194,11 +216,6 @@ end, { desc = "Search selection in file" })
 map("n", "<leader>sf", function()
 	open_grug_far_current_file()
 end, { desc = "Search current file" })
-
--- Zen mode
-map("n", "<leader>z", function()
-	require("plugin.zen").toggle()
-end, { desc = "Toggle Zen mode" })
 
 ----------------------------------------------------------
 --------------------- Diagnostics ------------------------
