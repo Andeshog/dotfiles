@@ -20,6 +20,8 @@ map({ "n", "v" }, "<C-u>", "<C-u>zz", { desc = "Scroll up (centered)", silent = 
 map("n", "<Esc>", "<cmd>nohlsearch | echon ''<cr>", { desc = "Clear search highlight + command line" })
 -- Neo-tree
 map("n", "<leader>o", "<cmd>Neotree reveal<cr>", { desc = "Reveal in Neo-tree", silent = true })
+map("n", "<leader>B", "<cmd>Neotree float buffers<cr>", { desc = "Buffer list (Neo-tree)", silent = true })
+map("n", "<leader>G", "<cmd>Neotree float git_status<cr>", { desc = "Git status (Neo-tree)", silent = true })
 
 -- Treewalker
 map({ "n", "v" }, "<C-k>", "<cmd>Treewalker Up<cr>", { desc = "Treewalker up", silent = true })
@@ -137,7 +139,6 @@ end, { desc = "Delete other buffers", silent = true })
 map("n", "<leader>bq", function()
 	vim.cmd("silent! %bdelete | intro")
 end, { desc = "Close all buffers", silent = true })
-map("n", "<leader>B", "<cmd>Neotree float buffers<cr>", { desc = "Buffer list (Neo-tree)", silent = true })
 
 -- Git
 map("n", "<leader>g", "<nop>", { desc = "Git" })
