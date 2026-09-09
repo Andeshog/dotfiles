@@ -1,5 +1,28 @@
 local diagnostics = require("diagnostics")
 
+local function switch_source_header(cmd)
+	cmd = cmd or "edit"
+	local bufnr = vim.api.nvim_get_current_buf()
+	local client = vim.lsp.get_clients({ bufnr = bufnr, name = "clangd" })[1]
+	if not client then
+		return vim.notify("clangd not attached", vim.log.levels.WARN)
+	end
+
+	client:request("textDocument/switchSourceHeader", vim.lsp.util.make_text_document_params(bufnr), function(err, uri)
+		if err then
+			return vim.notify(err.message, vim.log.levels.ERROR)
+		end
+		if not uri or uri == "" then
+			return vim.notify("No corresponding file found", vim.log.levels.WARN)
+		end
+		vim.cmd[cmd](vim.fn.fnameescape(vim.uri_to_fname(uri)))
+	end, bufnr)
+end
+
+vim.api.nvim_create_user_command("ClangdSwitch", function(o)
+	switch_source_header(o.bang and "vsplit" or "edit")
+end, { bang = true, desc = "Switch between source and header" })
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("lsp-keymaps", {}),
 	callback = function(ev)
@@ -14,11 +37,20 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts("References"))
 		vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts("Type definition"))
 
+		-- Call hierarchy
+		vim.keymap.set("n", "<leader>lci", vim.lsp.buf.incoming_calls, opts("Incoming calls"))
+		vim.keymap.set("n", "<leader>lco", vim.lsp.buf.outgoing_calls, opts("Outgoing calls"))
+
+		-- Type hierarchy
+		vim.keymap.set("n", "<leader>lt", function()
+			vim.lsp.buf.typehierarchy("subtypes")
+		end, opts("Type hierarchy"))
+
 		-- Info
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts("Hover"))
 
 		-- Actions
-		vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, opts("Code action"))
+		vim.keymap.set({ "n", "x" }, "<leader>la", vim.lsp.buf.code_action, opts("Code action"))
 		vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts("Rename symbol"))
 		vim.keymap.set("n", "<leader>lf", function()
 			local ok, conform = pcall(require, "conform")
@@ -46,9 +78,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- Toggle inlay hints (if supported)
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
 		if client and client:supports_method("textDocument/inlayHint") then
+			vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
 			vim.keymap.set("n", "<leader>lh", function()
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf }), { bufnr = ev.buf })
 			end, opts("Toggle inlay hints"))
+		end
+		-- Switch between source and header (if clangd)
+		if client and client.name == "clangd" then
+			vim.keymap.set("n", "<leader>lo", function()
+				switch_source_header()
+			end, opts("Switch source/header"))
+			vim.keymap.set("n", "<leader>lO", function()
+				switch_source_header("vsplit")
+			end, opts("Switch source/header (split)"))
 		end
 	end,
 })

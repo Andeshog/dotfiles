@@ -1,5 +1,13 @@
 {
   "plugins": {
+    "Comment": {
+      "rev": "e30b7f2008e52442154b66f7c519bfd2f1e32acb",
+      "src": "https://github.com/numToStr/Comment.nvim"
+    },
+    "arc": {
+      "rev": "cefd2c9ec65b1701352e757bd9e8d0171de02149",
+      "src": "https://codeberg.org/knight9114/arc.nvim"
+    },
     "auto-session": {
       "rev": "c8e6139a2e52a38101fecaba6014d7dd75489044",
       "src": "https://github.com/rmagatti/auto-session"
@@ -19,6 +27,10 @@
     "cmake-tools": {
       "rev": "ee807ac4e62591720de2f6ad0abbfb966c4c7b97",
       "src": "https://github.com/Civitasv/cmake-tools.nvim"
+    },
+    "codecompanion": {
+      "rev": "b1cbe52ecd71e7b0ed43ac1dc6eb3aab4099db00",
+      "src": "https://github.com/olimorris/codecompanion.nvim"
     },
     "conform": {
       "rev": "016802de402556da54c36bd7359b441266b01cdd",
@@ -147,7 +159,15 @@
       "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
       "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
     },
+    "telescope-fzf-native.nvim": {
+      "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
+      "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
+    },
     "telescope-live-grep-args": {
+      "rev": "53e9df55b3651dd7cf77e172f1e8c9a17407acca",
+      "src": "https://github.com/nvim-telescope/telescope-live-grep-args.nvim"
+    },
+    "telescope-live-grep-args.nvim": {
       "rev": "53e9df55b3651dd7cf77e172f1e8c9a17407acca",
       "src": "https://github.com/nvim-telescope/telescope-live-grep-args.nvim"
     },
@@ -155,17 +175,37 @@
       "rev": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2",
       "src": "https://github.com/nvim-telescope/telescope-ui-select.nvim"
     },
+    "telescope.nvim": {
+      "rev": "f04ab730b8f9c6bf3f54a206d0dcddfd70c52d59",
+      "src": "https://github.com/nvim-telescope/telescope.nvim"
+    },
     "termite": {
       "rev": "d9bb384de496796f67985a1be4bb9097834a337c",
       "src": "https://github.com/ruicsh/termite.nvim"
+    },
+    "toggleterm.nvim": {
+      "rev": "9a88eae817ef395952e08650b3283726786fb5fb",
+      "src": "https://github.com/akinsho/toggleterm.nvim"
     },
     "treewalker": {
       "rev": "976eb9921c2f26a9a4314b5a0f4842d447a49592",
       "src": "https://github.com/aaronik/treewalker.nvim"
     },
+    "vim-move": {
+      "rev": "267fd1cff61fc643dfb5f9b188c434906f5214aa",
+      "src": "https://github.com/matze/vim-move"
+    },
+    "vim-surround": {
+      "rev": "3d188ed2113431cf8dac77be61b842acb64433d9",
+      "src": "https://github.com/tpope/vim-surround"
+    },
     "which-key": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
       "src": "https://github.com/folke/which-key.nvim"
+    },
+    "zen-mode": {
+      "rev": "8564ce6d29ec7554eb9df578efa882d33b3c23a7",
+      "src": "https://github.com/folke/zen-mode.nvim"
     }
   }
 }

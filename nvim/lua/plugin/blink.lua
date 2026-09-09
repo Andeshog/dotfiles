@@ -58,6 +58,10 @@ require("blink.cmp").setup({
 		implementation = "prefer_rust",
 	},
 	completion = {
+		documentation = {
+			auto_show = true,
+			auto_show_delay_ms = 250,
+		},
 		list = {
 			selection = {
 				preselect = true,
