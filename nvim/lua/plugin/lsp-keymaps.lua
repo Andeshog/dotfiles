@@ -1,4 +1,5 @@
 local diagnostics = require("diagnostics")
+local fzf = require("fzf-lua")
 
 local function switch_source_header(cmd)
 	cmd = cmd or "edit"
@@ -31,10 +32,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end
 
 		-- Navigation
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
+		vim.keymap.set("n", "gd", fzf.lsp_definitions, opts("Go to definition"))
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts("Go to implementation"))
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts("References"))
+		vim.keymap.set("n", "gi", fzf.lsp_implementations, opts("Go to implementation"))
+		vim.keymap.set("n", "gr", fzf.lsp_references, opts("References"))
 		vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts("Type definition"))
 
 		-- Call hierarchy

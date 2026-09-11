@@ -24,7 +24,7 @@ require("plugin.lint")
 require("plugin.auto-session")
 require("plugin.statuscol")
 require("plugin.indent_blankline")
-require("plugin.telescope")
+require("plugin.fzf-lua")
 require("plugin.lualine")
 require("plugin.lsp-keymaps")
 require("plugin.copilot")
@@ -55,7 +55,7 @@ require("which-key").setup({
 require("gitsigns").setup({
 	current_line_blame = true,
 })
-require("nvim-autopairs").setup({ fast_wrap = {}, disable_filetype = { "TelescopePrompt", "vim" } })
+require("nvim-autopairs").setup({ fast_wrap = {}, disable_filetype = { "vim" } })
 require("treewalker").setup({
 	scope_confined = true,
 })

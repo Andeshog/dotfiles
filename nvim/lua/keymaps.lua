@@ -13,6 +13,10 @@ local function open_grug_far_current_file(options)
 	open_grug_far(options)
 end
 
+-- Conversion to NO keyboard
+map({ "n", "x", "o" }, "ø", "[", { remap = true })
+map({ "n", "x", "o" }, "æ", "]", { remap = true })
+
 -- Scrolling
 map({ "n", "v" }, "<C-d>", "<C-d>zz", { desc = "Scroll down (centered)", silent = true })
 map({ "n", "v" }, "<C-u>", "<C-u>zz", { desc = "Scroll up (centered)", silent = true })
@@ -166,7 +170,7 @@ map({ "n", "v" }, "<leader>gr", function()
 end, { desc = "Reset git hunk" })
 
 ----------------------------------------------------------
------------------------ Telescope ------------------------
+------------------------ FZF-lua -------------------------
 ----------------------------------------------------------
 map("n", "<leader>f", "<nop>", { desc = "Find" })
 

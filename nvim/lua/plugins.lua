@@ -10,10 +10,6 @@ vim.api.nvim_create_autocmd("PackChanged", {
 			vim.cmd("MasonUpdate")
 		end
 
-		if name == "telescope-fzf-native" and (kind == "install" or kind == "update") then
-			vim.system({ "make" }, { cwd = ev.data.path })
-		end
-
 		if name == "blink.cmp" and (kind == "install" or kind == "update") then
 			require("blink.cmp").build():wait(60000)
 		end
@@ -31,10 +27,7 @@ vim.pack.add({
 	{ src = "https://github.com/folke/which-key.nvim", name = "which-key" },
 	--Navigation and files
 	{ src = "https://github.com/aaronik/treewalker.nvim", name = "treewalker" },
-	{ src = "https://github.com/nvim-telescope/telescope.nvim", name = "telescope" },
-	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", name = "telescope-fzf-native" },
-	{ src = "https://github.com/nvim-telescope/telescope-live-grep-args.nvim", name = "telescope-live-grep-args" },
-	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim", name = "telescope-ui-select.nvim" },
+	{ src = "https://github.com/ibhagwan/fzf-lua", name = "fzf-lua" },
 	{ src = "https://github.com/rmagatti/auto-session", name = "auto-session" },
 	{ src = "https://github.com/williamboman/mason.nvim", name = "mason.nvim" },
 	{ src = "https://github.com/not-manu/filemention.nvim", name = "filemention" },

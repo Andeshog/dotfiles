@@ -12,7 +12,7 @@ require("catppuccin").setup({
 		gitsigns = true,
 		neotree = true,
 		treesitter = true,
-		telescope = { enabled = true },
+		fzf = true,
 		fidget = true,
 		mason = true,
 		dap = true,
