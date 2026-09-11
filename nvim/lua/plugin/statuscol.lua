@@ -1,3 +1,5 @@
+local builtin = require("statuscol.builtin")
+
 local function centered_lnum(args)
 	if not args.rnu and not args.nu then
 		return ""
@@ -42,6 +44,11 @@ require("statuscol").setup({
 				fillcharhl = "LineNr",
 			},
 			click = "v:lua.ScSa",
+		},
+		-- Fold column
+		{
+			text = { builtin.foldfunc },
+			click = "v:lua.ScFa",
 		},
 		{
 			text = { " " },

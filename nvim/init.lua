@@ -16,6 +16,7 @@ require("autocmds")
 require("plugins")
 
 --Plugins with config
+require("plugin.mini-icons")
 require("plugin.neo-tree")
 require("plugin.catppuccin")
 require("plugin.mason")

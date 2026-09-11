@@ -31,6 +31,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			return { buffer = ev.buf, desc = desc }
 		end
 
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		if client and client:supports_method("textDocument/foldingRange") then
+			vim.wo[vim.api.nvim_get_current_win()][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
+		end
+
 		-- Navigation
 		vim.keymap.set("n", "gd", fzf.lsp_definitions, opts("Go to definition"))
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))

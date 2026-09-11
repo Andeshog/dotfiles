@@ -11,6 +11,13 @@ opt.winborder = "rounded"
 opt.list = true
 opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
 
+-- Folding
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldtext = ""
+opt.foldlevelstart = 99
+opt.foldcolumn = "1"
+
 -- Wrapping and scrolling
 opt.wrap = true
 opt.linebreak = true
@@ -39,5 +46,4 @@ opt.splitkeep = "screen"
 -- Files and sessions
 opt.undofile = true
 opt.confirm = true
-opt.sessionoptions =
-	{ "blank", "buffers", "curdir", "folds", "help", "tabpages", "winsize", "winpos", "terminal", "localoptions" }
+opt.sessionoptions = { "blank", "buffers", "curdir", "help", "tabpages", "winsize", "winpos", "terminal" }

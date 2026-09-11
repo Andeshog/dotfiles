@@ -21,7 +21,7 @@ vim.pack.add({
 	-- dependencies
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/MunifTanjim/nui.nvim",
-	"https://github.com/nvim-tree/nvim-web-devicons",
+	{ src = "https://github.com/nvim-mini/mini.icons", name = "mini.icons" },
 
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	{ src = "https://github.com/folke/which-key.nvim", name = "which-key" },
