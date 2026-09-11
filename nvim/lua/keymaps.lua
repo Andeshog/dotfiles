@@ -145,29 +145,72 @@ map("n", "<leader>bq", function()
 end, { desc = "Close all buffers", silent = true })
 
 -- Git
-map("n", "<leader>g", "<nop>", { desc = "Git" })
+local function visual_range()
+	local start_line, end_line = vim.fn.line("v"), vim.fn.line(".")
+	if start_line > end_line then
+		start_line, end_line = end_line, start_line
+	end
+	return { start_line, end_line }
+end
+
+local function hunk_nav(direction)
+	return function()
+		if vim.wo.diff then
+			vim.cmd.normal({ direction == "next" and "]c" or "[c", bang = true })
+		else
+			require("gitsigns").nav_hunk(direction)
+		end
+	end
+end
+
+map("n", "<leader>g", "<nop>", { desc = "git" })
 map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
+map("n", "<leader>gf", function()
+	require("fzf-lua").git_status()
+end, { desc = "Git status (fzf)" })
+map("n", "<leader>gc", function()
+	require("fzf-lua").git_branches()
+end, { desc = "Git branches (fzf)" })
 map("n", "<leader>gl", "<cmd>.DiffviewFileHistory %<cr>", { desc = "Git line history" })
 map("v", "<leader>gl", ":<C-u>'<,'>DiffviewFileHistory %<cr>", { desc = "Git line history" })
 map("n", "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", { desc = "Git file history" })
 map("n", "<leader>gd", function()
 	require("inlinediff").toggle()
 end, { desc = "Toggle inline diff" })
-map("n", "<leader>gn", "<cmd>Gitsigns next_hunk<cr>", { desc = "Next git hunk" })
+map("n", "]c", hunk_nav("next"), { desc = "Next git hunk" })
+map("n", "[c", hunk_nav("prev"), { desc = "Previous git hunk" })
+map({ "o", "x" }, "ih", function()
+	require("gitsigns").select_hunk()
+end, { desc = "Git hunk" })
+map({ "n", "v" }, "<leader>gs", function()
+	local gs = require("gitsigns")
+	if vim.fn.mode():match("[vV]") then
+		gs.stage_hunk(visual_range())
+	else
+		gs.stage_hunk()
+	end
+end, { desc = "Stage/unstage git hunk" })
+map("n", "<leader>gS", function()
+	require("gitsigns").stage_buffer()
+end, { desc = "Stage git buffer" })
 map({ "n", "v" }, "<leader>gr", function()
 	local gs = require("gitsigns")
 	if vim.fn.mode():match("[vV]") then
-		local start_line = vim.fn.line("v")
-		local end_line = vim.fn.line(".")
-		if start_line > end_line then
-			start_line, end_line = end_line, start_line
-		end
-		gs.reset_hunk({ start_line, end_line })
+		gs.reset_hunk(visual_range())
 	else
 		local line = vim.api.nvim_win_get_cursor(0)[1]
 		gs.reset_hunk({ line, line })
 	end
-end, { desc = "Reset git hunk" })
+end, { desc = "Reset git line(s)" })
+map("n", "<leader>gb", function()
+	require("gitsigns").blame_line({ full = true })
+end, { desc = "Git blame line" })
+map("n", "<leader>gB", function()
+	require("gitsigns").blame()
+end, { desc = "Git blame buffer" })
+map("n", "<leader>gq", function()
+	require("gitsigns").setqflist("all")
+end, { desc = "Git hunks to quickfix" })
 
 ----------------------------------------------------------
 ------------------------ FZF-lua -------------------------
