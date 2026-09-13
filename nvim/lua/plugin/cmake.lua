@@ -18,7 +18,7 @@ require("cmake-tools").setup({
 	cmake_runner = {
 		name = "terminal",
 		opts = {
-			focus = true,
+			focus = false,
 			single_terminal_per_instance = true,
 			close_on_exit = false,
 		},
@@ -83,7 +83,6 @@ map("n", "<leader>ka", function()
 		end
 	end)
 end, { desc = "CMake: launch args" })
-map("n", "<leader>kT", "<cmd>CMakeRunTest --output-on-failure<cr>", { desc = "CMake: ctest" })
 map("n", "<leader>kc", function()
 	run("clean", cmake.clean)
 end, { desc = "CMake: clean" })

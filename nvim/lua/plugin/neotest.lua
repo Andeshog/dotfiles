@@ -57,34 +57,24 @@ if pcall(vim.treesitter.language.inspect, "cpp") then
 		adapters,
 		require("neotest-gtest").setup({
 			debug_adapter = "codelldb",
-			is_test_file = function(path)
-				if not (path:match("%.cpp$") or path:match("%.cc$") or path:match("%.cxx$")) then
-					return false
-				end
-				return path:match("tests?%.[^/]+$")
-					or path:match("_tests?%.[^/]+$")
-					or path:match("test_.*%.[^/]+$")
-					or path:match(".*_tests?%.[^/]+$")
-			end,
+			mappings = { configure = "C" },
 		})
 	)
 end
 
+local ignored_dirs = { build = true, install = true, log = true, _deps = true, [".cache"] = true, [".git"] = true }
+
 neotest.setup({
 	adapters = adapters,
+	discovery = {
+		filter_dir = function(name)
+			return not ignored_dirs[name]
+		end,
+	},
 	summary = {
 		open = open_summary_window,
 	},
 })
-
-local function run_and_redraw(...)
-	local args = { ... }
-	neotest.run.run(unpack(args))
-	-- Neotest places the running sign async; defer a redraw so statuscol picks it up
-	vim.defer_fn(function()
-		vim.cmd("redrawstatus!")
-	end, 50)
-end
 
 local function open_summary_and_focus()
 	remember_summary_origin()
@@ -123,16 +113,62 @@ local function toggle_summary_focus()
 	end
 end
 
+local function pick_test()
+	local nio = require("nio")
+	nio.run(function()
+		-- Starts the neotest client if needed and waits for discovery
+		local root = neotest.run.get_tree_from_args({ suite = true })
+		nio.scheduler()
+		if not root then
+			return vim.notify("No tests found", vim.log.levels.WARN)
+		end
+
+		local entries, by_entry = {}, {}
+		for _, node in root:iter_nodes() do
+			local data = node:data()
+			if data.type == "test" then
+				local name = data.id:match("::(.*)$"):gsub("::", ".")
+				local entry = ("%s:%d:1: %s"):format(vim.fn.fnamemodify(data.path, ":."), data.range[1] + 1, name)
+				entries[#entries + 1] = entry
+				by_entry[entry] = data
+			end
+		end
+		if #entries == 0 then
+			return vim.notify("No tests found", vim.log.levels.WARN)
+		end
+		table.sort(entries)
+
+		require("fzf-lua").fzf_exec(entries, {
+			prompt = "Tests> ",
+			previewer = "builtin",
+			fzf_opts = { ["--no-multi"] = true, ["--delimiter"] = ":", ["--nth"] = "4.." },
+			actions = {
+				["enter"] = function(selected)
+					local data = by_entry[selected[1]]
+					vim.cmd.edit(data.path)
+					vim.api.nvim_win_set_cursor(0, { data.range[1] + 1, data.range[2] })
+				end,
+			},
+		})
+	end)
+end
+
 local map = vim.keymap.set
 
 map("n", "<leader>t", "<nop>", { desc = "Test" })
-map("n", "<leader>tc", "<cmd>ConfigureGtest<cr>", { desc = "Gtest: configure marked tests" })
 map("n", "<leader>tn", function()
-	run_and_redraw()
+	neotest.run.run()
 end, { desc = "Test: run nearest" })
 map("n", "<leader>tf", function()
-	run_and_redraw(vim.fn.expand("%"))
+	neotest.run.run(vim.fn.expand("%"))
 end, { desc = "Test: run file" })
+map("n", "<leader>ta", function()
+	neotest.run.run(vim.uv.cwd())
+end, { desc = "Test: run all" })
+map("n", "<leader>tl", function()
+	neotest.run.run_last()
+end, { desc = "Test: run last" })
+map("n", "<leader>ft", pick_test, { desc = "Find test" })
 map("n", "<leader>ts", toggle_summary, { desc = "Test: toggle summary" })
 map("n", "<leader>tt", toggle_summary_focus, { desc = "Test: toggle summary focus" })
 map("n", "<leader>to", function()
@@ -145,7 +181,7 @@ map("n", "<leader>tq", function()
 	neotest.run.stop()
 end, { desc = "Test: stop" })
 map("n", "<leader>td", function()
-	run_and_redraw({ strategy = "dap" })
+	neotest.run.run({ strategy = "dap" })
 end, { desc = "Test: debug nearest" })
 map("n", "[t", function()
 	neotest.jump.prev({ status = "failed" })
