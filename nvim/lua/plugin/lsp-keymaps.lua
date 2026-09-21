@@ -84,7 +84,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- Toggle inlay hints (if supported)
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
 		if client and client:supports_method("textDocument/inlayHint") then
-			vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
 			vim.keymap.set("n", "<leader>lh", function()
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf }), { bufnr = ev.buf })
 			end, opts("Toggle inlay hints"))
