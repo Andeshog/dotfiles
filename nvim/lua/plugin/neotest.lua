@@ -58,6 +58,14 @@ if pcall(vim.treesitter.language.inspect, "cpp") then
 		require("neotest-gtest").setup({
 			debug_adapter = "codelldb",
 			mappings = { configure = "C" },
+			is_test_file = function(path)
+				local stem, ext = path:match("([^/]+)%.(%w+)$")
+				if not stem or not ({ cpp = true, cc = true, cxx = true })[ext] then
+					return false
+				end
+				return stem:match("^test_") ~= nil or stem:match("_tests?$") ~= nil
+			end,
+			root = require("neotest.lib").files.match_root_pattern("CMakeLists.txt", ".clangd"),
 		})
 	)
 end

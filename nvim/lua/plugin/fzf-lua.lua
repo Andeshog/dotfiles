@@ -16,23 +16,16 @@ fzf.register_ui_select({
 	},
 })
 
-local function after_terminal_mode(fn, tries)
-	if vim.api.nvim_get_mode().mode ~= "t" or tries == 0 then
-		return fn()
-	end
-	vim.api.nvim_input("<C-\\><C-n>")
-	vim.defer_fn(function()
-		after_terminal_mode(fn, tries - 1)
-	end, 10)
-end
-
 local fzf_select = vim.ui.select
 vim.ui.select = function(items, opts, on_choice)
 	return fzf_select(items, opts, function(...)
 		local n, args = select("#", ...), { ... }
-		after_terminal_mode(function()
+		vim.schedule(function()
+			if vim.api.nvim_get_mode().mode == "t" then
+				vim.cmd("stopinsert")
+			end
 			on_choice(unpack(args, 1, n))
-		end, 20)
+		end)
 	end)
 end
 
