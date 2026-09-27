@@ -1,9 +1,20 @@
 require("cmake-tools").setup({
 	cmake_command = "cmake",
-	cmake_build_directory = "build",
+	-- Only used without CMake[User]Presets.json; presets take their dir from binaryDir
+	cmake_build_directory = "build/${variant:buildType}",
 	cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" },
 	cmake_compile_commands_options = {
-		action = "none",
+		action = "soft_link",
+		-- Link into build/ so clangd finds it; cmake-tools' softlink won't replace a link
+		-- pointing at another variant (EEXIST), so drop the stale one first
+		target = function()
+			local dir = vim.fn.getcwd() .. "/build"
+			local stat = vim.uv.fs_lstat(dir .. "/compile_commands.json")
+			if stat and stat.type == "link" then
+				os.remove(dir .. "/compile_commands.json")
+			end
+			return dir
+		end,
 	},
 	cmake_regenerate_on_save = true,
 	cmake_executor = {
@@ -66,6 +77,7 @@ end, { desc = "CMake: run" })
 map("n", "<leader>kd", "<cmd>CMakeDebug<cr>", { desc = "CMake: debug" })
 map("n", "<leader>kt", "<cmd>CMakeSelectBuildTarget<cr>", { desc = "CMake: select build target" })
 map("n", "<leader>kl", "<cmd>CMakeSelectLaunchTarget<cr>", { desc = "CMake: select launch target" })
+map("n", "<leader>kv", "<cmd>CMakeSelectBuildType<cr>", { desc = "CMake: select build type" })
 map("n", "<leader>ka", function()
 	local cmake = require("cmake-tools")
 	if not cmake.get_launch_target() then
