@@ -62,6 +62,7 @@ vim.pack.add({
 	-- DAP
 	{ src = "https://github.com/mfussenegger/nvim-dap", name = "nvim-dap" },
 	{ src = "https://github.com/igorlfs/nvim-dap-view", name = "dap-view", version = vim.version.range("1") },
+	{ src = "https://codeberg.org/Jorenar/nvim-dap-disasm", name = "nvim-dap-disasm" },
 	-- Build
 	{ src = "https://github.com/Civitasv/cmake-tools.nvim", name = "cmake-tools" },
 	-- Testing

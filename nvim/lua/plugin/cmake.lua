@@ -30,6 +30,7 @@ require("cmake-tools").setup({
 		stopOnEntry = false,
 		runInTerminal = true,
 		console = "integratedTerminal",
+		initCommands = { "settings set target.x86-disassembly-flavor intel" },
 	},
 	cmake_use_scratch_buffer = true,
 	cmake_virtual_text_support = false,

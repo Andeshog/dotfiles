@@ -71,6 +71,7 @@ dap.configurations.cpp = {
 		cwd = "${workspaceFolder}",
 		stopOnEntry = false,
 		runInTerminal = true,
+		initCommands = { "settings set target.x86-disassembly-flavor intel" },
 	},
 }
 
@@ -82,10 +83,21 @@ dap.configurations.c = dap.configurations.cpp
 dapview.setup({
 	winbar = {
 		show = true,
+		sections = { "disassembly", "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
+		default_section = "scopes",
 		controls = { enabled = true },
 	},
 	windows = { position = "below" },
 	auto_toggle = false,
+})
+
+-- Registers the "disassembly" section with dap-view, so it must run after dapview.setup
+require("dap-disasm").setup({
+	dapui_register = false,
+	dapview_register = true,
+	ins_before_memref = 16,
+	ins_after_memref = 16,
+	columns = { "address", "instruction" },
 })
 
 -- Hide neotest panels and neo-tree when debugging starts
@@ -170,6 +182,18 @@ local function continue()
 	end)
 end
 
+-- nvim-dap falls back to this default when a step request has no `granularity`,
+-- so flipping it makes the regular step keymaps step by instruction
+local function toggle_instruction_stepping()
+	local defaults = dap.defaults.codelldb
+	local instruction = defaults.stepping_granularity ~= "instruction"
+	defaults.stepping_granularity = instruction and "instruction" or "statement"
+	if instruction then
+		dapview.show_view("disassembly")
+	end
+	vim.notify("DAP: stepping by " .. defaults.stepping_granularity)
+end
+
 local session_keymaps = {
 	{
 		name = "Launch",
@@ -192,6 +216,7 @@ local session_keymaps = {
 		{ "n", "<M-Down>", dap.step_into, "Step into" },
 		{ "n", "<M-Left>", dap.step_out, "Step out" },
 		{ "n", "<leader>dc", dap.run_to_cursor, "Run to cursor" },
+		{ "n", "<leader>di", toggle_instruction_stepping, "Toggle instruction stepping" },
 	},
 	{
 		name = "Breakpoints",
@@ -318,6 +343,11 @@ local function build_help_lines()
 	if target.args and #target.args > 0 then
 		table.insert(lines, "  args: " .. table.concat(target.args, " "))
 	end
+
+	table.insert(lines, "")
+	table.insert(lines, "Stepping")
+	table.insert(marks, { #lines - 1, 0, -1, "Title" })
+	table.insert(lines, "  by " .. (dap.defaults.codelldb.stepping_granularity or "statement"))
 
 	for _, group in ipairs(session_keymaps) do
 		table.insert(lines, "")
