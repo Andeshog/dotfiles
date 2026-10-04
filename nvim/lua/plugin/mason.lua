@@ -14,6 +14,7 @@ local packages = {
 	"clang-format",
 	"codelldb",
 	"neocmakelsp",
+	"asm-lsp",
 }
 
 local function ensure_installed()
