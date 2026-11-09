@@ -6,6 +6,17 @@ fzf.setup({
 			layout = "horizontal",
 		},
 	},
+	lsp = {
+		includeDeclaration = false,
+		ignore_current_line = true,
+		code_actions = {
+			winopts = {
+				width = 0.7,
+				height = 0.6,
+				preview = { layout = "vertical", vertical = "down:60%" },
+			},
+		},
+	},
 })
 
 fzf.register_ui_select({
@@ -38,4 +49,7 @@ vim.keymap.set("n", "<leader>f/", fzf.blines, { desc = "Search in buffer" })
 vim.keymap.set("n", "<leader>fq", fzf.quickfix, { desc = "Quickfix list" })
 vim.keymap.set("n", "<leader>fk", fzf.keymaps, { desc = "Keymaps" })
 vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Document symbols" })
+vim.keymap.set("n", "<leader>fS", fzf.lsp_live_workspace_symbols, { desc = "Workspace symbols" })
+vim.keymap.set("n", "<leader>fd", fzf.diagnostics_document, { desc = "Document diagnostics" })
+vim.keymap.set("n", "<leader>fD", fzf.diagnostics_workspace, { desc = "Workspace diagnostics" })
 vim.keymap.set("n", "<leader>fr", fzf.resume, { desc = "Resume last picker" })

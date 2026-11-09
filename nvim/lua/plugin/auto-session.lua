@@ -31,7 +31,13 @@ local function close_session_ignored_windows()
 	return true
 end
 
+local function enable_auto_save()
+	require("auto-session.config").auto_save = true
+end
+
 require("auto-session").setup({
+	auto_restore = false,
+	auto_save = false,
 	args_allow_files_auto_save = false,
 	args_allow_single_directory = true,
 	close_filetypes_on_save = {
@@ -39,4 +45,11 @@ require("auto-session").setup({
 		"termite",
 	},
 	pre_save_cmds = { close_session_ignored_windows },
+	post_restore_cmds = { enable_auto_save },
+	post_save_cmds = { enable_auto_save },
+	session_lens = { picker = "fzf" },
 })
+
+vim.keymap.set("n", "<leader>Sr", "<cmd>AutoSession restore<cr>", { desc = "Restore session (cwd)" })
+vim.keymap.set("n", "<leader>Sf", "<cmd>AutoSession search<cr>", { desc = "Find session" })
+vim.keymap.set("n", "<leader>Sd", "<cmd>AutoSession delete<cr>", { desc = "Delete session (cwd)" })

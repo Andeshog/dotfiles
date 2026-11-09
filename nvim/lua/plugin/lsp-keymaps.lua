@@ -38,25 +38,22 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		-- Navigation
 		vim.keymap.set("n", "gd", fzf.lsp_definitions, opts("Go to definition"))
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))
+		vim.keymap.set("n", "gD", fzf.lsp_declarations, opts("Go to declaration"))
 		vim.keymap.set("n", "gi", fzf.lsp_implementations, opts("Go to implementation"))
 		vim.keymap.set("n", "gr", fzf.lsp_references, opts("References"))
-		vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts("Type definition"))
+		vim.keymap.set("n", "gy", fzf.lsp_typedefs, opts("Type definition"))
+		vim.keymap.set("n", "<leader>lF", fzf.lsp_finder, opts("LSP finder"))
 
 		-- Call hierarchy
-		vim.keymap.set("n", "<leader>lci", vim.lsp.buf.incoming_calls, opts("Incoming calls"))
-		vim.keymap.set("n", "<leader>lco", vim.lsp.buf.outgoing_calls, opts("Outgoing calls"))
-
-		-- Type hierarchy
-		vim.keymap.set("n", "<leader>lt", function()
-			vim.lsp.buf.typehierarchy("subtypes")
-		end, opts("Type hierarchy"))
+		vim.keymap.set("n", "<leader>lci", fzf.lsp_incoming_calls, opts("Incoming calls"))
+		vim.keymap.set("n", "<leader>lco", fzf.lsp_outgoing_calls, opts("Outgoing calls"))
 
 		-- Info
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts("Hover"))
+		vim.keymap.set("n", "<leader>lp", require("custom_plugins.peek").peek_definition, opts("Peek definition"))
 
 		-- Actions
-		vim.keymap.set({ "n", "x" }, "<leader>la", vim.lsp.buf.code_action, opts("Code action"))
+		vim.keymap.set({ "n", "x" }, "<leader>la", fzf.lsp_code_actions, opts("Code action"))
 		vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts("Rename symbol"))
 		vim.keymap.set("n", "<leader>lf", function()
 			local ok, conform = pcall(require, "conform")
@@ -73,13 +70,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 				lint.try_lint()
 			end
 		end, opts("Lint buffer"))
-
-		-- Diagnostics
-		vim.keymap.set("n", "<leader>ld", diagnostics.open_float, opts("Line diagnostics"))
-
-		-- Workspace
-		vim.keymap.set("n", "<leader>lwa", vim.lsp.buf.add_workspace_folder, opts("Add workspace folder"))
-		vim.keymap.set("n", "<leader>lwr", vim.lsp.buf.remove_workspace_folder, opts("Remove workspace folder"))
 
 		-- Toggle inlay hints (if supported)
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)

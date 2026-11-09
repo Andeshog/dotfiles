@@ -53,6 +53,9 @@ require("neo-tree").setup({
 		position = "float",
 		mappings = {
 			["<space>"] = "none", -- free <space> for leader
+			["d"] = "trash",
+			["D"] = "delete",
+			["<C-z>"] = "undo",
 		},
 	},
 })
