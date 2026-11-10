@@ -44,7 +44,8 @@ require("neo-tree").setup({
 			mappings = {
 				["u"] = "navigate_up", -- go to parent dir
 				["."] = "set_root", -- set root to dir under cursor
-				["/"] = "fuzzy_sorter", --fuzzy search
+				-- fuzzy search; <CR> keeps the filter applied so the tree stays navigable
+				["/"] = { "fuzzy_sorter", config = { keep_filter_on_submit = true } },
 			},
 		},
 	},
